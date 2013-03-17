@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% load forum_extras %}
+{% load i18n %}
+
+{% block title %}Forum - Standard Survival Minecraft Server{% endblock %}
+
+{% block select_forum %}selected{% endblock %}
+{% block content %}
+
+{% set_theme_style request.user %}
+
+<script type="text/javascript">
+var STATIC_URL = "{{ STATIC_URL }}";
+var POST_PREVIEW_URL = "{% url djangobb:post_preview %}";
+</script>
+
+
+<!-- Highlightjs goodies -->
+<link type="text/css" rel="stylesheet" href="{{ STATIC_URL }}djangobb_forum/css/pygments.css" />
+{% if highlight_word %}
+<script type="text/javascript" src="{{ STATIC_URL }}djangobb_forum/js/jquery.highlight-3.pack.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("div.postmsg").highlight("{{ highlight_word }}");
+	});
+</script>
+{% endif %}
+{% if post %}
+	{% set_markup_editor request.user post.markup %}
+{% else %}
+	{% set_markup_editor request.user %}
+{% endif %}
+{% if user.is_authenticated %}
+	<script type="text/javascript" >
+	   $(document).ready(function() {
+		$(".markup").markItUp(mySettings);
+	   });
+	</script>
+{% endif %}
+{% block extra_meta %}{% endblock %}
+
+<h2>Standard Survival Forum</h2>
+{% include 'djangobb_forum/header.html' %}
+{% block djangobb_content %}{% endblock %}
+<div id="brdfooter" class="block">
+<div class="box">
+    <div class="inbox">
+	{% block controls %}
+	{% endblock %}
+	<p class="conr">Standard Survival</p>
+	<div class="clearer"></div>
+    </div>
+</div>
+</div>
+	
+{% endblock %}

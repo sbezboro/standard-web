@@ -1,0 +1,297 @@
+body {
+    background-color: #F5F5F5;
+    color: #444;
+    font-family: Helvetica, Arial, FreeSans, san-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    overflow-y: scroll;
+}
+
+#header {
+    background-color: #222;
+    text-align: left;
+    padding: 8px;
+}
+
+#header #inner {
+    margin: 0 auto;
+    text-align: left;
+    width: 960px;
+}
+
+#header #player-search {
+    float: right;
+    margin-top: -3px;
+}
+
+#header a {
+    color: #bbb;
+    text-decoration: none;
+    margin-right: 10px;
+}
+
+#header a:hover, #header .selected {
+    color: #fff;
+}
+
+#sub-header {
+    background-color: #dfdfdf;
+    text-align: left;
+    margin-top: 0px;
+}
+
+#sub-header h1 {
+    margin-top: 0px;
+    padding-top: 20px;
+    padding-bottom: 8px;
+}
+
+#container {
+    margin: 0 auto;
+    width: 960px;
+    text-align: left;
+}
+
+#main {
+    width: 740px;
+    float: left;
+    margin-bottom: 30px;
+}
+
+#sidebar {
+    width: 180px;
+    float: right;
+}
+
+#full {
+    margin-bottom: 20px;
+    overflow: auto;
+}
+
+h1 {
+    font-size: 3.8em;
+    margin-bottom: 3px;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin-top: 30px;
+}
+
+a {
+    color: #545454;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #AAA;
+}
+
+#caption {
+    color: #A8A8A8;
+    font-size: 1.2em;
+    font-style: italic;
+    margin-bottom: 30px;
+}
+
+#splash img {
+    border: 1px solid #D8D8D8;
+    margin: 0 10px 10px 0;
+}
+
+#player-list span {
+    display: inline-block;
+}
+
+#graph-tooltip {
+    font-size: 10pt;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+}
+
+.graph {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.player-header {
+    margin: 0 auto;
+    width: 960px;
+    text-align: left;
+}
+
+.player-stat-section {
+    float: left;
+    width: 25%;
+}
+
+.stat-row {
+    border: 1px solid #ddd;
+    width: 80%;
+    margin-top: -1px;
+    background-color: #fff;
+    padding: 2px 2px 0px 2px;
+}
+
+.stat-row .username {
+    float: left;
+}
+
+.stat-row .count {
+    float: right;
+}
+
+.stat-row .face-thumb {
+    border: 0px !important;
+    margin-right: 2px;
+}
+
+.face-large {
+    border: 1px solid #D8D8D8 !important;
+    width: 64px;
+    height: 64px;
+    margin-bottom: -2px;
+    margin-right: 12px;
+}
+
+.face-thumb {
+    border: 1px solid #D8D8D8 !important;
+    width: 16px;
+    height: 16px;
+    margin-bottom: -2px;
+}
+
+.tickLabel {
+    font-size: 8pt;
+}
+
+.strong {
+    font-weight: bold;
+}
+
+.player-section {
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.ranking-table {
+    width: 100%;
+    font-size: 18px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    padding: 0;
+    margin: 0;
+    border-collapse: collapse;
+}
+
+.ranking-table tr {
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid #ddd;
+    position: relative;
+}
+
+.ranking-table td {
+    padding-top: 3px;
+}
+
+.ranking-table .rank {
+    width: 22px;
+    text-align: right;
+    border-right: 1px solid #ddd;
+}
+
+.ranking-table .username {
+    padding-left: 4px;
+    border-right: 1px solid #ddd;
+}
+
+.ranking-table .timeSpent {
+    padding-left: 6px;
+    padding-right: 4px;
+    text-align: right;
+    width: 1px;
+    white-space: nowrap;
+}
+
+.ranking-table span {
+    font-size: small;
+    margin-left: 10px;
+}
+
+.search-row {
+    font-size: 14pt;
+}
+
+#refreshImage {
+    margin-bottom: -2px;
+}
+
+.progress {
+    background: url('../images/progress.gif') no-repeat center;
+}
+
+.button {
+    cursor: pointer;
+}
+
+.rank-star {
+    float: left;
+    margin-left: -18px;
+    padding-top: 4px;
+    background: url('../images/star.gif') no-repeat center;
+    width: 16px;
+    height: 16px;
+    text-align: center;
+    font-size: 12px;
+    color: #000;
+}
+
+.rank-star:hover {
+    color: #4e4e4e;
+}
+
+.warning {
+    background-color: #ffff00;
+    color: #000;
+    border: 1px solid #ffd700;
+    padding: 2px;
+    text-align: center;
+}
+
+.warning a {
+    color: #0072ab;
+}
+
+.warning a:hover {
+    color: #005d8c;
+    text-decoration: underline;
+}
+
+.small {
+    font-size: 0.5em;
+    margin-left: 10px;
+    color: #888;
+}
+
+.banned {
+    color: #f00;
+    margin-left: 16px;
+}
+
+.hidden {
+    display: none;
+}
+
+.clear {
+    clear: both;
+}
+
+.right {
+    float: right;
+}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics - Standard Survival Minecraft Server{% endblock %}
+
+{% block content %}
+    <div id="full">
+        {% for cohort in cohorts reversed %}
+            <h1>{{ forloop.revcounter }} week{{ forloop.revcounter|pluralize }} ago - {{ cohort.players }} new players</h1>
+            <div id="graph" class="graph progress" weeksAgo="{{ forloop.revcounter }}"></div>
+            {% if cohort.returns|length %}
+            <h3>Returning users by week</h3>
+            <div>{% for return in cohort.returns %}{% if forloop.last %}<b>{% endif %}{{ return }}{% if forloop.last %}</b>{% endif %} {% endfor %}</div>
+            {% endif %}
+            {% if cohort.active|length %}
+            <h3>Active users</h3>
+            {% for username in cohort.active %}<div class="player-section"><a href="/player/{{ username }}"><span><img class="face-thumb" src="/faces/16/{{ username }}.png">{{ username }}</span></a></div>{% endfor %}
+            {% endif %}
+        {% endfor %}
+    </div>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.graph').each(function() {
+                loadPlayerGraph($(this));
+            });
+        });
+    </script>
+{% endblock %}

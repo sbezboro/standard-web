@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Ranking - Standard Survival Minecraft Server{% endblock %}
+
+{% block select_ranking %}selected{% endblock %}
+{% block content %}
+    <div id="full">
+        <h2>Top 10 Players</h2>
+        <table class="ranking-table">
+        {% for player in player_info %}
+            <tr>
+                <td class="rank">{{ forloop.counter }}</td><td class="username"><a href="/player/{{ player.username }}"><img class="face-thumb" src="/faces/16/{{ player.username }}.png"/>{% if player.nickname %}{{ player.nickname }}{% else %}{{ player.username }}{% endif %}</a>{% if player.online %}<span>(Online Now!)</span>{% endif %}</td><td class="timeSpent">{{ player.time_spent }}</td>
+            </tr>
+        {% if forloop.counter == 10 %}
+        </table>
+        <br>
+        <h2>Top 40 Players</h2>
+        <table class="ranking-table">
+        {% endif %}
+        {% endfor %}
+        </table>
+    </div>
+{% endblock %}

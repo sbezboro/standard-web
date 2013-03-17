@@ -1,0 +1,17 @@
+{% extends 'djangobb_forum/base.html' %}
+{% load forum_extras %}
+{% load i18n %}
+
+{% block djangobb_content %}
+<div class="block2col">
+	{% include 'django_messages/menu_pm.html' %}
+	
+	{% block sub_content %}
+	{% endblock %}
+	
+<div class="clearer"></div>
+</div>
+{% endblock %}
+
+{% block controls %}
+{% endblock %}

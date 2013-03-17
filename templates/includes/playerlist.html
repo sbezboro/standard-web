@@ -1,0 +1,9 @@
+{% block playerlist %}
+{% if stats %}
+<b>Player count: {{ stats.num_players }} / {{ stats.max_players }}</b><br><br>
+{% if stats.players|length > 0 %}
+<b>Players online:</b>
+{% for player in stats.players %}<div>{% if player.rank %}<a class="rank-star" href="/ranking?player={{ player.username }}">{{ player.rank }}</a>{% endif %}<a href="/player/{{ player.username }}"><span><img class="face-thumb" src="/faces/16/{{ player.username }}.png">{% if player.nickname %}{{player.nickname}}{% else %}{{player.username}}{% endif %}</span></a></div>{% endfor %}
+{% endif %}
+{% else %}<b id="error">Uh-oh! The server doesn't appear to be running!</b>{% endif %}
+{% endblock %}

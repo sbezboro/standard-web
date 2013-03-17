@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Player Search - Standard Survival Minecraft Server{% endblock %}
+
+{% block content %}
+    <h2>Player Search - "{{ query }}"</h2>
+    {% if player_info %}
+    {% for player_info in player_info %}
+    <div class="search-row">
+        <a href="/player/{{ player_info.username }}"><img class="face-thumb" src="/faces/{{ player_info.username }}.png"/>{% if player_info.nickname %}{{ player_info.nickname }}{% else %}{{ player_info.username }}{% endif %}</a><br />
+    </div>
+    {% endfor %}
+    {% else %}
+    No results found
+    {% endif %}
+{% endblock %}

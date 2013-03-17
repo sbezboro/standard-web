@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}PVP Leaderboard - Standard Survival Minecraft Server{% endblock %}
+
+{% block select_pvp_leaderboard %}selected{% endblock %}
+{% block content %}
+    <div id="full">
+        <h2>PVP Leaderboard</h2>
+        <table class="ranking-table">
+            <th></th>
+            <th>Name</th>
+            <th>Kills</th>
+            <th>Deaths</th>
+        {% for killer in killers %}
+            <tr>
+                <td class="rank">{{ forloop.counter }}</td><td class="username"><a href="/player/{{ killer.username }}"><img class="face-thumb" src="/faces/16/{{ killer.username }}.png"/>{% if killer.nickname %}{{ killer.nickname }}{% else %}{{ killer.username }}{% endif %}</a></td><td class="numKills">{{ killer.num_kills }}</td><td class="numKills">{{ killer.num_deaths }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+{% endblock %}

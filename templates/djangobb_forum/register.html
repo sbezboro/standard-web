@@ -1,0 +1,25 @@
+{% extends "djangobb_forum/base.html" %}
+{% load i18n %}
+{% block extra_meta %}
+{% endblock %}
+{% block djangobb_content %}
+<div class="blockform">
+    <h2><span>{% trans "Register" %}</span></h2>
+    <div class="box">
+		<form id="registration_form" action="." method="post">
+		{% csrf_token %}
+		<div class="inform">
+			<fieldset>
+				<legend>{% trans "Registering a forum account" %}</legend>
+					<div class="infldset">
+                                                <p>Create a forum account by logging into the Minecraft server (standardsurvival.com) and typing the command <b>/forum</b>.</p>
+                                                <p>A forum account with your Minecraft username and a password you choose will then be created. <b>DO NOT use your Minecraft password.</b></p>
+					</div>
+			</fieldset>
+		</div>
+		<p>
+        </p>
+		</form>
+    </div>
+</div>
+{% endblock %}

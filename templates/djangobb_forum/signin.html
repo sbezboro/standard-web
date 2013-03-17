@@ -1,0 +1,41 @@
+{% extends "djangobb_forum/base.html" %}
+{% load i18n %}
+{% block extra_meta %}
+{% endblock %}
+{% block djangobb_content %}
+<div class="blockform">
+    <h2><span>{% trans "Login" %}</span></h2>
+    <div class="box">
+		<form id="registration_form" action="." method="post">
+		{% csrf_token %}
+		<div class="inform">
+			{% if msg %}
+			<ul class="errorlist">
+			    <li>{{ msg }}</li>
+			</ul>
+			{% endif %}
+			{{ form.non_field_errors.as_ul }}
+			{{ form2.non_field_errors.as_ul }}
+			<fieldset>
+				<legend>{% trans "Sign in using your username and password" %}</legend>
+					<div class="infldset">
+						{{ form.username.errors }}
+						<label><strong>{{ form.username.label }}</strong><br />{{ form.username }}</label>
+						{{ form.password.errors }}
+						<label><strong>{{ form.password.label }}</strong><br />{{ form.password }}</label>
+						<p class="clearb">{% trans "If you have not registered or have forgotten your password click on the appropriate link below." %}</p>
+						<p>
+							<a href="{% url register %}">{% trans "Not registered yet?" %}</a>&nbsp;&nbsp;
+							<a href="#" onclick="alert('Log into the Minecraft server and type /forum to reset your password')">{% trans "Forgotten your password?" %}</a>
+						</p>
+					</div>
+			</fieldset>
+		</div>
+		<p>
+            <input type="hidden" name="next" value="{{ next }}" />
+            <input type="submit" value="{% trans "Login" %}" />
+        </p>
+		</form>
+    </div>
+</div>
+{% endblock %}

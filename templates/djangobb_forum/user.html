@@ -1,0 +1,92 @@
+{% extends 'djangobb_forum/base.html' %}
+{% load forum_extras %}
+{% load i18n %}
+
+{% block title %}{{ profile }} - Standard Survival Forum{% endblock %}
+
+{% block djangobb_content %}
+<div id="viewprofile" class="block">
+	<h2><span>{% trans "Profile" %}</span></h2>
+	<div class="box">
+		<div class="fakeform">
+			{% if not profile.is_superuser %}
+			<div class="inform">
+				<fieldset>
+				<legend>{% trans "Minecraft" %}</legend>
+					<div class="infldset">
+						<dl>
+							<dt>{% trans "Minecraft profile:" %} </dt>
+							<dd><a href="/player/{{ profile.username }}">{{ profile }}</a></dd>
+							{% endif %}
+							{% if profile.is_superuser %}
+							{% else %}
+							<dt>{% trans "Face:" %} </dt>
+							<dd><img class="face-large" src="/faces/64/{{ profile.forum_profile.player.username }}.png" width="64px" height=64px"/></dd>
+						</dl>
+						<div class="clearer"></div>
+					</div>
+				</fieldset>
+			</div>
+		{% endif %}
+		{% if profile.first_name or profile.last_name or profile.forum_profile.location or profile.forum_profile.site %}
+			<div class="inform">
+				<fieldset>
+				<legend>{% trans "Personal" %}</legend>
+					<div class="infldset">
+						<dl>
+							{% if profile.forum_profile.status %}
+							<dt>{% trans "Title" %} </dt>
+							<dd>{{ profile.forum_profile.status }}</dd>
+							{% endif %}
+							{% if profile.first_name or profile.last_name %}
+							<dt>{% trans "Real name:" %} </dt>
+								<dd>{{ profile.first_name }} {{ profile.last_name }}</dd>
+							{% endif %}
+							{% if profile.forum_profile.location %}
+							<dt>{% trans "Location" %} </dt>
+								<dd>{{ profile.forum_profile.location }}</dd>
+							{% endif %}
+							{% if profile.forum_profile.site %}
+							<dt>{% trans "Website:" %} </dt>
+								<dd>{{ profile.forum_profile.site|urlize }}</dd>
+							{% endif %}
+							{% if profile.email %}
+								<dt>{% trans "E-mail:" %} </dt>
+								{% if profile.forum_profile.privacy_permission == 0 %}
+									<dd><a href="mailto:{{ profile.email }}">{{ profile.email }}</a></dd>
+								{% else %}
+									{% if profile.forum_profile.privacy_permission == 1 %}
+										<dd><a href="{% url djangobb:misc %}?mail_to={{ profile }}">{% trans "Send e-mail" %}</a></dd>
+									{% endif %}
+								{% endif %}
+							{% endif %}
+						</dl>
+						<div class="clearer"></div>
+					</div>
+				</fieldset>
+			</div>
+		{% endif %}
+			<div class="inform">
+				<fieldset>
+				<legend>{% trans "User activity" %}</legend>
+					<div class="infldset">
+						<dl>
+							<dt>{% trans "Posts:" %} </dt>
+							<dd>{{ profile.forum_profile.post_count }} - <a href="{% url djangobb:search %}?action=show_user&amp;user_id={{ profile.id }}">{% trans "Show all posts" %}</a></dd>
+							<dt>{% trans "Last post:" %} </dt>
+							{% if profile.forum_profile.last_post %}
+								<dd>{{ profile.forum_profile.last_post }}</dd>
+							{% else %}
+								<dd>{% trans "(Unknown)" %}</dd>
+							{% endif %}
+							<dt>{% trans "Registered:" %} </dt>
+							<dd>{{ profile.date_joined|date:"Y-m-d" }}</dd>
+						</dl>
+						<div class="clearer"></div>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

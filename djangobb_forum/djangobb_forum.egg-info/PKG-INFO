@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: djangobb-forum
+Version: 0.0.1a0
+Summary: DjangoBB is a quick and simple forum which uses the Django Framework.
+Home-page: http://djangobb.org/
+Author: Alexey Afinogenov, Maranchuk Sergey
+Author-email: Maranchuk Sergey <slav0nic0@gmail.com>
+License: BSD
+Description: UNKNOWN
+Keywords: django forum bb
+Platform: UNKNOWN
