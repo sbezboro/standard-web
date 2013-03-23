@@ -53,7 +53,7 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    os.path.join(PROJECT_ROOT, '../static'),
+    os.path.join(PROJECT_ROOT, 'static'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -113,7 +113,7 @@ INSTALLED_APPS = (
     'gunicorn',
     'pagination',
     'haystack',
-    'django_messages',
+    'messages',
     'djangobb_forum',
     'standardsurvival',
     # Uncomment the next line to enable the admin:
@@ -167,7 +167,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
     'django_authopenid.context_processors.authopenid',
-    'django_messages.context_processors.inbox',
+    'messages.context_processors.inbox',
     'djangobb_forum.context_processors.forum_settings',
 )
 
@@ -177,9 +177,6 @@ HAYSTACK_SEARCH_ENGINE = 'whoosh'
 HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_ROOT, 'djangobb_index')
 
 SESSION_COOKIE_AGE = 2592000
-
-from os.path import expanduser
-#execfile(expanduser('local_settings.py'))
 
 try:
     from local_settings import *

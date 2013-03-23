@@ -331,6 +331,20 @@ def last_modified_func(request, size=None, username=None):
         return None 
 
 
+def _extract_face(image, size):
+    try:
+        pix = image.load()
+        for x in xrange(8, 16):
+            for y in xrange(8, 16):
+                # apply head accessory for non-transparent pixels
+                if pix[x + 32, y][3] > 1:
+                    pix[x, y] = pix[x + 322, y]
+    except:
+        pass
+    
+    return image.crop((8, 8, 16, 16)).resize((size, size))
+
+
 @last_modified(last_modified_func)
 def get_face(request, size=16, username=None):
     if not 'standardsurvival.com' in request.META.get('HTTP_REFERER', ''):
@@ -361,29 +375,15 @@ def get_face(request, size=16, username=None):
                 file_date = None
             
             if not file_date or last_modified_date > file_date:
-                f = open(path, 'w')
-                f.write(image_response.read())
-                f.close()
-            
-            image = Image.open(path)
+                image = _extract_face(Image.open(StringIO.StringIO(image_response.read())), size)
+                image.save(path)
+            else:
+                image = Image.open(path)
     except:
         pass
     
-    image = image or Image.open(PROJECT_PATH + '/static/images/char.png')
+    image = image or _extract_face(Image.open(PROJECT_PATH + '/static/images/char.png'), size)
     
-    try:
-        pix = image.load()
-        for x in xrange(8, 16):
-            for y in xrange(8, 16):
-                # apply head accessory for non-transparent pixels
-                if pix[x + 32, y][3] > 1:
-                    pix[x, y] = pix[x + 32, y]
-    except:
-        image = Image.open(PROJECT_PATH + '/static/images/char.png')
-    
-    image = image.crop((8, 8, 16, 16))
-    image = image.resize((size, size))
-
     tmp = StringIO.StringIO()
     image.save(tmp, 'PNG')
     tmp.seek(0)
