@@ -8,7 +8,6 @@ django-authopenid==1.0.1
 django-haystack==1.2.7
 django-messages==0.4.4
 django-pagination==1.0.7
-django-ratchet==0.3.2
 django-registration==0.8
 djangobb-forum==0.0.1a0
 gunicorn==0.14.5
@@ -19,4 +18,5 @@ pylibmc==1.2.3
 python-memcached==1.48
 python-openid==2.2.5
 requests==0.14.1
+rollbar==0.5.3
 wsgiref==0.1.2

@@ -1,6 +1,7 @@
 *.log
 *.pot
 *.pyc
+*.un~
 local_settings.py
 faces/*
 standardsurvival/djangobb_index/

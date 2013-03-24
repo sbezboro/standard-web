@@ -347,9 +347,6 @@ def _extract_face(image, size):
 
 @last_modified(last_modified_func)
 def get_face(request, size=16, username=None):
-    if not 'standardsurvival.com' in request.META.get('HTTP_REFERER', ''):
-        return HttpResponseForbidden()
-    
     size = int(size)
     
     if size != 16 and size != 64:
