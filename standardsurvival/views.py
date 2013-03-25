@@ -281,7 +281,7 @@ def player(request, username):
     
     online_now = datetime.utcnow() - timedelta(minutes = 1) < player_stats.last_seen
     
-    rank = player_stats.rank(1)
+    rank = player_stats.rank()
     
     return render_to_response('player.html', {
         'exists': True,

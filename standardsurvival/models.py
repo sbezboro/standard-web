@@ -22,8 +22,8 @@ class PlayerStats(models.Model):
     last_login = models.DateTimeField(default = datetime.utcnow, null=True)
     banned = models.BooleanField(default=False)
     
-    def rank(self, server_id):
-        above = PlayerStats.objects.filter(server=server_id, time_spent__gte=self.time_spent).exclude(player_id=self.player_id)
+    def rank(self):
+        above = PlayerStats.objects.filter(server=self.server, time_spent__gte=self.time_spent).exclude(player_id=self.player_id)
         return len(above) + 1
     
 
