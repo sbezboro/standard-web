@@ -1,14 +1,9 @@
 from django.contrib.auth.models import User
-from django.core.cache import cache
 from django.db.models import Q
 from django.http import HttpResponse
 from django.http import HttpResponseForbidden
 from django.http import HttpResponseNotFound
-from django.shortcuts import render_to_response
-from django.template import RequestContext
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import last_modified
-from minecraft_query import MinecraftQuery
 
 from functools import wraps
 
@@ -17,13 +12,8 @@ import date_util
 
 from djangobb_forum.models import Profile as ForumProfile
 
-from PIL import Image
-
-from datetime import datetime, timedelta
-import StringIO
-import calendar
-import urllib
 import json
+
 
 def api(function):
     @wraps(function)
