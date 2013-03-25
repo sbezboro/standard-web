@@ -184,6 +184,7 @@ def pvp_leaderboard(request):
     },
     context_instance=RequestContext(request))
 
+
 def search(request):
     query = request.GET.get('q')
     
@@ -339,7 +340,7 @@ def _extract_face(image, size):
             for y in xrange(8, 16):
                 # apply head accessory for non-transparent pixels
                 if pix[x + 32, y][3] > 1:
-                    pix[x, y] = pix[x + 322, y]
+                    pix[x, y] = pix[x + 32, y]
     except:
         pass
     
