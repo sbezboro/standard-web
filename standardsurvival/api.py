@@ -10,6 +10,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import last_modified
 from minecraft_query import MinecraftQuery
 
+from functools import wraps
+
 from standardsurvival.models import *
 import date_util
 
@@ -23,6 +25,23 @@ import calendar
 import urllib
 import json
 
+def api(function):
+    @wraps(function)
+    def decorator(request, *args, **kwargs):
+        server_id = request.REQUEST.get('server-id')
+        secret_key = request.REQUEST.get('secret-key')
+        
+        try:
+            server = Server.objects.get(id=server_id, secret_key=secret_key)
+        except:
+            return HttpResponseForbidden()
+        
+        return function(request, *args, **kwargs)
+    
+    return decorator
+
+
+@api
 @csrf_exempt
 def log_death(request):
     type = request.POST.get('type')
@@ -61,6 +80,8 @@ def log_death(request):
     
     return HttpResponse()
 
+
+@api
 @csrf_exempt
 def log_kill(request):
     type = request.POST.get('type')
@@ -86,6 +107,7 @@ def log_kill(request):
     
     return HttpResponse()
 
+@api
 @csrf_exempt
 def link(request):
     username = request.POST.get('username')
@@ -110,6 +132,8 @@ def link(request):
     
     return HttpResponse('Your username has been linked to a forum account!')
 
+
+@api
 @csrf_exempt
 def rank_query(request):
     username = request.GET.get('username')

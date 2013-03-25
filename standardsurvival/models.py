@@ -11,6 +11,7 @@ class MinecraftPlayer(models.Model):
 class Server(models.Model):
     name = models.CharField(max_length=30)
     address = models.CharField(max_length=50)
+    secret_key = models.CharField(max_length=10)
 
 class PlayerStats(models.Model):
     player = models.ForeignKey('MinecraftPlayer')
