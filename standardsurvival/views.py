@@ -145,18 +145,18 @@ def player_list(request):
             server_status['players'].sort(key=lambda x: (x.get('nickname') or x.get('username')).lower())
             
             players = []
-            top10 = MinecraftPlayer.objects.order_by('-time_spent')[:10]
+            top10_player_ids = PlayerStats.objects.filter(server=1).order_by('-time_spent')[:10].values_list('player', flat=True)
             for player_info in server_status['players']:
                 try:
                     player = MinecraftPlayer.objects.get(username=player_info.get('username'))
                 except:
                     player = MinecraftPlayer(username=player_info.get('username'))
-                    player.save
+                    player.save()
                 
                 rank = None
-                if player in top10:
-                    for index, top10player in enumerate(top10):
-                        if player == top10player:
+                if player.id in top10_player_ids:
+                    for index, top10player_id in enumerate(top10_player_ids):
+                        if player.id == top10player_id:
                             rank = index + 1
                 
                 players.append({'username': player.username, 'nickname': player.nickname, 'rank': rank})
@@ -213,6 +213,7 @@ def player(request, username):
     
     try:
         player = MinecraftPlayer.objects.get(username=username)
+        player_stats = PlayerStats.objects.get(server=1, player=player)
     except Exception, e:
         return render_to_response('player.html', {
             'exists': False,
@@ -222,12 +223,12 @@ def player(request, username):
     death_info = {}
     pvp_deaths = {}
         
-    deaths = DeathEvent.objects.filter(victim=player).values('killer__username', 'killer__nickname', 'death_type__displayname')
+    deaths = DeathEvent.objects.filter(server=1, victim=player).values('killer__username', 'killer__nickname', 'death_type__displayname')
     death_count = len(deaths)
     
-    pvp_kill_count = len(DeathEvent.objects.filter(killer=player, victim__isnull=False))
-    pvp_death_count = len(DeathEvent.objects.filter(victim=player, killer__isnull=False))
-    other_death_count = len(DeathEvent.objects.filter(victim=player, killer__isnull=True))
+    pvp_kill_count = len(DeathEvent.objects.filter(server=1, killer=player, victim__isnull=False))
+    pvp_death_count = len(DeathEvent.objects.filter(server=1, victim=player, killer__isnull=False))
+    other_death_count = len(DeathEvent.objects.filter(server=1, victim=player, killer__isnull=True))
     
     nicknames = {}
     
@@ -251,10 +252,10 @@ def player(request, username):
     kill_info = {}
     pvp_kills = {}
     
-    kills = KillEvent.objects.filter(killer=player).values('kill_type__displayname')
+    kills = KillEvent.objects.filter(server=1, killer=player).values('kill_type__displayname')
     kill_count = len(kills)
     
-    other_kill_count = len(KillEvent.objects.filter(killer=player, victim__isnull=True))
+    other_kill_count = len(KillEvent.objects.filter(server=1, killer=player, victim__isnull=True))
     
     for kill in kills:
         kill_type = kill.get('kill_type__displayname')
@@ -263,7 +264,7 @@ def player(request, username):
     
     kill_info = sorted([{'type': key, 'count': kill_info[key]} for key in kill_info], key=lambda k: (-k['count'], k['type']))
     
-    kills = DeathEvent.objects.filter(killer=player).values('victim__username', 'victim__nickname')
+    kills = DeathEvent.objects.filter(server=1, killer=player).values('victim__username', 'victim__nickname')
     kill_count = kill_count + len(kills)
     for kill in kills:
         username = kill.get('victim__username')
@@ -275,21 +276,21 @@ def player(request, username):
         
     
     pvp_kills = sorted([{'username': key, 'nickname': nicknames.get(key), 'count': pvp_kills[key]} for key in pvp_kills], key=lambda k: (-k['count'], (k['nickname'] or k['username']).lower()))
+
     
-    online_now = datetime.utcnow() - timedelta(minutes = 1) < player.last_seen
+    online_now = datetime.utcnow() - timedelta(minutes = 1) < player_stats.last_seen
     
-    players = MinecraftPlayer.objects.filter(time_spent__gte=player.time_spent).exclude(id=player.id)
-    rank = len(players) + 1
+    rank = player_stats.rank(1)
     
     return render_to_response('player.html', {
         'exists': True,
         'username': player.username,
         'nickname': player.nickname,
-        'banned': player.banned,
+        'banned': player_stats.banned,
         'online_now': online_now,
-        'first_seen': date_util.iso_date(player.first_seen),
-        'last_seen': date_util.iso_date(player.last_seen),
-        'time_spent': date_util.elapsed_time_string(player.time_spent),
+        'first_seen': date_util.iso_date(player_stats.first_seen),
+        'last_seen': date_util.iso_date(player_stats.last_seen),
+        'time_spent': date_util.elapsed_time_string(player_stats.time_spent),
         'death_info': death_info,
         'death_count': death_count,
         'kill_info': kill_info,
@@ -306,14 +307,14 @@ def player(request, username):
 
 def ranking(request):
     player_info = []
-    players = MinecraftPlayer.objects.order_by('-time_spent')[:40]
+    player_stats = PlayerStats.objects.filter(server=1).order_by('-time_spent')[:40]
     
-    for player in players:
+    for player_stat in player_stats:
         player_info.append({
-            'username': player.username,
-            'nickname': player.nickname,
-            'time_spent': date_util.elapsed_time_string(player.time_spent),
-            'online': datetime.utcnow() - timedelta(minutes = 1) < player.last_seen,
+            'username': player_stat.player.username,
+            'nickname': player_stat.player.nickname,
+            'time_spent': date_util.elapsed_time_string(player_stat.time_spent),
+            'online': datetime.utcnow() - timedelta(minutes = 1) < player_stat.last_seen,
         })
     
     return render_to_response('ranking.html', {
@@ -321,7 +322,7 @@ def ranking(request):
         }, context_instance=RequestContext(request))
 
 
-def last_modified_func(request, size=None, username=None):
+def _last_modified_func(request, size=None, username=None):
     PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
     path = '%s/faces/%s/%s.png' % (PROJECT_PATH, size, username)
     
@@ -345,7 +346,7 @@ def _extract_face(image, size):
     return image.crop((8, 8, 16, 16)).resize((size, size))
 
 
-@last_modified(last_modified_func)
+@last_modified(_last_modified_func)
 def get_face(request, size=16, username=None):
     size = int(size)
     

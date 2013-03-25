@@ -25,9 +25,11 @@ import json
 
 @csrf_exempt
 def log_death(request):
-    type = request.REQUEST.get('type')
-    victim_name = request.REQUEST.get('victim')
-    killer_name = request.REQUEST.get('killer')
+    type = request.POST.get('type')
+    victim_name = request.POST.get('victim')
+    killer_name = request.POST.get('killer')
+    
+    server = Server.objects.get(id=1)
     
     try:
         victim = MinecraftPlayer.objects.get(username=victim_name)
@@ -51,9 +53,9 @@ def log_death(request):
             killer = MinecraftPlayer(username=killer_name)
             killer.save()
         
-        death_event = DeathEvent(death_type=death_type, victim=victim, killer=killer)
+        death_event = DeathEvent(server=server, death_type=death_type, victim=victim, killer=killer)
     else:
-        death_event = DeathEvent(death_type=death_type, victim=victim)
+        death_event = DeathEvent(server=server, death_type=death_type, victim=victim)
     
     death_event.save()
     
@@ -61,8 +63,10 @@ def log_death(request):
 
 @csrf_exempt
 def log_kill(request):
-    type = request.REQUEST.get('type')
-    killer_name = request.REQUEST.get('killer')
+    type = request.POST.get('type')
+    killer_name = request.POST.get('killer')
+    
+    server = Server.objects.get(id=1)
     
     try:
         killer = MinecraftPlayer.objects.get(username=killer_name)
@@ -76,7 +80,7 @@ def log_kill(request):
         kill_type = KillType(type=type)
         kill_type.save()
     
-    kill_event = KillEvent(kill_type=kill_type, killer=killer)
+    kill_event = KillEvent(server=server, kill_type=kill_type, killer=killer)
     
     kill_event.save()
     
@@ -119,10 +123,10 @@ def rank_query(request):
             player_info = sorted([x for x in players], key=lambda k: len(k.nickname or k.username))
             player = player_info[0]
         
-        players = MinecraftPlayer.objects.filter(time_spent__gte=player.time_spent).exclude(id=player.id)
-        rank = len(players) + 1
+        stats = PlayerStats.objects.get(player=player)
+        rank = stats.rank(1)
         
-        time = date_util.elapsed_time_string(player.time_spent)
+        time = date_util.elapsed_time_string(stats.time_spent)
         
         response_data = {
             'result': 1,

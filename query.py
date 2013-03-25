@@ -24,29 +24,37 @@ try:
     server_status = api.call('server_status')
 except:
     server_status = {}
+    
+server = Server.objects.get(id=1)
 
 for player_info in server_status.get('players', []):
     try:
         player = MinecraftPlayer.objects.get(username=player_info.get('username'))
-        player.last_seen = datetime.utcnow()
-        player.banned = False
     except:
         player = MinecraftPlayer(username=player_info.get('username'))
     
     player.nickname = player_info.get('nickname')
-    
-    player.time_spent = player.time_spent + 1
     player.save()
     
-    if player.time_spent % 6000 == 0:
-        api.call('player_time', player.username, player.time_spent)
+    try:
+        player_stats = PlayerStats.objects.get(server=1, player=player)
+        player_stats.last_seen = datetime.utcnow()
+        player_stats.banned = False
+    except:
+        player_stats = PlayerStats(server=server, player=player)
+    
+    player_stats.time_spent += 1
+    player_stats.save()
+    
+    if player_stats.time_spent % 6000 == 0:
+        api.call('player_time', player.username, player_stats.time_spent)
 
-banned_players = MinecraftPlayer.objects.filter(username__in=server_status.get('banned_players', [])).update(banned=True)
+PlayerStats.objects.filter(player__username__in=server_status.get('banned_players', [])).update(banned=True)
 
 player_count = server_status.get('numplayers', 0)
 cpu_load = os.getloadavg()[0]
 
-status = ServerStatus(player_count=player_count, cpu_load=cpu_load)
+status = ServerStatus(server=server, player_count=player_count, cpu_load=cpu_load)
 status.save()
 
 try:

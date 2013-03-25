@@ -3,18 +3,32 @@ from datetime import datetime
 
 class MinecraftPlayer(models.Model):
     username = models.CharField(max_length=30, unique=True)
-    time_spent = models.IntegerField(default = 0)
-    first_seen = models.DateTimeField(default = datetime.utcnow)
-    last_seen = models.DateTimeField(default = datetime.utcnow)
-    last_login = models.DateTimeField(default = datetime.utcnow, null=True)
     nickname = models.CharField(max_length=30, null=True)
-    banned = models.BooleanField(default=False)
     
     def __str__(self):
         return self.username
     
+class Server(models.Model):
+    name = models.CharField(max_length=30)
+    address = models.CharField(max_length=50)
+
+class PlayerStats(models.Model):
+    player = models.ForeignKey('MinecraftPlayer')
+    server = models.ForeignKey('Server')
+    time_spent = models.IntegerField(default = 0)
+    first_seen = models.DateTimeField(default = datetime.utcnow)
+    last_seen = models.DateTimeField(default = datetime.utcnow)
+    last_login = models.DateTimeField(default = datetime.utcnow, null=True)
+    banned = models.BooleanField(default=False)
+    
+    def rank(self, server_id):
+        above = PlayerStats.objects.filter(server=server_id, time_spent__gte=self.time_spent).exclude(player_id=self.player_id)
+        return len(above) + 1
+    
+
 class ServerStatus(models.Model):
     timestamp = models.DateTimeField(default = datetime.utcnow)
+    server = models.ForeignKey('Server')
     player_count = models.IntegerField(default = 0)
     cpu_load = models.FloatField(default = 0)
     
@@ -37,12 +51,14 @@ class KillType(models.Model):
 
 class DeathEvent(models.Model):
     timestamp = models.DateTimeField(default = datetime.utcnow)
+    server = models.ForeignKey('Server')
     death_type = models.ForeignKey('DeathType', related_name = 'death_type')
     victim = models.ForeignKey('MinecraftPlayer', related_name = 'd_victim')
     killer = models.ForeignKey('MinecraftPlayer', related_name = 'd_killer', null=True)
     
 class KillEvent(models.Model):
     timestamp = models.DateTimeField(default = datetime.utcnow)
+    server = models.ForeignKey('Server')
     kill_type = models.ForeignKey('KillType', related_name = 'kill_type')
     killer = models.ForeignKey('MinecraftPlayer', related_name = 'k_killer')
     victim = models.ForeignKey('MinecraftPlayer', related_name = 'k_victim', null=True)
