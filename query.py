@@ -1,3 +1,7 @@
+"""
+Script that should run every minute. Collects and stores stats from all servers to the db.
+"""
+
 import glob
 import json
 import os

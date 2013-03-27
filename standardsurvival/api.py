@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.db.models import Q
 from django.http import HttpResponse
 from django.http import HttpResponseForbidden
@@ -21,10 +22,14 @@ def api(function):
         server_id = request.REQUEST.get('server-id')
         secret_key = request.REQUEST.get('secret-key')
         
-        try:
-            request.server = Server.objects.get(id=server_id, secret_key=secret_key)
-        except:
-            return HttpResponseForbidden()
+        cache_key = 'api-%s-%s' % (server_id, secret_key)
+        request.server = cache.get(cache_key)
+        if not request.server:
+            try:
+                request.server = Server.objects.get(id=server_id, secret_key=secret_key)
+                cache.set(cache_key, request.server, 3600)
+            except:
+                return HttpResponseForbidden()
         
         return function(request, *args, **kwargs)
     
