@@ -10,9 +10,8 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.decorators.http import last_modified
 from minecraft_query import MinecraftQuery
-from minecraft_api import MinecraftJsonApi
 
-
+from standardsurvival.lib import api
 from standardsurvival.models import *
 import date_util
 
@@ -132,20 +131,14 @@ def player_list(request):
         stats = {}
 
         try:
-            api = MinecraftJsonApi(
-                host = settings.MC_API_HOST, 
-                port = settings.MC_API_PORT, 
-                username = settings.MC_API_USERNAME, 
-                password = settings.MC_API_PASSWORD, 
-                salt = settings.MC_API_SALT
-            )
+            server = Server.objects.get(id=1)
             
-            server_status = api.call('server_status')
+            server_status = api.get_server_status(server)
             
             server_status['players'].sort(key=lambda x: (x.get('nickname') or x.get('username')).lower())
             
             players = []
-            top10_player_ids = PlayerStats.objects.filter(server=1).order_by('-time_spent')[:10].values_list('player', flat=True)
+            top10_player_ids = PlayerStats.objects.filter(server=server).order_by('-time_spent')[:10].values_list('player', flat=True)
             for player_info in server_status['players']:
                 try:
                     player = MinecraftPlayer.objects.get(username=player_info.get('username'))

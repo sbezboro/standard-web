@@ -1,5 +1,5 @@
 import math
-from datetime import datetime, timedelta 
+from datetime import datetime, timedelta
 
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import Http404, HttpResponse, HttpResponseRedirect, HttpResponseForbidden
@@ -296,7 +296,7 @@ def show_topic(request, topic_id, full=True):
 @login_required
 @transaction.commit_on_success
 def add_post(request, forum_id, topic_id):
-    from minecraft_api import MinecraftJsonApi
+    from standardsurvival.lib import api
     
     forum = None
     topic = None
@@ -327,22 +327,10 @@ def add_post(request, forum_id, topic_id):
     if form.is_valid():
         post = form.save();
         
-        try:
-            api = MinecraftJsonApi(
-                host = settings.MC_API_HOST, 
-                port = settings.MC_API_PORT, 
-                username = settings.MC_API_USERNAME, 
-                password = settings.MC_API_PASSWORD, 
-                salt = settings.MC_API_SALT
-            )
-            
-            api.call('forum_post',
-                     request.user.username,
-                     post.topic.forum.name,
-                     post.topic.name,
-                     '%s%s' % (Site.objects.get_current().domain, post.get_absolute_url()))
-        except:
-            pass
+        api.forum_post(request.user.username,
+                       post.topic.forum.name,
+                       post.topic.name,
+                       post.get_absolute_url())
         
         return HttpResponseRedirect(post.get_absolute_url())
 

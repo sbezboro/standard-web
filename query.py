@@ -12,21 +12,13 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'standardsurvival.settings'
 from django.conf import settings
 
 from standardsurvival.models import *
-from minecraft_api import MinecraftJsonApi
+from standardsurvival.lib import api
 
 from datetime import datetime, timedelta
 
 def query(server):
     try:
-        api = MinecraftJsonApi(
-            host = server.address, 
-            port = settings.MC_API_PORT, 
-            username = settings.MC_API_USERNAME, 
-            password = settings.MC_API_PASSWORD, 
-            salt = settings.MC_API_SALT
-        )
-        
-        server_status = api.call('server_status')
+        server_status = api.get_server_status(server)
     except:
         server_status = {}
     
@@ -50,7 +42,7 @@ def query(server):
         player_stats.save()
         
         if player_stats.time_spent % 6000 == 0:
-            api.call('player_time', player.username, player_stats.time_spent)
+            api.announce_player_time(server, player.username, player_stats.time_spent)
     
     PlayerStats.objects.filter(player__username__in=server_status.get('banned_players', [])).update(banned=True)
     
