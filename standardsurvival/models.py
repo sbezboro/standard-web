@@ -7,6 +7,10 @@ class MinecraftPlayer(models.Model):
     
     def __str__(self):
         return self.username
+
+class VeteranStatus(models.Model):
+    player = models.ForeignKey('MinecraftPlayer')
+    rank = models.IntegerField(default = 0)
     
 class Server(models.Model):
     name = models.CharField(max_length=30)

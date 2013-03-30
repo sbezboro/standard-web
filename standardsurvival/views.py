@@ -104,7 +104,7 @@ def player_graph(request):
         #index = 0
         #average = 0
         #counts = []
-        statuses = ServerStatus.objects.filter(timestamp__gt=datetime.utcnow() - timedelta(days = 7))
+        statuses = ServerStatus.objects.filter(server=2, timestamp__gt=datetime.utcnow() - timedelta(days = 7))
         
         average = statuses[0].player_count
         for status in statuses:
