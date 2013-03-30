@@ -34,7 +34,7 @@ function loadPlayerGraph(elem) {
                 colors: ["#7E9BFF", "#F00"],
                 series: {lines: { fill: true }},
                 xaxes: [{mode: "time", minTickSize: [1, "day"], timeformat: "%b %d"}],
-                yaxes: [{min: 0, max: 48, tickSize: 6, position: "right"}, {min: 0, max: 20}] });
+                yaxes: [{min: 0, max: 54, tickSize: 6, position: "right"}, {min: 0, max: 20}] });
         },
         error: function(data) {
         }

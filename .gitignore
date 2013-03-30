@@ -3,7 +3,7 @@
 *.pyc
 *.un~
 local_settings.py
-faces/*
+faces/*/*
 standardsurvival/djangobb_index/
 static/djangobb_forum/attachments/
 static/djangobb_forum/avatars/
