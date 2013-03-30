@@ -8,6 +8,13 @@ from standardsurvival.models import *
 import rollbar
 
 
+def _global_console_command(command):
+    for server in Server.objects.all():
+        api = get_api(server.address)
+        
+        api.call('runConsoleCommand', command)
+
+
 def get_api(host):
     return MinecraftJsonApi(
         host = host, 
@@ -44,3 +51,12 @@ def forum_post(username, forum_name, topic_name, path):
                      '%s%s' % (base_url, path))
         except:
             rollbar.report_exc_info(sys.exc_info())
+
+
+def set_nickname(username, nickname):
+    _global_console_command('nick %s %s' % (username, nickname))
+
+
+def set_donator(username):
+    _global_console_command('permissions player addgroup %s donator' % username)
+

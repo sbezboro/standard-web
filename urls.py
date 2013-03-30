@@ -22,6 +22,9 @@ urlpatterns = patterns('',
     url(r'^rankings$', RedirectView.as_view(url='/ranking')),
     url(r'^pvp_leaderboard$', views.pvp_leaderboard),
     
+    url(r'^classic/player/(?P<username>\w{0,50})', views.player, kwargs={'classic': True}),
+    url(r'^classic/ranking$', views.ranking, kwargs={'classic': True}),
+    
     url(r'^analytics$', views.analytics),
     
     (r'^500/$', views.server_error),

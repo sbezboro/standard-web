@@ -5,11 +5,22 @@
 {% block select_ranking %}selected{% endblock %}
 {% block content %}
     <div id="full">
+        <p class="server-selector">
+            {% if classic %}
+            <a href="/ranking">New</a>
+            |
+            <span class="selected">Classic</span>
+            {% else %}
+            <span class="selected">New</span>
+            |
+            <a href="/classic/ranking">Classic</a>
+            {% endif %}
+        </p>
         <h2>Top 10 Players</h2>
         <table class="ranking-table">
         {% for player in player_info %}
             <tr>
-                <td class="rank">{{ forloop.counter }}</td><td class="username"><a href="/player/{{ player.username }}"><img class="face-thumb" src="/faces/16/{{ player.username }}.png"/>{% if player.nickname %}{{ player.nickname }}{% else %}{{ player.username }}{% endif %}</a>{% if player.online %}<span>(Online Now!)</span>{% endif %}</td><td class="timeSpent">{{ player.time_spent }}</td>
+                <td class="rank">{{ forloop.counter }}</td><td class="username"><a href="{% if classic %}/classic{% endif %}/player/{{ player.username }}"><img class="face-thumb" src="/faces/16/{{ player.username }}.png"/>{% if player.nickname %}{{ player.nickname }}{% else %}{{ player.username }}{% endif %}</a>{% if player.online %}<span>(Online Now!)</span>{% endif %}</td><td class="timeSpent">{{ player.time_spent }}</td>
             </tr>
         {% if forloop.counter == 10 %}
         </table>

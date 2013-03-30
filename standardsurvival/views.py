@@ -131,7 +131,7 @@ def player_list(request):
         stats = {}
 
         try:
-            server = Server.objects.get(id=1)
+            server = Server.objects.get(id=2)
             
             server_status = api.get_server_status(server)
             
@@ -201,13 +201,15 @@ def search(request):
         }, context_instance=RequestContext(request))
 
 
-def player(request, username):
+def player(request, username, classic=False):
     if not username:
         raise Http404
     
+    server = Server.objects.get(id=1 if classic else 2)
+    
     try:
         player = MinecraftPlayer.objects.get(username=username)
-        player_stats = PlayerStats.objects.get(server=1, player=player)
+        player_stats = PlayerStats.objects.get(server=server, player=player)
     except Exception, e:
         return render_to_response('player.html', {
             'exists': False,
@@ -217,12 +219,12 @@ def player(request, username):
     death_info = {}
     pvp_deaths = {}
         
-    deaths = DeathEvent.objects.filter(server=1, victim=player).values('killer__username', 'killer__nickname', 'death_type__displayname')
+    deaths = DeathEvent.objects.filter(server=server, victim=player).values('killer__username', 'killer__nickname', 'death_type__displayname')
     death_count = len(deaths)
     
-    pvp_kill_count = len(DeathEvent.objects.filter(server=1, killer=player, victim__isnull=False))
-    pvp_death_count = len(DeathEvent.objects.filter(server=1, victim=player, killer__isnull=False))
-    other_death_count = len(DeathEvent.objects.filter(server=1, victim=player, killer__isnull=True))
+    pvp_kill_count = len(DeathEvent.objects.filter(server=server, killer=player, victim__isnull=False))
+    pvp_death_count = len(DeathEvent.objects.filter(server=server, victim=player, killer__isnull=False))
+    other_death_count = len(DeathEvent.objects.filter(server=server, victim=player, killer__isnull=True))
     
     nicknames = {}
     
@@ -246,10 +248,10 @@ def player(request, username):
     kill_info = {}
     pvp_kills = {}
     
-    kills = KillEvent.objects.filter(server=1, killer=player).values('kill_type__displayname')
+    kills = KillEvent.objects.filter(server=server, killer=player).values('kill_type__displayname')
     kill_count = len(kills)
     
-    other_kill_count = len(KillEvent.objects.filter(server=1, killer=player, victim__isnull=True))
+    other_kill_count = len(KillEvent.objects.filter(server=server, killer=player, victim__isnull=True))
     
     for kill in kills:
         kill_type = kill.get('kill_type__displayname')
@@ -258,7 +260,7 @@ def player(request, username):
     
     kill_info = sorted([{'type': key, 'count': kill_info[key]} for key in kill_info], key=lambda k: (-k['count'], k['type']))
     
-    kills = DeathEvent.objects.filter(server=1, killer=player).values('victim__username', 'victim__nickname')
+    kills = DeathEvent.objects.filter(server=server, killer=player).values('victim__username', 'victim__nickname')
     kill_count = kill_count + len(kills)
     for kill in kills:
         username = kill.get('victim__username')
@@ -267,10 +269,8 @@ def player(request, username):
         nickname = kill.get('victim__nickname')
         if nickname:
             nicknames[username] = nickname
-        
     
     pvp_kills = sorted([{'username': key, 'nickname': nicknames.get(key), 'count': pvp_kills[key]} for key in pvp_kills], key=lambda k: (-k['count'], (k['nickname'] or k['username']).lower()))
-
     
     online_now = datetime.utcnow() - timedelta(minutes = 1) < player_stats.last_seen
     
@@ -278,6 +278,7 @@ def player(request, username):
     
     return render_to_response('player.html', {
         'exists': True,
+        'classic': classic,
         'username': player.username,
         'nickname': player.nickname,
         'banned': player_stats.banned,
@@ -299,9 +300,11 @@ def player(request, username):
         }, context_instance=RequestContext(request))
 
 
-def ranking(request):
+def ranking(request, classic=False):
+    server = Server.objects.get(id=1 if classic else 2)
+    
     player_info = []
-    player_stats = PlayerStats.objects.filter(server=1).order_by('-time_spent')[:40]
+    player_stats = PlayerStats.objects.filter(server=server).order_by('-time_spent')[:40]
     
     for player_stat in player_stats:
         player_info.append({
@@ -312,6 +315,7 @@ def ranking(request):
         })
     
     return render_to_response('ranking.html', {
+        'classic': classic,
         'player_info': player_info,
         }, context_instance=RequestContext(request))
 
