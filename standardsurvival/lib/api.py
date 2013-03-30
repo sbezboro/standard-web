@@ -7,6 +7,7 @@ from standardsurvival.models import *
 
 import rollbar
 
+import sys
 
 def _global_console_command(command):
     for server in Server.objects.all():
