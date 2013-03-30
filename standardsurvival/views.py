@@ -111,7 +111,7 @@ def player_graph(request):
             #counts.append(status.player_count)
             #average = average - (counts[max(index - 5, 0)] / 5) + counts[index] / 5
             
-            if status.id % 30 == 0:
+            if status.id % 30 == 1:
                 graph_info.append({
                     'time': int(calendar.timegm(status.timestamp.timetuple()) * 1000),
                     'player_count': status.player_count #average
