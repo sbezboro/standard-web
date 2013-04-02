@@ -7,6 +7,7 @@
 
 {% block select_forum %}selected{% endblock %}
 {% block content %}
+<div id="main">
 
 {% set_theme_style request.user %}
 
@@ -53,5 +54,5 @@ var POST_PREVIEW_URL = "{% url djangobb:post_preview %}";
     </div>
 </div>
 </div>
-	
+</div>
 {% endblock %}

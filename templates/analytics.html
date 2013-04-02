@@ -3,7 +3,7 @@
 {% block title %}Analytics - Standard Survival Minecraft Server{% endblock %}
 
 {% block content %}
-    <div id="full">
+    <div id="main">
         {% for cohort in cohorts reversed %}
             <h1>{{ forloop.revcounter }} week{{ forloop.revcounter|pluralize }} ago - {{ cohort.players }} new players</h1>
             <div id="graph" class="graph progress" weeksAgo="{{ forloop.revcounter }}"></div>

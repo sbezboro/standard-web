@@ -49,6 +49,7 @@
             <a class="{% block select_forum %}{% endblock %}" href="/forum/">Forum</a>
             <a class="{% block select_vote %}{% endblock %}" href="/forum/topic/116/">Vote</a>
             {% if user.is_superuser %}<a href="/analytics">Analytics</a>{% endif %}
+            {% if user.is_superuser %}<a href="/server-admin">Server Admin</a>{% endif %}
             <div id="player-search">
                 <form onsubmit="playerSearch(); return false;">
                     <input id="searchBox" type="text" placeholder="Player search" value="{{ query }}"/>
@@ -58,9 +59,6 @@
             <a class="{% block select_player %}{% endblock %}" href="/player/{{ user.username }}">{{ user.username }}</a>
             {% endif %}
         </div>
-    </div>
-    <div id="sub-header">
-        {% block sub-header %}{% endblock %}
     </div>
     <div id="container">
         {% block content %}{% endblock %}

@@ -2,42 +2,44 @@
 
 {% block select_index %}selected{% endblock %}
 {% block content %}
-    {% if not status.session %}
-    <div class="warning">
-        Minecraft session servers are down! You won't be able to connect to this server until they are back up!
-    </div>
-    {% endif %}
-    <div id="splash">
-        <h1>Standard Survival</h1>
-        <img src="{{STATIC_URL}}images/standard-survival.jpg" width="958px" height="331px">
-        <div id="caption">A vanilla-inspired Minecraft survival server</div>
-    </div>
     <div id="main">
-        <h2>Server Address</h2>
-        <p><b>standardsurvival.com</b></p>
-    
-        <h2>Description</h2>
-        <p>Standard Survival is a 24/7 Minecraft survival server set up to be an immersive vanilla-like experience. As a result, <b>all teleport commands such as /tp, /home, /spawn are disabled</b>, but you can still set a different spawn by sleeping in a bed.</p>
-        <p>The world is yours to explore. You can build, craft, kill, survive and do anything else you want, there are no rules. You can defend against griefers by protecting your land and chests using the Factions and Lockette plugins. So team up with others or go lone wolf and start an adventure on Standard Survival.</p>
+        {% if not status.session %}
+        <div class="warning">
+            Minecraft session servers are down! You won't be able to connect to this server until they are back up!
+        </div>
+        {% endif %}
+        <div id="splash">
+            <h1>Standard Survival</h1>
+            <img src="{{STATIC_URL}}images/standard-survival.jpg" width="958px" height="331px">
+            <div id="caption">A vanilla-inspired Minecraft survival server</div>
+        </div>
+        <div id="left-section">
+            <h2>Server Address</h2>
+            <p><b>standardsurvival.com</b></p>
         
-        <h2>Player Graph</h2>
-        <div id="graph" class="graph progress"></div>
-        <br/>
-        <!--
-        <h2>A Thank You</h2>
-        <p>Thank you to all the donators that have supported me and the server over the past few months. At this point I have received enough donations to cover the yearly costs of both of the servers I use for Minecraft! I had no idea what to expect when I started the server in early May. I've learnt a lot since then and had a blast bringing my own flavour of server to the Minecraft multiplayer world. I'm happy to be able to provide such an enjoyable experience to so many people. Thanks again for all the support!</p>
-        -->
-        <p>Hosting this Minecraft server is a lot of fun, but it does need time and especially money to run. Please consider helping me cover the cost of running the server by clicking the donate button below. Thanks.</p>
-        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" onclick="donateClick()">
-            <input type="hidden" name="cmd" value="_s-xclick">
-            <input type="hidden" name="hosted_button_id" value="R4GTC8E7Z8Y84">
-            <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-            <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-        </form>
-    </div>
-    <div id="sidebar">
-        <h2>Server Status <span id="refreshButton" class="button" onclick="_gaq.push(['_trackPageview', '/refresh/player-list']); loadPlayerList();"><img id="refreshImage"/></span></h2>
-        <div id="player-list">
+            <h2>Description</h2>
+            <p>Standard Survival is a 24/7 Minecraft survival server set up to be an immersive vanilla-like experience. As a result, <b>all teleport commands such as /tp, /home, /spawn are disabled</b>, but you can still set a different spawn by sleeping in a bed.</p>
+            <p>The world is yours to explore. You can build, craft, kill, survive and do anything else you want, there are no rules. You can defend against griefers by protecting your land and chests using the Factions and Lockette plugins. So team up with others or go lone wolf and start an adventure on Standard Survival.</p>
+            
+            <h2>Player Graph</h2>
+            <div id="graph" class="graph progress"></div>
+            <br/>
+            <!--
+            <h2>A Thank You</h2>
+            <p>Thank you to all the donators that have supported me and the server over the past few months. At this point I have received enough donations to cover the yearly costs of both of the servers I use for Minecraft! I had no idea what to expect when I started the server in early May. I've learnt a lot since then and had a blast bringing my own flavour of server to the Minecraft multiplayer world. I'm happy to be able to provide such an enjoyable experience to so many people. Thanks again for all the support!</p>
+            -->
+            <p>Hosting this Minecraft server is a lot of fun, but it does need time and especially money to run. Please consider helping me cover the cost of running the server by clicking the donate button below. Thanks.</p>
+            <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" onclick="donateClick()">
+                <input type="hidden" name="cmd" value="_s-xclick">
+                <input type="hidden" name="hosted_button_id" value="R4GTC8E7Z8Y84">
+                <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+            </form>
+        </div>
+        <div id="sidebar">
+            <h2>Server Status <span id="refreshButton" class="button" onclick="_gaq.push(['_trackPageview', '/refresh/player-list']); loadPlayerList();"><img id="refreshImage"/></span></h2>
+            <div id="player-list">
+            </div>
         </div>
     </div>
     <a href="https://github.com/sbezboro/standardsurvival"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>

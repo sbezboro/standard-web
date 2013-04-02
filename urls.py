@@ -26,6 +26,7 @@ urlpatterns = patterns('',
     url(r'^classic/ranking$', views.ranking, kwargs={'classic': True}),
     
     url(r'^analytics$', views.analytics),
+    url(r'^server-admin$', views.admin),
     
     (r'^500/$', views.server_error),
 )
@@ -35,6 +36,7 @@ urlpatterns += patterns('',
     url(r'^api/log_kill', api.log_kill),
     url(r'^api/link', api.link),
     url(r'^api/rank_query', api.rank_query),
+    url(r'^api/auth_session_key', api.auth_session_key),
 )
     
 urlpatterns += patterns('', 

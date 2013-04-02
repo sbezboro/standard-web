@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.core.cache import cache
 from django.db.models import Q
 from django.http import HttpResponse
+from django.http import HttpResponseBadRequest
 from django.http import HttpResponseForbidden
 from django.http import HttpResponseNotFound
 from django.views.decorators.csrf import csrf_exempt
@@ -15,8 +16,10 @@ from djangobb_forum.models import Profile as ForumProfile
 
 import json
 
+import rollbar
 
-def api(function):
+
+def server_api(function):
     @wraps(function)
     def decorator(request, *args, **kwargs):
         server_id = request.REQUEST.get('server-id')
@@ -29,6 +32,7 @@ def api(function):
                 request.server = Server.objects.get(id=server_id, secret_key=secret_key)
                 cache.set(cache_key, request.server, 3600)
             except:
+                rollbar.report_message('API access denied!', level='error', request=request)
                 return HttpResponseForbidden()
         
         return function(request, *args, **kwargs)
@@ -36,7 +40,7 @@ def api(function):
     return decorator
 
 
-@api
+@server_api
 @csrf_exempt
 def log_death(request):
     type = request.POST.get('type')
@@ -74,7 +78,7 @@ def log_death(request):
     return HttpResponse()
 
 
-@api
+@server_api
 @csrf_exempt
 def log_kill(request):
     type = request.POST.get('type')
@@ -98,7 +102,7 @@ def log_kill(request):
     
     return HttpResponse()
 
-@api
+@server_api
 @csrf_exempt
 def link(request):
     username = request.POST.get('username')
@@ -121,10 +125,11 @@ def link(request):
     except Exception as e:
         return HttpResponseNotFound()
     
+    rollbar.report_message('Forum account created', level='info', request=request)
     return HttpResponse('Your username has been linked to a forum account!')
 
 
-@api
+@server_api
 @csrf_exempt
 def rank_query(request):
     username = request.GET.get('username')
@@ -158,3 +163,36 @@ def rank_query(request):
         }
     
     return HttpResponse(json.dumps(response_data), mimetype="application/json")
+
+
+@csrf_exempt
+def auth_session_key(request):
+    """
+    Authenticates a Django session key and returns its corresponding username.
+    Also authorizes admin access if 'is-admin' is sent along.
+    """
+    
+    from django.contrib.sessions.models import Session
+    from django.contrib.auth.models import User
+    
+    try:
+        session_key = request.POST.get('session-key')
+        is_admin = bool(request.POST.get('is-admin'))
+        
+        session = Session.objects.get(session_key=session_key)
+        user_id = session.get_decoded().get('_auth_user_id')
+        user = User.objects.get(pk=user_id)
+        request.user = user
+    except:
+        rollbar.report_message('Bad auth request!', level='error', request=request)
+        return HttpResponseBadRequest()
+    
+    if is_admin and not user.is_superuser:
+        rollbar.report_message('Session key not authorized for admin access!',
+                               level='critical', request=request)
+        return HttpResponseForbidden()
+    
+    rollbar.report_message('Session key authenticated', level='info', request=request)
+    return HttpResponse(json.dumps({
+        'username': user.username
+    }), mimetype="application/json")

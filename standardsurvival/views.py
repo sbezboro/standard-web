@@ -9,7 +9,6 @@ from django.shortcuts import redirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.decorators.http import last_modified
-from minecraft_query import MinecraftQuery
 
 from standardsurvival.lib import api
 from standardsurvival.models import *
@@ -65,6 +64,16 @@ def analytics(request):
     
     return render_to_response('analytics.html', {
         'cohorts': cohorts
+        }, context_instance=RequestContext(request))
+
+
+def admin(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden()
+    
+    return render_to_response('admin.html', {
+            'rts_host': settings.RTS_HOST,
+            'rts_port': settings.RTS_PORT
         }, context_instance=RequestContext(request))
 
 
@@ -213,6 +222,7 @@ def player(request, username, classic=False):
     except Exception, e:
         return render_to_response('player.html', {
             'exists': False,
+            'classic': classic,
             'username': username,
             }, context_instance=RequestContext(request))
     

@@ -3,13 +3,13 @@
 {% block title %}{% if nickname %}{{ nickname }}{% else %}{{ username }}{% endif %} - Standard Survival Minecraft Server{% endblock %}
 
 {% block select_player %}{% if user.username == username %}selected{% endif %}{% endblock %}
-{% block sub-header %}
-    <div class="player-header">
-        <h1><img class="face-large" src="/faces/64/{{ username }}.png" alt="{{ username }}" width="64px" height=64px"/>{% if nickname %}{{ nickname }}<span class="small">({{ username }})</span>{% else %}{{ username }}{% endif %} {% if banned %}<span class="banned">BANNED</span>{% endif %}</h1>
-    </div>
-{% endblock %}
 {% block content %}
-    <div id="full">
+    <div id="sub-header">
+        <div class="player-header">
+            <h1><img class="face-large" src="/faces/64/{{ username }}.png" alt="{{ username }}" width="64px" height=64px"/>{% if nickname %}{{ nickname }}<span class="small">({{ username }})</span>{% else %}{{ username }}{% endif %} {% if banned %}<span class="banned">BANNED</span>{% endif %}</h1>
+        </div>
+    </div>
+    <div id="main">
         <p class="server-selector">
             {% if classic %}
             <a href="/player/{{ username }}">New</a>
