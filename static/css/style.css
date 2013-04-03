@@ -113,34 +113,51 @@ a:hover {
     -moz-border-radius: 4px;
 }
 
-#admin-panel {
-    overflow: hidden;
+#admin-panel #admin-header {
+    height: 50px;
+    text-align: center;
+    
+    background: rgb(186,186,186); /* Old browsers */
+    background: -moz-linear-gradient(top,  rgba(186,186,186,1) 0%, rgba(125,126,125,1) 3%, rgba(76,76,76,1) 98%, rgba(22,22,22,1) 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(186,186,186,1)), color-stop(3%,rgba(125,126,125,1)), color-stop(98%,rgba(76,76,76,1)), color-stop(100%,rgba(22,22,22,1))); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  rgba(186,186,186,1) 0%,rgba(125,126,125,1) 3%,rgba(76,76,76,1) 98%,rgba(22,22,22,1) 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  rgba(186,186,186,1) 0%,rgba(125,126,125,1) 3%,rgba(76,76,76,1) 98%,rgba(22,22,22,1) 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  rgba(186,186,186,1) 0%,rgba(125,126,125,1) 3%,rgba(76,76,76,1) 98%,rgba(22,22,22,1) 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  rgba(186,186,186,1) 0%,rgba(125,126,125,1) 3%,rgba(76,76,76,1) 98%,rgba(22,22,22,1) 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bababa', endColorstr='#161616',GradientType=0 ); /* IE6-9 */
 }
 
 #admin-panel #console-area {
-    width: 85%;
-    float: left;
+    margin-right: 250px;
 }
 
 #admin-panel #console {
-    height: 800px;
+    height: 300px;
     overflow-y: scroll;
     font-family: "Lucida Console", Monaco, monospace;
-    font-size: 8pt;
+    font-size: 11px;
     background-color: #000;
     color: #eee;
     padding: 4px;
+    list-style: none;
+}
+
+#admin-panel #console a {
+    color: inherit;
 }
 
 #admin-panel #console-textbox {
     width: 100%;
-    height: 17px;
+    height: 22px;
     font-family: "Lucida Console", Monaco, monospace;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
 }
 
 #admin-panel #players-area {
     float: right;
-    width: 15%;
+    width: 250px;
 }
 
 #admin-panel #players {

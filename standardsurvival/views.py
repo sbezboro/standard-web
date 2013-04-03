@@ -72,8 +72,7 @@ def admin(request):
         return HttpResponseForbidden()
     
     return render_to_response('admin.html', {
-            'rts_host': settings.RTS_HOST,
-            'rts_port': settings.RTS_PORT
+            'rts_address': settings.RTS_ADDRESS
         }, context_instance=RequestContext(request))
 
 
