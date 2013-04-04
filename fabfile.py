@@ -7,8 +7,8 @@ import requests
 
 import standardsurvival.local_settings as settings
 
-CODE_DIR = '/home/sbezboro/standardsurvival'
-ENV_DIR = '/home/sbezboro/standardsurvival-env'
+CODE_DIR = '/home/sbezboro/standard-web'
+ENV_DIR = '/home/sbezboro/standard-web-env'
 
 env.roledefs = {
     'web': ['standardsurvival.com']
