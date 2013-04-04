@@ -99,8 +99,8 @@
         }
             
         function resize() {
-            $("#console").height($(window).height() - 114);
-            $("#players").height($(window).height() - 94);
+            $("#console").height($(window).height() - $("#header").height() - 46);
+            $("#players").height($(window).height() - $("#header").height() - 26);
         }
         
         resize();
