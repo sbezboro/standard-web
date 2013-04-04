@@ -1,2 +1,2 @@
 #!/bin/bash
-. /home/sbezboro/standardsurvival-env/bin/activate; python /home/sbezboro/standard-web/query.py
+. /home/sbezboro/standard-web-env/bin/activate; python /home/sbezboro/standard-web/query.py
