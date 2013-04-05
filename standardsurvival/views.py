@@ -76,6 +76,12 @@ def admin(request):
         }, context_instance=RequestContext(request))
 
 
+def chat(request):
+    return render_to_response('chat.html', {
+            'rts_address': settings.RTS_ADDRESS
+        }, context_instance=RequestContext(request))
+
+
 def player_graph(request):
     weeks_ago = int(request.GET.get('weeks_ago', 0))
     if weeks_ago:

@@ -20,6 +20,7 @@ urlpatterns = patterns('',
     url(r'^search/$', views.search),
     url(r'^ranking$', views.ranking),
     url(r'^rankings$', RedirectView.as_view(url='/ranking')),
+    url(r'^chat$', views.chat),
     url(r'^pvp_leaderboard$', views.pvp_leaderboard),
     
     url(r'^classic/player/(?P<username>\w{0,50})', views.player, kwargs={'classic': True}),
