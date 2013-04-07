@@ -115,26 +115,21 @@ def player_graph(request):
     graph_info = cache.get('minecraft-graph-info')
     if not graph_info:
         graph_info = []
-        #index = 0
-        #average = 0
-        #counts = []
         statuses = ServerStatus.objects.filter(server=2, timestamp__gt=datetime.utcnow() - timedelta(days = 7))
         
         average = statuses[0].player_count
         for status in statuses:
-            #counts.append(status.player_count)
-            #average = average - (counts[max(index - 5, 0)] / 5) + counts[index] / 5
             
             if status.id % 30 == 1:
                 graph_info.append({
                     'time': int(calendar.timegm(status.timestamp.timetuple()) * 1000),
                     'player_count': status.player_count #average
                 })
-            
-            #index = index + 1
+        
+        graph_info.sort(key=lambda x: x['time'])
         
         cache.set('minecraft-graph-info', graph_info, 60)
-        
+    
     return HttpResponse(json.dumps(graph_info), mimetype="application/json")
 
 
