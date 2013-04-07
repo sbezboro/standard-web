@@ -35,32 +35,45 @@ def index(request):
 
 
 def analytics(request):
-    from django.db.models import Min
-    earliest_date = MinecraftPlayer.objects.all().aggregate(Min('first_seen'))['first_seen__min']
+    server = Server.objects.get(id=2)
+    
+    earliest_date = ServerStatus.objects.filter(server=server).order_by('timestamp')[1].timestamp
     
     cohorts = []
     weeks = (datetime.utcnow() - earliest_date).days / 7
     
     for i in xrange(weeks + 1):
-        cohorts.append({'players': 0, 'active': []})
+        cohorts.append({'players': 0, 'active': [], 'inactive': 0, 'new': 0})
         
-    players = MinecraftPlayer.objects.all()
+    players = MinecraftPlayer.objects.filter(stats__server_id=server.id).values('username', 'stats__first_seen', 'stats__last_seen')
     
     for player in players:
-        difference = datetime.utcnow() - player.first_seen
-        cohort = difference.days / 7
-        cohorts[cohort]['players'] += 1
+        username = player['username']
+        first_seen = player['stats__first_seen']
+        last_seen = player['stats__last_seen']
         
-        if cohort > 0:
-            if not cohorts[cohort].get('returns'):
-                cohorts[cohort]['returns'] = [0] * cohort
+        difference = first_seen - earliest_date
+        cohort = difference.days / 7
+        cohorts[cohort]['new'] += 1
+        
+        difference = last_seen - earliest_date
+        last_week = difference.days / 7
+        if last_week == weeks - 1: #still here this week
+            cohorts[last_week]['active'].append(username)
+        else:
+            cohorts[last_week]['inactive'] += 1
+        
+        '''
+        if cohort < weeks:
+            cohorts[cohort].setdefault('returns', [0] * (weeks - cohort))
             
             for i in xrange(0, cohort):
-                if datetime.utcnow() - timedelta(days = 7 * (i + 1)) < player.last_seen:
+                if datetime.utcnow() - timedelta(days = 7 * (i + 1)) < last_seen:
                     cohorts[cohort]['returns'][cohort - i - 1] += 1
                 
                     if i == 0:
                         cohorts[cohort]['active'].append(player.username)
+        '''
     
     return render_to_response('analytics.html', {
         'cohorts': cohorts
@@ -81,56 +94,81 @@ def chat(request):
             'rts_address': settings.RTS_ADDRESS
         }, context_instance=RequestContext(request))
 
+def _get_player_graph_data(server, granularity=30, start_date=None, end_date=None):
+    end_date = end_date or datetime.utcnow()
+    start_date = start_date or end_date - timedelta(days = 7)
+    
+    statuses = ServerStatus.objects.filter(server=server,
+                                           timestamp__gt=start_date,
+                                           timestamp__lt=end_date)
+    
+    points = []
+    for status in statuses:
+        if status.id % granularity == 1:
+            points.append({
+                'time': int(calendar.timegm(status.timestamp.timetuple()) * 1000),
+                'player_count': status.player_count
+            })
+    
+    points.sort(key=lambda x: x['time'])
+    
+    return {
+        'start_time': int(calendar.timegm(start_date.timetuple()) * 1000),
+        'end_time': int(calendar.timegm(end_date.timetuple()) * 1000),
+        'points': points
+    }
+
 
 def player_graph(request):
-    weeks_ago = int(request.GET.get('weeks_ago', 0))
-    if weeks_ago:
-        graph_info = []
-        new_players = 0
-        statuses = ServerStatus.objects.filter(timestamp__gt=datetime.utcnow() - timedelta(days = weeks_ago * 7), timestamp__lt=datetime.utcnow() - timedelta(days = (weeks_ago - 1) * 7))
-        new_players = MinecraftPlayer.objects.filter(first_seen__gt=datetime.utcnow() - timedelta(days = weeks_ago * 7), first_seen__lt=datetime.utcnow() - timedelta(days = (weeks_ago - 1) * 7));
+    server = Server.objects.get(id=2)
+    
+    week_index = int(request.GET.get('weekIndex', -1))
+    if week_index >= 0:
+        first_status = ServerStatus.objects.filter(server=server).order_by('timestamp')[1]
         
-        slices = []
-        for i in xrange(int(timedelta(days = 7).total_seconds() / 10)):
-            slices.append(0)
+        timestamp = first_status.timestamp + week_index * timedelta(days=7)
+        start_date = timestamp
+        end_date = timestamp + timedelta(days=7)
+        
+        graph_data = _get_player_graph_data(server, start_date=start_date, end_date=end_date)
+        '''
+        weeks_ago = int(request.GET.get('weeks_ago', 0))
+        if weeks_ago:
+            graph_info = []
+            new_players = 0
+            statuses = ServerStatus.objects.filter(timestamp__gt=datetime.utcnow() - timedelta(days = weeks_ago * 7), timestamp__lt=datetime.utcnow() - timedelta(days = (weeks_ago - 1) * 7))
+            new_players = MinecraftPlayer.objects.filter(first_seen__gt=datetime.utcnow() - timedelta(days = weeks_ago * 7), first_seen__lt=datetime.utcnow() - timedelta(days = (weeks_ago - 1) * 7));
             
-        for player in new_players:
-            start = datetime.utcnow() - timedelta(days = weeks_ago * 7)
-            slice = int((player.first_seen - start).total_seconds() / 600)
-            slices[slice] += 1
-        
-        index = 0
-        for status in statuses:
-            if status.id % 10 == 0:
-                graph_info.append({
-                    'time': int(calendar.timegm(status.timestamp.timetuple()) * 1000),
-                    'player_count': status.player_count,
-                    'new_players': slices[index]
-                })
+            slices = []
+            for i in xrange(int(timedelta(days = 7).total_seconds() / 10)):
+                slices.append(0)
                 
-                index += 1
+            for player in new_players:
+                start = datetime.utcnow() - timedelta(days = weeks_ago * 7)
+                slice = int((player.first_seen - start).total_seconds() / 600)
+                slices[slice] += 1
             
-        return HttpResponse(json.dumps(graph_info), mimetype="application/json")
-    
-    graph_info = cache.get('minecraft-graph-info')
-    if not graph_info:
-        graph_info = []
-        statuses = ServerStatus.objects.filter(server=2, timestamp__gt=datetime.utcnow() - timedelta(days = 7))
-        
-        average = statuses[0].player_count
-        for status in statuses:
+            index = 0
+            for status in statuses:
+                if status.id % 10 == 0:
+                    graph_info.append({
+                        'time': int(calendar.timegm(status.timestamp.timetuple()) * 1000),
+                        'player_count': status.player_count,
+                        'new_players': slices[index]
+                    })
+                    
+                    index += 1
+                
+            return HttpResponse(json.dumps(graph_info), mimetype="application/json")
+        '''
+    else:
+        graph_data = cache.get('minecraft-graph-data')
+        if not graph_data:
+            graph_data = _get_player_graph_data(2)
             
-            if status.id % 30 == 1:
-                graph_info.append({
-                    'time': int(calendar.timegm(status.timestamp.timetuple()) * 1000),
-                    'player_count': status.player_count #average
-                })
-        
-        graph_info.sort(key=lambda x: x['time'])
-        
-        cache.set('minecraft-graph-info', graph_info, 60)
+            cache.set('minecraft-graph-info', graph_data, 60)
     
-    return HttpResponse(json.dumps(graph_info), mimetype="application/json")
+    return HttpResponse(json.dumps(graph_data), mimetype="application/json")
 
 
 def player_list(request):

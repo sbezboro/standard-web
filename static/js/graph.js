@@ -1,32 +1,40 @@
 function loadPlayerGraph(elem) {
     var offset = new Date().getTimezoneOffset() * 1000 * 60;
-    var url = "player_graph";
-    if (elem.attr("weeksAgo")) {
-        url += "?weeks_ago=" + elem.attr("weeksAgo");
+    
+    var data = {};
+    
+    if (elem.attr("weekindex")) {
+        data['weekIndex'] = elem.attr("weekindex");
     }
     
     $.ajax({
-        url: url,
+        url: "player_graph",
+        data: data,
         success: function(data) {
             elem.removeClass('progress');
             
-            count_graph = new Array();
-            new_graph = new Array();
-            for (key in data) {
-                var time = data[key].time - offset;
-                var playerCount = data[key].player_count;
-                var newPlayers = data[key].new_players;
-                
-                count_graph.push([time, playerCount]);
-                if (newPlayers >= 0) {
-                    new_graph.push([time, newPlayers]);
-                }
-            }
+            var points = data.points;
+            var startTime = data.start_time - offset;
+            var endTime = data.end_time - offset;
             
-            if (new_graph.length) {
-                data = [{data: count_graph}, {data: new_graph, yaxis: 2}];
+            var countGraph = [];
+            var newGraph = [];
+            
+            points.map(function(point) {
+                var time = point.time - offset;
+                var playerCount = point.player_count;
+                var newPlayers = point.new_players;
+                
+                countGraph.push([time, playerCount]);
+                if (newPlayers >= 0) {
+                    newGraph.push([time, newPlayers]);
+                }
+            });
+            
+            if (newGraph.length) {
+                data = [{data: countGraph}, {data: newGraph, yaxis: 2}, {data: [[startTime], [endTime]]}];
             } else {
-                data = [count_graph];
+                data = [{data: countGraph}, {data: [[startTime], [endTime]]}];
             }
             
             $.plot(elem, data, {
@@ -34,7 +42,7 @@ function loadPlayerGraph(elem) {
                 colors: ["#7E9BFF", "#F00"],
                 series: {lines: { fill: true }},
                 xaxes: [{mode: "time", minTickSize: [1, "day"], timeformat: "%b %d"}],
-                yaxes: [{min: 0, max: 54, tickSize: 6, position: "right"}, {min: 0, max: 20}] });
+                yaxes: [{min: 0, max: 60, tickSize: 6, position: "right"}, {min: 0, max: 20}] });
         },
         error: function(data) {
         }

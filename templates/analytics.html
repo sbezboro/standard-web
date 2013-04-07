@@ -4,16 +4,36 @@
 
 {% block content %}
     <div id="main">
-        {% for cohort in cohorts reversed %}
-            <h1>{{ forloop.revcounter }} week{{ forloop.revcounter|pluralize }} ago - {{ cohort.players }} new players</h1>
-            <div id="graph" class="graph progress" weeksAgo="{{ forloop.revcounter }}"></div>
+        {% for cohort in cohorts %}
+            {% if forloop.revcounter0 == 0 %}
+                <h1>This week - {{ cohort.new }} new players</h1>
+            {% else %}
+                <h1>{{ forloop.revcounter0 }} week{{ forloop.revcounter0|pluralize }} ago - {{ cohort.new }} new players</h1>
+            {% endif %}
+            <div id="graph" class="graph progress" weekIndex="{{ forloop.counter0 }}"></div>
             {% if cohort.returns|length %}
-            <h3>Returning users by week</h3>
-            <div>{% for return in cohort.returns %}{% if forloop.last %}<b>{% endif %}{{ return }}{% if forloop.last %}</b>{% endif %} {% endfor %}</div>
+                <h3>Returning users by week</h3>
+                <div>
+                    {% for return in cohort.returns %}
+                        {% if forloop.last %}
+                            <b>
+                        {% endif %}
+                        {{ return }}
+                        {% if forloop.last %}
+                            </b>
+                        {% endif %}
+                    {% endfor %}
+                </div>
             {% endif %}
             {% if cohort.active|length %}
-            <h3>Active users</h3>
-            {% for username in cohort.active %}<div class="player-section"><a href="/player/{{ username }}"><span><img class="face-thumb" src="/faces/16/{{ username }}.png">{{ username }}</span></a></div>{% endfor %}
+                <h3>Currently active users</h3>
+                {% for username in cohort.active %}
+                    <div class="player-section"><a href="/player/{{ username }}"><span><img class="face-thumb" src="/faces/16/{{ username }}.png">{{ username }}</span></a></div>
+                {% endfor %}
+            {% endif %}
+                {% if cohort.inactive %}
+                <h3>Users last seen this week</h3>
+                {{ cohort.inactive }}
             {% endif %}
         {% endfor %}
     </div>

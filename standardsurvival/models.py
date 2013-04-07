@@ -18,7 +18,7 @@ class Server(models.Model):
     secret_key = models.CharField(max_length=10)
 
 class PlayerStats(models.Model):
-    player = models.ForeignKey('MinecraftPlayer')
+    player = models.ForeignKey('MinecraftPlayer', related_name='stats')
     server = models.ForeignKey('Server')
     time_spent = models.IntegerField(default = 0)
     first_seen = models.DateTimeField(default = datetime.utcnow)

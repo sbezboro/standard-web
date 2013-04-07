@@ -10,6 +10,12 @@
         <div id="chat"></div>
         <input id="chat-textbox" type="text">
       </div>
+      {% if not user.is_authenticated %}
+      <br>
+      <div>
+        You must be logged in to the website to be able to chat!
+      </div>
+      {% endif %}
       
       <script src="http://{{ rts_address }}/socket.io/socket.io.js"></script>
       <script type="text/javascript">
