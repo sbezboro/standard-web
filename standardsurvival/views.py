@@ -94,42 +94,42 @@ def chat(request):
             'rts_address': settings.RTS_ADDRESS
         }, context_instance=RequestContext(request))
 
-def _get_player_graph_data(server, show_new_players=False, granularity=30, start_date=None, end_date=None):
+
+def _get_player_graph_data(server, show_new_players=False, granularity=15, start_date=None, end_date=None):
     end_date = end_date or datetime.utcnow()
     start_date = start_date or end_date - timedelta(days = 7)
     
     statuses = ServerStatus.objects.filter(server=server,
                                            timestamp__gt=start_date,
-                                           timestamp__lt=end_date)
+                                           timestamp__lt=end_date).order_by('timestamp')
     
-    new_players = MinecraftPlayer.objects.filter(stats__server=server,
-                                                 stats__first_seen__gt=start_date,
-                                                 stats__first_seen__lt=end_date).values('stats__first_seen')
-    
-    # see how many new players joined in each slice of time
-    slices = []
-    for i in xrange(int(timedelta(days = 7).total_seconds() / granularity)):
-        slices.append(0)
+    if show_new_players:
+        new_players = PlayerStats.objects.filter(server=server,
+                                                 first_seen__gt=start_date,
+                                                 first_seen__lt=end_date)
         
-    for player in new_players:
-        slice = int((player['stats__first_seen'] - start_date).total_seconds() / 600)
-        slices[slice] += 1
+        # see how many new players joined in each slice of time
+        slices = [0 for i in xrange(int((end_date - start_date).total_seconds() / (60 * granularity)))]
+            
+        for stats in new_players:
+            slice = int((stats.first_seen - start_date).total_seconds() / (60 * granularity))
+            slices[slice] += 1
     
     index = 0
     points = []
     for status in statuses:
-        if status.id % granularity == 1:
+        if index % granularity == 0:
             data = {
                 'time': int(calendar.timegm(status.timestamp.timetuple()) * 1000),
                 'player_count': status.player_count
             }
             
             if show_new_players:
-                data['new_players'] = slices[index]
+                data['new_players'] = slices[index / granularity]
             
             points.append(data)
             
-            index += 1
+        index += 1
     
     points.sort(key=lambda x: x['time'])
     
