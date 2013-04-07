@@ -20,6 +20,7 @@ function loadPlayerGraph(elem) {
             var countGraph = [];
             var newGraph = [];
             
+            var maxNewPlayers = 0;
             points.map(function(point) {
                 var time = point.time - offset;
                 var playerCount = point.player_count;
@@ -28,21 +29,25 @@ function loadPlayerGraph(elem) {
                 countGraph.push([time, playerCount]);
                 if (newPlayers >= 0) {
                     newGraph.push([time, newPlayers]);
+                    maxNewPlayers = Math.max(newPlayers, maxNewPlayers);
                 }
             });
             
+            data = [{data: countGraph}];
+            
             if (newGraph.length) {
-                data = [{data: countGraph}, {data: newGraph, yaxis: 2}, {data: [[startTime], [endTime]]}];
-            } else {
-                data = [{data: countGraph}, {data: [[startTime], [endTime]]}];
+                data.push({data: newGraph, yaxis: 2});
             }
+            
+            // Hard graph boundaries
+            data.push({data: [[startTime], [endTime]]})
             
             $.plot(elem, data, {
                 grid: {hoverable: true, backgroundColor: "#ffffff"},
                 colors: ["#7E9BFF", "#F00"],
                 series: {lines: { fill: true }},
                 xaxes: [{mode: "time", minTickSize: [1, "day"], timeformat: "%b %d"}],
-                yaxes: [{min: 0, max: 60, tickSize: 6, position: "right"}, {min: 0, max: 20}] });
+                yaxes: [{min: 0, max: 60, tickSize: 6, position: "right"}, {min: 0, max: maxNewPlayers * 2}] });
         },
         error: function(data) {
         }

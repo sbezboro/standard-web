@@ -58,7 +58,7 @@ def analytics(request):
         
         difference = last_seen - earliest_date
         last_week = difference.days / 7
-        if last_week == weeks - 1: #still here this week
+        if last_week == weeks: #still here this week
             cohorts[last_week]['active'].append(username)
         else:
             cohorts[last_week]['inactive'] += 1
@@ -94,7 +94,7 @@ def chat(request):
             'rts_address': settings.RTS_ADDRESS
         }, context_instance=RequestContext(request))
 
-def _get_player_graph_data(server, granularity=30, start_date=None, end_date=None):
+def _get_player_graph_data(server, show_new_players=False, granularity=30, start_date=None, end_date=None):
     end_date = end_date or datetime.utcnow()
     start_date = start_date or end_date - timedelta(days = 7)
     
@@ -102,13 +102,34 @@ def _get_player_graph_data(server, granularity=30, start_date=None, end_date=Non
                                            timestamp__gt=start_date,
                                            timestamp__lt=end_date)
     
+    new_players = MinecraftPlayer.objects.filter(stats__server=server,
+                                                 stats__first_seen__gt=start_date,
+                                                 stats__first_seen__lt=end_date).values('stats__first_seen')
+    
+    # see how many new players joined in each slice of time
+    slices = []
+    for i in xrange(int(timedelta(days = 7).total_seconds() / granularity)):
+        slices.append(0)
+        
+    for player in new_players:
+        slice = int((player['stats__first_seen'] - start_date).total_seconds() / 600)
+        slices[slice] += 1
+    
+    index = 0
     points = []
     for status in statuses:
         if status.id % granularity == 1:
-            points.append({
+            data = {
                 'time': int(calendar.timegm(status.timestamp.timetuple()) * 1000),
                 'player_count': status.player_count
-            })
+            }
+            
+            if show_new_players:
+                data['new_players'] = slices[index]
+            
+            points.append(data)
+            
+            index += 1
     
     points.sort(key=lambda x: x['time'])
     
@@ -130,41 +151,12 @@ def player_graph(request):
         start_date = timestamp
         end_date = timestamp + timedelta(days=7)
         
-        graph_data = _get_player_graph_data(server, start_date=start_date, end_date=end_date)
-        '''
-        weeks_ago = int(request.GET.get('weeks_ago', 0))
-        if weeks_ago:
-            graph_info = []
-            new_players = 0
-            statuses = ServerStatus.objects.filter(timestamp__gt=datetime.utcnow() - timedelta(days = weeks_ago * 7), timestamp__lt=datetime.utcnow() - timedelta(days = (weeks_ago - 1) * 7))
-            new_players = MinecraftPlayer.objects.filter(first_seen__gt=datetime.utcnow() - timedelta(days = weeks_ago * 7), first_seen__lt=datetime.utcnow() - timedelta(days = (weeks_ago - 1) * 7));
-            
-            slices = []
-            for i in xrange(int(timedelta(days = 7).total_seconds() / 10)):
-                slices.append(0)
-                
-            for player in new_players:
-                start = datetime.utcnow() - timedelta(days = weeks_ago * 7)
-                slice = int((player.first_seen - start).total_seconds() / 600)
-                slices[slice] += 1
-            
-            index = 0
-            for status in statuses:
-                if status.id % 10 == 0:
-                    graph_info.append({
-                        'time': int(calendar.timegm(status.timestamp.timetuple()) * 1000),
-                        'player_count': status.player_count,
-                        'new_players': slices[index]
-                    })
-                    
-                    index += 1
-                
-            return HttpResponse(json.dumps(graph_info), mimetype="application/json")
-        '''
+        graph_data = _get_player_graph_data(server, show_new_players=True,
+                                            start_date=start_date, end_date=end_date)
     else:
         graph_data = cache.get('minecraft-graph-data')
         if not graph_data:
-            graph_data = _get_player_graph_data(2)
+            graph_data = _get_player_graph_data(server, show_new_players=False)
             
             cache.set('minecraft-graph-info', graph_data, 60)
     
