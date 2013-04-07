@@ -184,15 +184,17 @@ def auth_session_key(request):
         user = User.objects.get(pk=user_id)
         request.user = user
     except:
-        rollbar.report_message('Bad auth request!', level='error', request=request)
-        return HttpResponseBadRequest()
+        pass
     
-    if is_admin and not user.is_superuser:
+    if is_admin and (not request.user or not request.user.is_superuser):
         rollbar.report_message('Session key not authorized for admin access!',
                                level='critical', request=request)
         return HttpResponseForbidden()
     
-    rollbar.report_message('Session key authenticated', level='info', request=request)
-    return HttpResponse(json.dumps({
-        'username': user.username
-    }), mimetype="application/json")
+    if request.user:
+        rollbar.report_message('Session key authenticated', level='info', request=request)
+        return HttpResponse(json.dumps({
+            'username': request.user.username
+        }), mimetype="application/json")
+    else:
+        return HttpResponse()
