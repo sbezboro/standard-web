@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.contrib.auth.views import login as django_login
+from django.contrib.auth import logout as django_logout
 from django.core.cache import cache
 from django.db.models import Q
 from django.http import Http404
@@ -32,6 +34,18 @@ def index(request):
     return render_to_response('index.html', {
         'status': status
     }, context_instance=RequestContext(request))
+
+
+def login(request, **kwargs):
+    if request.user.is_authenticated():
+        return redirect('/')
+    else:
+        return django_login(request, **kwargs)
+
+
+def logout(request):
+    django_logout(request)
+    return redirect('/')
 
 
 def analytics(request):

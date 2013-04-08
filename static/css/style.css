@@ -11,10 +11,26 @@ html {
     overflow-y: scroll;
 }
 
+input[type="text"], input[type="password"] {
+    border: 1px solid #ccc;
+    padding: 3px;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    border-radius: 4px;
+}
+
+code {
+    color: #db382d;
+    background-color: #eee;
+    padding: 2px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
 #header {
     background-color: #222;
     text-align: left;
-    padding: 8px;
+    padding: 10px;
+    position: relative;
     -webkit-box-shadow: 0 1px 10px rgba(0,0,0,0.8);
     -moz-box-shadow: 0 1px 10px rgba(0,0,0,0.8);
     box-shadow: 0 1px 10px rgba(0,0,0,0.8);
@@ -26,7 +42,7 @@ html {
     width: 960px;
 }
 
-#header #player-search {
+#header #right {
     float: right;
     margin-top: -3px;
 }
@@ -94,6 +110,25 @@ a:hover {
     color: #AAA;
 }
 
+.btn {
+    color: #111 !important;
+    font-size: 0.9em;
+    cursor: pointer;
+    border: 1px solid #b9b9b9;
+    padding: 6px 14px;
+    background-color: #f5f5f5;
+    background: linear-gradient(to top,#e1e1e1 0%,#fff 100%);
+}
+
+.btn:hover {
+    background-image: none;
+    background-color: #e6e6e6;
+}
+
+.btn:active {
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
 #caption {
     color: #A8A8A8;
     font-size: 1.2em;
@@ -114,6 +149,68 @@ a:hover {
     font-size: 10pt;
     border-radius: 4px;
     -moz-border-radius: 4px;
+}
+
+.center-section {
+    margin: auto;
+    width: 600px;
+    color: #626262;
+}
+
+.center-section fieldset {
+    background-color: #fff;
+    border: 1px solid #bcbcbc;
+    border-radius: 4px;
+    padding: 20px;
+}
+
+.center-section .help {
+    font-size: 0.9em;
+}
+
+.center-section .errorlist {
+    background-color: #fee;
+    list-style-type: none;
+    color: rgb(202, 0, 0);
+    font-size: 1.0em;
+    margin: 0 0 20px;
+    padding: 8px;
+    border: 1px solid #fdd;
+}
+
+.control-group {
+    margin: 20px 0 20px;
+}
+
+.control-group .errorlist {
+    background-color: #fff;
+    display: inline;
+    margin: 0;
+    font-size: 0.8em;
+    border: 0;
+}
+
+.control-group .errorlist li {
+    display: inline;
+}
+
+.control-label {
+    display: inline;
+    text-align: right;
+    float: left;
+    width: 210px;
+    font-size: smaller;
+    padding-top: 4px;
+}
+
+.control {
+    display: block;
+    margin-left: 230px;
+}
+
+.control input[type="text"], input[type="password"] {
+    width: 160px;
+    height: 17px;
 }
 
 #admin-panel #admin-header {
@@ -188,9 +285,14 @@ a:hover {
 #chat-container #chat-textbox {
     width: 100%;
     height: 22px;
+    border-radius: 0;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+}
+
+.form-inline {
+    display: inline;
 }
 
 .server-selector {

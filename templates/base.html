@@ -51,14 +51,20 @@
             <a class="{% block select_chat %}{% endblock %}" href="/chat">Live Chat</a>
             {% if user.is_superuser %}<a href="/analytics">Analytics</a>{% endif %}
             {% if user.is_superuser %}<a href="/server-admin">Server Admin</a>{% endif %}
-            <div id="player-search">
-                <form onsubmit="playerSearch(); return false;">
+            <div id="right">
+                {% if user.is_authenticated %}
+                    {% if not user.is_superuser %}
+                        <a class="{% block select_player %}{% endblock %}" href="/player/{{ user.username }}">{{ user.username }}</a>
+                    {% endif %}
+                    <a href="/logout">Log out</a>
+                {% else %}
+                    <a href="#" onclick="alert('Log in to the Minecraft server (standardsurvival.com) and type /register to create an account!')">Sign up</a>
+                    <a class="{% block select_login %}{% endblock %}" href="/login?next={{ request.path }}">Log in</a>
+                {% endif %}
+                <form class="form-inline" onsubmit="playerSearch(); return false;">
                     <input id="searchBox" type="text" placeholder="Player search" value="{{ query }}"/>
                 </form>
             </div>
-            {% if not user.is_superuser and user.is_authenticated %}
-            <a class="{% block select_player %}{% endblock %}" href="/player/{{ user.username }}">{{ user.username }}</a>
-            {% endif %}
         </div>
     </div>
     <div id="container">
