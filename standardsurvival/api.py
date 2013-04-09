@@ -116,7 +116,7 @@ def link(request):
             user.set_password(password)
             user.save()
             
-            return HttpResponse('Your forum password has been changed!')
+            return HttpResponse('Your website password has been changed!')
         except:
             user = User.objects.create_user(username, password=password)
             profile = ForumProfile(user=user, player=player, language='en', time_zone=-5)
@@ -125,8 +125,8 @@ def link(request):
     except Exception as e:
         return HttpResponseNotFound()
     
-    rollbar.report_message('Forum account created', level='info', request=request)
-    return HttpResponse('Your username has been linked to a forum account!')
+    rollbar.report_message('Website account created', level='info', request=request)
+    return HttpResponse('Your username has been linked to a website account!')
 
 
 @server_api
@@ -168,7 +168,7 @@ def rank_query(request):
 @csrf_exempt
 def auth_session_key(request):
     """
-    Authenticates a Django session key and returns its corresponding username.
+    Authenticates a Django session key and returns its corresponding user_id and username.
     Also authorizes admin access if 'is-admin' is sent along.
     """
     
@@ -184,17 +184,16 @@ def auth_session_key(request):
         user = User.objects.get(pk=user_id)
         request.user = user
     except:
-        pass
+        rollbar.report_message('Bad auth request!', level='error', request=request)
+        return HttpResponseBadRequest()
     
     if is_admin and (not request.user or not request.user.is_superuser):
         rollbar.report_message('Session key not authorized for admin access!',
                                level='critical', request=request)
         return HttpResponseForbidden()
     
-    if request.user:
-        rollbar.report_message('Session key authenticated', level='info', request=request)
-        return HttpResponse(json.dumps({
-            'username': request.user.username
-        }), mimetype="application/json")
-    else:
-        return HttpResponse()
+    rollbar.report_message('Session key authenticated', level='info', request=request)
+    return HttpResponse(json.dumps({
+        'user_id': user.id,
+        'username': user.username
+    }), mimetype="application/json")

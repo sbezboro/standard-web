@@ -43,16 +43,20 @@
               
               socket = io.connect('http://{{ rts_address }}/chat');
               
-              // Authenticate using the current django session key. It must belong
-              // to a superuser to proceed with socket.io connection
               socket.on('connect', function() {
                 $("#chat").empty();
                 
-                var djangoSessionKey = "{{ request.session.session_key }}";
-                socket.emit('auth', {
-                    djangoSessionKey: djangoSessionKey,
-                    serverId: 2
-                });
+                var data = {
+                  serverId: 2
+                };
+                
+                {% if request.user.is_authenticated %}
+                data['djangoSessionKey'] = "{{ request.session.session_key }}";
+                {% endif %}
+                
+                // Authenticate using the current django session key. It must belong
+                // to a superuser to proceed with socket.io connection
+                socket.emit('auth', data);
               });
               
               socket.on('disconnect', function() {
