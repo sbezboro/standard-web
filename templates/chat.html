@@ -43,6 +43,8 @@
               
               socket = io.connect('http://{{ rts_address }}/chat');
               
+              addChatLine("Connecting...");
+              
               socket.on('connect', function() {
                 $("#chat").empty();
                 
@@ -54,8 +56,7 @@
                 data['djangoSessionKey'] = "{{ request.session.session_key }}";
                 {% endif %}
                 
-                // Authenticate using the current django session key. It must belong
-                // to a superuser to proceed with socket.io connection
+                // Authenticate using the current django session key if it exists
                 socket.emit('auth', data);
               });
               
@@ -74,6 +75,10 @@
           }
           
           $(document).ready(function() {
+              {% if spam %}
+              addChatLine("STOP SPAMMING THE CHAT!");
+              addChatLine("Come back in a few minutes.");
+              {% else %}
               socketConnect();
               
               $("#chat-textbox").keyup(function (e) {
@@ -106,6 +111,7 @@
                           break;
                   }
               });
+              {% endif %}
           })
       </script>
     </div>

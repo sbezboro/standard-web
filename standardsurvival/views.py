@@ -27,6 +27,11 @@ import shutil
 import time
 import urllib
 
+import rollbar
+
+CHAT_SPAM_COUNT = 2
+CHAT_SPAM_DURATION = 120
+
 
 def index(request):
     status = MojangStatus.objects.latest('timestamp')
@@ -104,9 +109,23 @@ def admin(request):
 
 
 def chat(request):
-    return render_to_response('chat.html', {
-            'rts_address': settings.RTS_ADDRESS
-        }, context_instance=RequestContext(request))
+    data = {
+        'rts_address': settings.RTS_ADDRESS
+    }
+    
+    if request.user.id:
+        cache_key = 'chat-count-%d' % request.user.id
+        count = cache.get(cache_key, 0)
+        
+        if count >= CHAT_SPAM_COUNT:
+            data['spam'] = True
+            
+            if count == CHAT_SPAM_COUNT:
+                rollbar.report_message('User spamming chat', level='warning', request=request)
+        
+        cache.set(cache_key, count + 1, CHAT_SPAM_DURATION)
+    
+    return render_to_response('chat.html', data, context_instance=RequestContext(request))
 
 
 def _get_player_graph_data(server, show_new_players=False, granularity=15, start_date=None, end_date=None):

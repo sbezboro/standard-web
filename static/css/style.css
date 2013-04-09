@@ -21,7 +21,7 @@ input[type="text"], input[type="password"] {
 code {
     color: #db382d;
     background-color: #eee;
-    padding: 2px;
+    padding: 1px 2px;
     border: 1px solid #ddd;
     border-radius: 4px;
 }
@@ -234,6 +234,7 @@ a:hover {
 #admin-panel #console {
     height: 300px;
     overflow-y: scroll;
+    overflow-x: hidden;
     font-family: "Lucida Console", Monaco, monospace;
     font-size: 11px;
     background-color: #000;
@@ -275,6 +276,7 @@ a:hover {
 #chat-container #chat {
     height: 600px;
     overflow-y: scroll;
+    overflow-x: hidden;
     font-family: "Minecraft Regular";
     font-size: 13px;
     background-color: #222;
