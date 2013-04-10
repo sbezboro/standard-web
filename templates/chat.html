@@ -46,18 +46,27 @@
               addChatLine("Connecting...");
               
               socket.on('connect', function() {
-                $("#chat").empty();
-                
-                var data = {
-                  serverId: 2
-                };
-                
-                {% if request.user.is_authenticated %}
-                data['djangoSessionKey'] = "{{ request.session.session_key }}";
-                {% endif %}
-                
-                // Authenticate using the current django session key if it exists
-                socket.emit('auth', data);
+                  $("#chat").empty();
+                  
+                  var data = {
+                    serverId: 2
+                  };
+                  
+                  {% if request.user.is_authenticated %}
+                  data['djangoSessionKey'] = "{{ request.session.session_key }}";
+                  {% endif %}
+                  
+                  // Authenticate using the current django session key if it exists
+                  socket.emit('auth', data);
+              });
+              
+              socket.on('connection-spam', function() {
+                  addChatLine("Stop trying to connect so much!");
+                  addChatLine("Try again in a few minutes...");
+              });
+              
+              socket.on('chat-spam', function() {
+                  addChatLine("Stop typing so fast!");
               });
               
               socket.on('disconnect', function() {
@@ -75,10 +84,6 @@
           }
           
           $(document).ready(function() {
-              {% if spam %}
-              addChatLine("STOP SPAMMING THE CHAT!");
-              addChatLine("Come back in a few minutes.");
-              {% else %}
               socketConnect();
               
               $("#chat-textbox").keyup(function (e) {
@@ -111,7 +116,6 @@
                           break;
                   }
               });
-              {% endif %}
           })
       </script>
     </div>
