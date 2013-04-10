@@ -172,7 +172,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'djangobb_forum.context_processors.forum_settings',
 )
 
-LOGIN_REDIRECT_URL = '/forum'
+LOGIN_URL = '/login'
+LOGIN_REDIRECT_URL = '/'
 
 # Haystack settings
 HAYSTACK_SITECONF = 'search_sites'
