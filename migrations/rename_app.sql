@@ -1,0 +1,10 @@
+rename table standardsurvival_deathevent to standardweb_deathevent,
+	standardsurvival_deathtype to standardweb_deathtype,
+	standardsurvival_killevent to standardweb_killevent,
+	standardsurvival_killtype to standardweb_killtype,
+	standardsurvival_minecraftplayer to standardweb_minecraftplayer,
+	standardsurvival_mojangstatus to standardweb_mojangstatus,
+	standardsurvival_playerstats to standardweb_playerstats,
+	standardsurvival_server to standardweb_server,
+	standardsurvival_serverstatus to standardweb_serverstatus,
+	standardsurvival_veteranstatus to standardweb_veteranstatus;
