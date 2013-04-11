@@ -4,8 +4,8 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.views.generic import RedirectView
 from djangobb_forum import settings as forum_settings
 
-from standardsurvival import views
-from standardsurvival import api
+from standardweb import views
+from standardweb import api
 
 
 admin.autodiscover()
@@ -53,4 +53,4 @@ if (forum_settings.PM_SUPPORT):
     urlpatterns += patterns('', (r'^forum/pm/', include('django_messages.urls')),
     )
     
-handler500 = 'standardsurvival.views.server_error'
+handler500 = 'standardweb.views.server_error'

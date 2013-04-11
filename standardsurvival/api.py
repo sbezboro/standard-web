@@ -9,8 +9,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 from functools import wraps
 
-from standardsurvival.models import *
-from standardsurvival.lib import helpers as h
+from standardweb.models import *
+from standardweb.lib import helpers as h
 
 from djangobb_forum.models import Profile as ForumProfile
 

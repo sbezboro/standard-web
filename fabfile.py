@@ -5,7 +5,7 @@ import sys
 from fabric.api import run, local, cd, env, roles, execute, prefix
 import requests
 
-import standardsurvival.local_settings as settings
+import standardweb.local_settings as settings
 
 CODE_DIR = '/home/sbezboro/standard-web'
 ENV_DIR = '/home/sbezboro/standard-web-env'

@@ -3,7 +3,7 @@ from django.contrib.sites.models import Site
 
 from minecraft_api import MinecraftJsonApi
 
-from standardsurvival.models import *
+from standardweb.models import *
 
 import rollbar
 

@@ -1,2 +1,2 @@
-standardsurvival
+standard-web
 ================

@@ -296,7 +296,7 @@ def show_topic(request, topic_id, full=True):
 @login_required
 @transaction.commit_on_success
 def add_post(request, forum_id, topic_id):
-    from standardsurvival.lib import api
+    from standardweb.lib import api
     
     forum = None
     topic = None

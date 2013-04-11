@@ -318,7 +318,7 @@ class Profile(models.Model):
     privacy_permission = models.IntegerField(_('Privacy permission'), choices=PRIVACY_CHOICES, default=1)
     markup = models.CharField(_('Default markup'), max_length=15, default=forum_settings.DEFAULT_MARKUP, choices=MARKUP_CHOICES)
     post_count = models.IntegerField(_('Post count'), blank=True, default=0)
-    player = models.ForeignKey('standardsurvival.MinecraftPlayer', null=True)
+    player = models.ForeignKey('standardweb.MinecraftPlayer', null=True)
 
     objects = ProfileManager()
 

@@ -1,4 +1,4 @@
-# Django settings for standardsurvival project.
+# Django settings for standardweb project.
 import os.path
 
 PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
@@ -117,7 +117,7 @@ INSTALLED_APPS = (
     'haystack',
     'messages',
     'djangobb_forum',
-    'standardsurvival',
+    'standardweb',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:

@@ -7,12 +7,12 @@ import json
 import os
 import sys
 import urllib2
-os.environ['DJANGO_SETTINGS_MODULE'] = 'standardsurvival.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'standardweb.settings'
 
 from django.conf import settings
 
-from standardsurvival.models import *
-from standardsurvival.lib import api
+from standardweb.models import *
+from standardweb.lib import api
 
 from datetime import datetime, timedelta
 

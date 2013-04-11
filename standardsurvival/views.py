@@ -12,9 +12,9 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.views.decorators.http import last_modified
 
-from standardsurvival.lib import api
-from standardsurvival.lib import helpers as h
-from standardsurvival.models import *
+from standardweb.lib import api
+from standardweb.lib import helpers as h
+from standardweb.models import *
 
 from PIL import Image
 
