@@ -94,17 +94,6 @@
 				<h3>{{ post.topic.name }}</h3>
 				<div class="postmsg">
 					{{ post.body_html|safe }}
-					{% if not user.is_authenticated or user.forum_profile.show_signatures %}
-						{% if post.user.forum_profile.signature_html %}
-						<div class="postsignature">
-							<br /><br/ >
-							{{ post.user.forum_profile.signature_html|safe }}
-						</div>
-						{% endif %}
-					{% endif %}
-					{% if post.updated %}
-						<p class="postedit"><em>{% trans "Edited" %} {{ post.updated_by.username }} ({% forum_time post.updated %})</em></p>
-					{% endif %}
 					{% with post.attachments.all as attachments %}
 						{% if attachments %}
 							{% for attach in attachments %}
@@ -112,6 +101,18 @@
 							{% endfor %}
 						{% endif %}
 					{% endwith %}
+					{% if not user.is_authenticated or user.forum_profile.show_signatures %}
+						{% if post.user.forum_profile.signature_html %}
+						<div class="postsignature">
+							<br /><br/ >
+							<hr>
+							{{ post.user.forum_profile.signature_html|safe }}
+						</div>
+						{% endif %}
+					{% endif %}
+					{% if post.updated %}
+						<p class="postedit"><em>{% trans "Edited by" %} <b>{{ post.updated_by.username }}</b> ({% forum_time post.updated %})</em></p>
+					{% endif %}
 				</div>
 			</div>
 			<div class="clearer"></div>

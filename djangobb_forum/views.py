@@ -8,6 +8,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import Site
+from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
 from django.db.models import Q, F, Sum
@@ -297,6 +298,9 @@ def show_topic(request, topic_id, full=True):
 @transaction.commit_on_success
 def add_post(request, forum_id, topic_id):
     from standardweb.lib import api
+    
+    if not request.user.is_active:
+        raise PermissionDenied
     
     forum = None
     topic = None

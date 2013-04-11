@@ -29,9 +29,6 @@ import urllib
 
 import rollbar
 
-CHAT_SPAM_COUNT = 2
-CHAT_SPAM_DURATION = 120
-
 
 def index(request):
     status = MojangStatus.objects.latest('timestamp')
@@ -450,6 +447,23 @@ def get_face(request, size=16, username=None):
     tmp.close()
 
     return HttpResponse(data, mimetype="image/png")
+
+
+def forbidden(request, template_name='403.html'):
+    from djangobb_forum.models import Ban
+    
+    data = {}
+    
+    if not request.user.is_active:
+        try:
+            ban = Ban.objects.get(user=request.user)
+        except:
+            ban = None
+    
+        if ban:
+            data['reason'] = ban.reason
+        
+    return render_to_response(template_name, data, context_instance=RequestContext(request))
 
 
 def server_error(request, template_name='500.html'):
