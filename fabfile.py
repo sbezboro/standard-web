@@ -9,6 +9,7 @@ import standardweb.local_settings as settings
 
 CODE_DIR = '/home/sbezboro/standard-web'
 ENV_DIR = '/home/sbezboro/standard-web-env'
+WEB_SERVICE = 'standard-web'
 
 env.roledefs = {
     'web': ['standardsurvival.com']
@@ -31,7 +32,7 @@ def update_and_restart_webs():
             if result.failed:
                 abort('Could not install required packages. Aborting.')
             
-            run('service gunicorn restart')
+            run('service %s restart' % WEB_SERVICE)
 
 
 def rollbar_record_deploy():
