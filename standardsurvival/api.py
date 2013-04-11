@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from functools import wraps
 
 from standardsurvival.models import *
-import date_util
+from standardsurvival.lib import helpers as h
 
 from djangobb_forum.models import Profile as ForumProfile
 
@@ -146,7 +146,7 @@ def rank_query(request):
         stats = PlayerStats.objects.get(server=request.server, player=player)
         rank = stats.rank()
         
-        time = date_util.elapsed_time_string(stats.time_spent)
+        time = h.elapsed_time_string(stats.time_spent)
         
         response_data = {
             'result': 1,

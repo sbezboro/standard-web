@@ -4,7 +4,7 @@
 *.un~
 local_settings.py
 faces/*/*
-standardsurvival/djangobb_index/
+djangobb_index/*
 static/djangobb_forum/attachments/*
 static/djangobb_forum/avatars/
 static/google074225ff8881cc3e.html

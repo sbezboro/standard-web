@@ -178,7 +178,7 @@ LOGIN_REDIRECT_URL = '/'
 # Haystack settings
 HAYSTACK_SITECONF = 'search_sites'
 HAYSTACK_SEARCH_ENGINE = 'whoosh'
-HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_ROOT, 'djangobb_index')
+HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_ROOT, '../djangobb_index')
 
 SESSION_COOKIE_AGE = 2592000
 

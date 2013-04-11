@@ -13,8 +13,8 @@ from django.template import RequestContext
 from django.views.decorators.http import last_modified
 
 from standardsurvival.lib import api
+from standardsurvival.lib import helpers as h
 from standardsurvival.models import *
-import date_util
 
 from PIL import Image
 
@@ -346,9 +346,9 @@ def player(request, username, classic=False):
         'nickname': player.nickname,
         'banned': player_stats.banned,
         'online_now': online_now,
-        'first_seen': date_util.iso_date(player_stats.first_seen),
-        'last_seen': date_util.iso_date(player_stats.last_seen),
-        'time_spent': date_util.elapsed_time_string(player_stats.time_spent),
+        'first_seen': h.iso_date(player_stats.first_seen),
+        'last_seen': h.iso_date(player_stats.last_seen),
+        'time_spent': h.elapsed_time_string(player_stats.time_spent),
         'death_info': death_info,
         'death_count': death_count,
         'kill_info': kill_info,
@@ -373,7 +373,7 @@ def ranking(request, classic=False):
         player_info.append({
             'username': player_stat.player.username,
             'nickname': player_stat.player.nickname,
-            'time_spent': date_util.elapsed_time_string(player_stat.time_spent),
+            'time_spent': h.elapsed_time_string(player_stat.time_spent),
             'online': datetime.utcnow() - timedelta(minutes = 1) < player_stat.last_seen,
         })
     
