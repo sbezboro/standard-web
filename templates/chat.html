@@ -16,6 +16,8 @@
         You must be <a href="/login">logged in</a> to the website to be able to chat!
       </div>
       {% endif %}
+      <table class="players-table">
+      </table>
       
       <script src="http://{{ rts_address }}/socket.io/socket.io.js"></script>
       <script type="text/javascript">
@@ -33,6 +35,34 @@
               if (shouldScroll) {
                   $chat.scrollTop($chat.get(0).scrollHeight);
               }
+          }
+          
+          // Renders a table almost identical looking to the tab player table ingame
+          function renderPlayersTable(players, maxPlayers) {
+              var tableHtml = "<tr>";
+              
+              for (var i = 0; i < maxPlayers; ++i) {
+                  if (players.length <= i) {
+                      tableHtml += '<td>&nbsp;</td>';
+                  } else {
+                      var username = players[i].username;
+                      var nickname = players[i].nickname;
+                      
+                      tableHtml += ['<td>',
+                                      '<a href="/player/' + username + '">',
+                                        '<span><img class="face-thumb" src="/faces/16/' + username + '.png">' + (nickname ? nickname : username) + '</span>',
+                                      '</a>',
+                                    '</td>'].join('');
+                  }
+                  
+                  // Three columns per row, same as ingame
+                  if ((i + 1) % 3 == 0) {
+                      tableHtml += '</tr><tr>'
+                  }
+              }
+              tableHtml += "</tr>";
+              
+              $('.players-table').html(tableHtml);
           }
           
           function socketConnect() {
@@ -80,6 +110,24 @@
               // Receive a chat line
               socket.on('chat', function(data) {
                   addChatLine(data.line);
+              });
+              
+              // Update list of players shown
+              socket.on('player-list', function(data) {
+                  var players = data.players;
+                  var numPlayers = data.numPlayers;
+                  var maxPlayers = data.maxPlayers;
+                  
+                  players = players.sort(function(a, b) {
+                      a = (a.nickname ? a.nickname : a.username);
+                      b = (b.nickname ? b.nickname : b.username);
+                      
+                      if (a.toLowerCase() < b.toLowerCase()) return -1;
+                      if (a.toLowerCase() > b.toLowerCase()) return 1;
+                      return 0;
+                  });
+                  
+                  renderPlayersTable(players, maxPlayers);
               });
           }
           
