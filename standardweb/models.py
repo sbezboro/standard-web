@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 from datetime import datetime
 
@@ -29,7 +30,6 @@ class PlayerStats(models.Model):
     def rank(self):
         above = PlayerStats.objects.filter(server=self.server, time_spent__gte=self.time_spent).exclude(player_id=self.player_id)
         return len(above) + 1
-    
 
 class ServerStatus(models.Model):
     timestamp = models.DateTimeField(default = datetime.utcnow)
@@ -67,6 +67,13 @@ class KillEvent(models.Model):
     kill_type = models.ForeignKey('KillType', related_name = 'kill_type')
     killer = models.ForeignKey('MinecraftPlayer', related_name = 'k_killer')
     victim = models.ForeignKey('MinecraftPlayer', related_name = 'k_victim', null=True)
+
+class IPTracking(models.Model):
+    timestamp = models.DateTimeField(default = datetime.utcnow)
+    ip = models.IPAddressField()
+    player = models.ForeignKey('MinecraftPlayer', related_name='ip', null=True)
+    user = models.ForeignKey(User, null=True)
+
 '''
 class FactionRelation(models.Model):
     faction1 = models.ForeignKey('Faction', related_name = 'faction1')

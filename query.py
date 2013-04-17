@@ -31,6 +31,15 @@ def query(server):
         player.nickname = player_info.get('nickname')
         player.save()
         
+        ip = player_info.get('address')
+        
+        if ip:
+            try:
+                existing_player_ip = IPTracking.objects.get(ip=ip, player=player)
+            except:
+                existing_player_ip = IPTracking(ip=ip, player=player)
+                existing_player_ip.save()
+        
         try:
             player_stats = PlayerStats.objects.get(server=server, player=player)
             player_stats.last_seen = datetime.utcnow()
