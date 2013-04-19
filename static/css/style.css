@@ -268,6 +268,12 @@ a:hover {
     overflow-y: scroll;
 }
 
+#admin-panel #users {
+    padding: 5px;
+    overflow-y: scroll;
+    border-top: 2px solid #aaa;
+}
+
 #chat-container {
     -webkit-box-shadow: 10px 10px 10px 10px rgba(0,0,0,1);
     -moz-box-shadow: 0 1px 10px rgba(0,0,0,1);

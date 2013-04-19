@@ -7,6 +7,7 @@
     <div id="admin-panel">
         <div id="players-area">
             <div id="players"></div>
+            <div id="users"></div>
         </div>
         <div id="console-area">
             <div id="console"></div>
@@ -100,11 +101,37 @@
                     $('#players').append(html);
                 }
             });
+            
+            socket.on('chat-users', function(data) {
+                var users = data.users;
+                
+                var html = '<b>Chat user count: ' + users.length + '</b>';
+                for (var i = 0; i < users.length; ++i) {
+                    var username = users[i].username;
+                    var address = users[i].address;
+                    
+                    if (username == 'Server') {
+                        html += ['<div class="user">',
+                                        '<span>' + username + ' - ' + address + '</span>',
+                                '</div>'].join('');
+                    } else {
+                        html += ['<div class="user">',
+                                    '<a href="/player/' + username + '">',
+                                        '<span><img class="face-thumb" src="/faces/16/' + username + '.png">' + username + '</span>',
+                                    '</a>',
+                                    ' - ' + address,
+                                '</div>'].join('');
+                    }
+                }
+                
+                $('#users').html(html);
+            });
         }
             
         function resize() {
             $("#console").height($(window).height() - $("#header").outerHeight() - 30);
-            $("#players").height($(window).height() - $("#header").outerHeight() - 10);
+            $("#players").height($(window).height() - $("#header").outerHeight() - 140);
+            $("#users").height(118);
         }
         
         resize();
