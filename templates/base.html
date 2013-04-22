@@ -8,7 +8,8 @@
     <script>
         var _rollbarParams = {
             "server.environment": "production",
-            {% if user.is_authenticated %}person: {
+            {% if user.is_authenticated %}
+            person: {
                 id: {{user.id}},
                 username: '{{user.username}}',
                 email: '{{user.email}}'

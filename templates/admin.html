@@ -137,19 +137,22 @@
         resize();
         
         $(document).ready(function() {
+            var $console = $('#console');
+            var $consoleTextbox = $('#console-textbox');
+            
             socketConnect();
             
-            $(document).keydown(function (e) {
-                if (!$("#console-textbox").is(":focus")) {
-                    $("#console-textbox").focus();
+            $(document).keypress(function (e) {
+                if (!$consoleTextbox.is(":focus")) {
+                    $consoleTextbox.focus();
                 }
             });
             
-            $("#console-textbox").keyup(function (e) {
+            $consoleTextbox.keyup(function (e) {
                 switch (e.which) {
                     case 13: //Enter
                         var data = {};
-                        var input = $('#console-textbox').val();
+                        var input = $consoleTextbox.val();
                         
                         if (input[0] == "/") {
                             data = {
@@ -162,8 +165,8 @@
                         }
                         
                         socket.emit('console-input', data);
-                        $('#console-textbox').val("");
-                        $('#console').scrollTop($('#console').get(0).scrollHeight);
+                        $consoleTextbox.val("");
+                        $console.scrollTop($console.get(0).scrollHeight);
                         
                         commandHistory.unshift(input);
                         commandIndex = -1;
@@ -171,13 +174,13 @@
                     case 38: //Up
                         if (commandIndex < commandHistory.length - 1) {
                             commandIndex++;
-                            $('#console-textbox').val(commandHistory[commandIndex]);
+                            $consoleTextbox.val(commandHistory[commandIndex]);
                         }
                         break;
                     case 40: //Down
                         if (commandIndex > -1) {
                             commandIndex--
-                            $('#console-textbox').val(commandHistory[commandIndex]);
+                            $consoleTextbox.val(commandHistory[commandIndex]);
                         }
                         break;
                 }

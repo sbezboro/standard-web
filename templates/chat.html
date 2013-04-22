@@ -48,9 +48,11 @@
                       var username = players[i].username;
                       var nickname = players[i].nickname;
                       
+                      var displayName = (nickname ? nickname : username);
+                      
                       tableHtml += ['<td>',
-                                      '<a href="/player/' + username + '">',
-                                        '<span><img class="face-thumb" src="/faces/16/' + username + '.png">' + (nickname ? nickname : username) + '</span>',
+                                      '<a href="/player/' + username + '" target="_blank">',
+                                        '<span><img class="face-thumb" src="/faces/16/' + username + '.png">' + displayName + '</span>',
                                       '</a>',
                                     '</td>'].join('');
                   }
@@ -132,19 +134,27 @@
           }
           
           $(document).ready(function() {
-              socketConnect();
+              var $chatTextbox = $('#chat-textbox');
               
-              $("#chat-textbox").keyup(function (e) {
+              socketConnect();
+            
+              $(document).keypress(function (e) {
+                  if (!$chatTextbox.is(":focus")) {
+                      $chatTextbox.focus();
+                  }
+              });
+              
+              $chatTextbox.keyup(function (e) {
                   switch (e.which) {
                       case 13: //Enter
                           var data = {};
-                          var input = $('#chat-textbox').val();
+                          var input = $chatTextbox.val();
                           
                           socket.emit('chat-input', {
                             message: input
                           });
                           
-                          $('#chat-textbox').val("");
+                          $chatTextbox.val("");
                           $('#chat').scrollTop($('#chat').get(0).scrollHeight);
                           
                           commandHistory.unshift(input);
@@ -153,16 +163,22 @@
                       case 38: //Up
                           if (commandIndex < commandHistory.length - 1) {
                               commandIndex++;
-                              $('#chat-textbox').val(commandHistory[commandIndex]);
+                              $chatTextbox.val(commandHistory[commandIndex]);
                           }
                           break;
                       case 40: //Down
                           if (commandIndex > -1) {
                               commandIndex--
-                              $('#chat-textbox').val(commandHistory[commandIndex]);
+                              $chatTextbox.val(commandHistory[commandIndex]);
                           }
                           break;
                   }
+              });
+              
+              $(document).on("click", ".message-player", function (event) {
+                  $chatTextbox.val("/msg " + $(this).attr("player") + " ");
+                  $chatTextbox.focus();
+                  return false;
               });
           })
       </script>
