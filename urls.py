@@ -51,8 +51,8 @@ urlpatterns += patterns('',
 )
 
 if (forum_settings.PM_SUPPORT):
-    urlpatterns += patterns('', (r'^forum/pm/', include('django_messages.urls')),
-    )
+    urlpatterns += patterns('', (r'^forum/pm/', include('messages.urls')),
+)
     
 handler403 = 'standardweb.views.forbidden'
 handler500 = 'standardweb.views.server_error'

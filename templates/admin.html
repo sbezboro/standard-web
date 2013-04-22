@@ -109,17 +109,21 @@
                 for (var i = 0; i < users.length; ++i) {
                     var username = users[i].username;
                     var address = users[i].address;
+                    var type = users[i].type;
                     
                     if (username == 'Server') {
                         html += ['<div class="user">',
-                                        '<span>' + username + ' - ' + address + '</span>',
+                                    username + ' [' + type + ']',
                                 '</div>'].join('');
-                    } else {
+                    } else if (username) {
                         html += ['<div class="user">',
                                     '<a href="/player/' + username + '">',
                                         '<span><img class="face-thumb" src="/faces/16/' + username + '.png">' + username + '</span>',
                                     '</a>',
-                                    ' - ' + address,
+                                '</div>'].join('');
+                    } else {
+                        html += ['<div class="user">',
+                                    'Anonymous - ' + address,
                                 '</div>'].join('');
                     }
                 }
@@ -130,8 +134,8 @@
             
         function resize() {
             $("#console").height($(window).height() - $("#header").outerHeight() - 30);
-            $("#players").height($(window).height() - $("#header").outerHeight() - 140);
-            $("#users").height(118);
+            $("#players").height($(window).height() - $("#header").outerHeight() - 150);
+            $("#users").height(128);
         }
         
         resize();
