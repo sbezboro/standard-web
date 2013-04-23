@@ -147,7 +147,8 @@
             socketConnect();
             
             $(document).keypress(function (e) {
-                if (!$consoleTextbox.is(":focus")) {
+                if (!$consoleTextbox.is(":focus")
+                    && !$('#searchBox').is(':focus')) {
                     $consoleTextbox.focus();
                 }
             });

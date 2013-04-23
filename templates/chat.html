@@ -144,7 +144,8 @@
               socketConnect();
             
               $(document).keypress(function (e) {
-                  if (!$chatTextbox.is(":focus")) {
+                  if (!$chatTextbox.is(':focus')
+                      && !$('#searchBox').is(':focus')) {
                       $chatTextbox.focus();
                   }
               });
