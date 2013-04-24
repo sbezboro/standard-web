@@ -5,7 +5,6 @@ from django.http import HttpResponse
 from django.http import HttpResponseBadRequest
 from django.http import HttpResponseForbidden
 from django.http import HttpResponseNotFound
-from django.views.decorators.csrf import csrf_exempt
 
 from functools import wraps
 
@@ -19,6 +18,27 @@ import json
 import rollbar
 
 
+api_funcs = []
+
+# Base API function decorator that builds a list of view functions for use in urls.py. 
+def api_func(function):
+    function.csrf_exempt = True
+    api_funcs.append(function)
+    
+    @wraps(function)
+    def decorator(request, *args, **kwargs):
+        version = int(kwargs['version'])
+        if version < 1 or version > 1:
+            return HttpResponseNotFound()
+        
+        del kwargs['version']
+        return function(request, *args, **kwargs)
+    
+    return decorator
+
+
+# API function decorator for any api operation exposed to a Minecraft server.
+# This access must be authorized by server-id/secret-key pair combination.
 def server_api(function):
     @wraps(function)
     def decorator(request, *args, **kwargs):
@@ -40,8 +60,8 @@ def server_api(function):
     return decorator
 
 
+@api_func
 @server_api
-@csrf_exempt
 def log_death(request):
     type = request.POST.get('type')
     victim_name = request.POST.get('victim')
@@ -78,8 +98,8 @@ def log_death(request):
     return HttpResponse()
 
 
+@api_func
 @server_api
-@csrf_exempt
 def log_kill(request):
     type = request.POST.get('type')
     killer_name = request.POST.get('killer')
@@ -102,8 +122,8 @@ def log_kill(request):
     
     return HttpResponse()
 
+@api_func
 @server_api
-@csrf_exempt
 def link(request):
     username = request.POST.get('username')
     password = request.POST.get('password')
@@ -129,8 +149,8 @@ def link(request):
     return HttpResponse('Your username has been linked to a website account!')
 
 
+@api_func
 @server_api
-@csrf_exempt
 def rank_query(request):
     username = request.GET.get('username')
     exact = int(request.GET.get('exact', 0))
@@ -165,11 +185,11 @@ def rank_query(request):
     return HttpResponse(json.dumps(response_data), mimetype="application/json")
 
 
-@csrf_exempt
+@api_func
 def auth_session_key(request):
     """
     Authenticates a Django session key and returns its corresponding user_id and username.
-    Also authorizes admin access if 'is-admin' is sent along.
+    Also authorizes admin access if 'is-admin' is set in the request.
     """
     
     from django.contrib.sessions.models import Session

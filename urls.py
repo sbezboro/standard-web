@@ -35,14 +35,11 @@ urlpatterns = patterns('',
     (r'^500/$', views.server_error),
     (r'^403/$', views.forbidden),
 )
-    
-urlpatterns += patterns('',
-    url(r'^api/log_death', api.log_death),
-    url(r'^api/log_kill', api.log_kill),
-    url(r'^api/link', api.link),
-    url(r'^api/rank_query', api.rank_query),
-    url(r'^api/auth_session_key', api.auth_session_key),
-)
+
+for api_func in api.api_funcs:
+    urlpatterns += patterns('standardweb.api',
+        url(r'^api/v(?P<version>\d{1})/%s' % api_func.__name__, api_func.__name__),
+    )
     
 urlpatterns += patterns('', 
     (r'^forum/', include('djangobb_forum.urls', namespace='djangobb')),
