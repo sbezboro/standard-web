@@ -32,8 +32,8 @@ urlpatterns = patterns('',
     url(r'^analytics$', views.analytics),
     url(r'^server-admin$', views.admin),
     
-    (r'^500/$', views.server_error),
-    (r'^403/$', views.forbidden),
+    (r'^500$', views.server_error),
+    (r'^403$', views.forbidden),
 )
 
 for api_func in api.api_funcs:
