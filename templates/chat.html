@@ -36,8 +36,6 @@
           var commandIndex = -1;
           var socket;
           
-          var $serverButton = $("a.server");
-          
           function addChatLine(line) {
               var $chat = $('#chat');
               var shouldScroll = $chat.get(0).scrollHeight - $chat.scrollTop() == $chat.outerHeight();
@@ -153,7 +151,7 @@
           
           $(document).ready(function() {
               var $chatTextbox = $('#chat-textbox');
-              
+              var $serverButton = $("a.server");
               
               var serverId = 2;
               var hash = window.location.hash;

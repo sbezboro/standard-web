@@ -101,8 +101,9 @@ def admin(request):
         return HttpResponseForbidden()
     
     return render_to_response('admin.html', {
-            'rts_address': settings.RTS_ADDRESS
-        }, context_instance=RequestContext(request))
+        'servers': Server.objects.all(),
+        'rts_address': settings.RTS_ADDRESS
+    }, context_instance=RequestContext(request))
 
 
 def chat(request):
