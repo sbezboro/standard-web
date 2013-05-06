@@ -20,7 +20,25 @@
         <table class="ranking-table">
         {% for player in player_info %}
             <tr>
-                <td class="rank">{{ forloop.counter }}</td><td class="username"><a href="/{{ server_id }}/player/{{ player.username }}"><img class="face-thumb" src="/faces/16/{{ player.username }}.png"/>{% if player.nickname %}{{ player.nickname }}{% else %}{{ player.username }}{% endif %}</a>{% if player.online %}<span>(Online Now!)</span>{% endif %}</td><td class="timeSpent">{{ player.time_spent }}</td>
+                <td class="rank">
+                    {{ forloop.counter }}
+                </td>
+                <td class="username">
+                    <a href="/{{ server_id }}/player/{{ player.username }}">
+                        <img class="face-thumb" src="/faces/16/{{ player.username }}.png"/>
+                        {% if player.nickname %}
+                            {{ player.nickname }}
+                        {% else %}
+                            {{ player.username }}
+                        {% endif %}
+                    </a>
+                    {% if player.online %}
+                        <img src="/static/images/online.png" alt="Online now!" title="Online now!">
+                    {% endif %}
+                </td>
+                <td class="timeSpent">
+                    {{ player.time_spent }}
+                </td>
             </tr>
         {% if forloop.counter == 10 %}
         </table>
