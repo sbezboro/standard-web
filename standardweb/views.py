@@ -258,11 +258,15 @@ def search(request):
         }, context_instance=RequestContext(request))
 
 
-def player(request, username, classic=False):
+def player(request, username, server_id=None):
+    server_id = int(server_id or 2)
     if not username:
         raise Http404
     
-    server = Server.objects.get(id=1 if classic else 2)
+    try:
+        server = Server.objects.get(id=server_id)
+    except:
+        raise Http404
     
     try:
         player = MinecraftPlayer.objects.get(username=username)
@@ -270,7 +274,8 @@ def player(request, username, classic=False):
     except Exception, e:
         return render_to_response('player.html', {
             'exists': False,
-            'classic': classic,
+            'servers': Server.objects.all(),
+            'server_id': server_id,
             'username': username,
             }, context_instance=RequestContext(request))
     
@@ -336,7 +341,8 @@ def player(request, username, classic=False):
     
     return render_to_response('player.html', {
         'exists': True,
-        'classic': classic,
+        'servers': Server.objects.all(),
+        'server_id': server_id,
         'username': player.username,
         'nickname': player.nickname,
         'banned': player_stats.banned,
@@ -358,8 +364,9 @@ def player(request, username, classic=False):
         }, context_instance=RequestContext(request))
 
 
-def ranking(request, classic=False):
-    server = Server.objects.get(id=1 if classic else 2)
+def ranking(request, server_id=None):
+    server_id = int(server_id or 2)
+    server = Server.objects.get(id=server_id)
     
     player_info = []
     player_stats = PlayerStats.objects.filter(server=server).order_by('-time_spent')[:40]
@@ -373,7 +380,8 @@ def ranking(request, classic=False):
         })
     
     return render_to_response('ranking.html', {
-        'classic': classic,
+        'servers': Server.objects.all(),
+        'server_id': server_id,
         'player_info': player_info,
         }, context_instance=RequestContext(request))
 

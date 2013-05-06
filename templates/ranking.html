@@ -4,23 +4,23 @@
 
 {% block select_ranking %}selected{% endblock %}
 {% block content %}
+    <div class="nav-header">
+        <div class="inner">
+            <ul>
+                {% for server in servers %}
+                <li {% if server.id == server_id %}class="selected"{% endif %}>
+                    <a href="/{{server.id}}/ranking">{{ server.name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
     <div id="main">
-        <p class="server-selector">
-            {% if classic %}
-            <a href="/ranking">New</a>
-            |
-            <span class="selected">Classic</span>
-            {% else %}
-            <span class="selected">New</span>
-            |
-            <a href="/classic/ranking">Classic</a>
-            {% endif %}
-        </p>
         <h2>Top 10 Players</h2>
         <table class="ranking-table">
         {% for player in player_info %}
             <tr>
-                <td class="rank">{{ forloop.counter }}</td><td class="username"><a href="{% if classic %}/classic{% endif %}/player/{{ player.username }}"><img class="face-thumb" src="/faces/16/{{ player.username }}.png"/>{% if player.nickname %}{{ player.nickname }}{% else %}{{ player.username }}{% endif %}</a>{% if player.online %}<span>(Online Now!)</span>{% endif %}</td><td class="timeSpent">{{ player.time_spent }}</td>
+                <td class="rank">{{ forloop.counter }}</td><td class="username"><a href="/{{ server_id }}/player/{{ player.username }}"><img class="face-thumb" src="/faces/16/{{ player.username }}.png"/>{% if player.nickname %}{{ player.nickname }}{% else %}{{ player.username }}{% endif %}</a>{% if player.online %}<span>(Online Now!)</span>{% endif %}</td><td class="timeSpent">{{ player.time_spent }}</td>
             </tr>
         {% if forloop.counter == 10 %}
         </table>
