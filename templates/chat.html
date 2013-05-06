@@ -4,6 +4,17 @@
 
 {% block select_chat %}selected{% endblock %}
 {% block content %}
+    <div class="nav-header">
+      <div class="inner">
+        <ul>
+          {% for server in servers %}
+          <li>
+            <a class="server" href="#server-{{ server.id }}" server-id="{{ server.id }}">{{ server.name }}</a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
     <div id="main">
       <h2>Live Server Chat</h2>
       <div id="chat-container">
@@ -24,6 +35,8 @@
           var commandHistory = [];
           var commandIndex = -1;
           var socket;
+          
+          var $serverButton = $("a.server");
           
           function addChatLine(line) {
               var $chat = $('#chat');
@@ -72,7 +85,7 @@
               $('.players-table').html(tableHtml);
           }
           
-          function socketConnect() {
+          function socketConnect(serverId) {
               if (typeof io === 'undefined') {
                   addChatLine("ERROR: Could not establish socket connection");
                   return;
@@ -86,7 +99,7 @@
                   $("#chat").empty();
                   
                   var data = {
-                    serverId: 2
+                    serverId: serverId
                   };
                   
                   {% if request.user.is_authenticated %}
@@ -141,7 +154,16 @@
           $(document).ready(function() {
               var $chatTextbox = $('#chat-textbox');
               
-              socketConnect();
+              
+              var serverId = 2;
+              var hash = window.location.hash;
+              if (hash && hash.indexOf('server-') != -1) {
+                serverId = hash.split('-')[1];
+              }
+              
+              $('a[server-id=' + serverId + ']').closest('li').addClass('selected');
+              
+              socketConnect(serverId);
             
               $(document).keypress(function (e) {
                   if (!$chatTextbox.is(':focus')
@@ -181,10 +203,26 @@
                   }
               });
               
-              $(document).on("click", ".message-player", function (event) {
+              $(document).on("click", ".message-player", function(event) {
                   $chatTextbox.val("/msg " + $(this).attr("player") + " ");
                   $chatTextbox.focus();
                   return false;
+              });
+              
+              $serverButton.on("click", function(e) {
+                if ($(this).closest('li').hasClass('selected')) {
+                  return false;
+                }
+                
+                $("#chat").empty();
+                
+                var serverId = $(this).attr('server-id');
+                socket.emit('switch-server', {
+                  serverId: serverId
+                });
+                
+                $(this).closest('div').find('li').removeClass('selected');
+                $(this).closest('li').addClass('selected');
               });
           })
       </script>

@@ -106,11 +106,8 @@ def admin(request):
 
 
 def chat(request):
-    data = {
-        'rts_address': settings.RTS_ADDRESS
-    }
-    
     return render_to_response('chat.html', {
+        'servers': Server.objects.all(),
         'rts_address': settings.RTS_ADDRESS
     }, context_instance=RequestContext(request))
 
