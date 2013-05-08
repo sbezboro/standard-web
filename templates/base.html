@@ -20,15 +20,6 @@
         f=d.getElementsByTagName("script")[0];s.src="//d37gvrvc0wt4s1.cloudfront.net/js/1/rollbar.min.js";s.async=!0;
         f.parentNode.insertBefore(s,f);};if(w.addEventListener){w.addEventListener("load",i,!1);}else{w.attachEvent("onload",i);}})(window,document);
     </script>
-
-    <script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.7.2.min.js"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.flot.min.js"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.placeholder.min.js"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.timeago.js"></script>
-    <!--[if lte IE 8]><script type="text/javascript" src="{{STATIC_URL}}js/excanvas.min.js"></script><![endif]-->
-    <script type="text/javascript" src="{{STATIC_URL}}js/base.js"></script>
-    <script type="text/javascript" src="{{STATIC_URL}}js/graph.js"></script>
-    
     <script type="text/javascript">
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-32372174-1']);
@@ -40,6 +31,13 @@
             var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
     </script>
+    
+    <script type="text/javascript" src="{{STATIC_URL}}js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.flot.min.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.placeholder.min.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.timeago.min.js"></script>
+    <!--[if lte IE 8]><script type="text/javascript" src="{{STATIC_URL}}js/excanvas.min.js"></script><![endif]-->
+    <script type="text/javascript" src="{{STATIC_URL}}js/graph.js"></script>
 </head>
 
 <body>
@@ -62,8 +60,8 @@
                     <a href="#" onclick="alert('Log in to the Minecraft server (standardsurvival.com) and type /register to create an account!')">Sign up</a>
                     <a class="{% block select_login %}{% endblock %}" href="/login?next={{ request.path }}">Log in</a>
                 {% endif %}
-                <form class="form-inline" onsubmit="playerSearch(); return false;">
-                    <input id="searchBox" type="text" placeholder="Player search" value="{{ query }}"/>
+                <form class="form-inline" method="GET" action="/search">
+                    <input class="placeholder" type="text" name="q" placeholder="Player search" value="{{ query }}"/>
                 </form>
             </div>
         </div>
@@ -71,5 +69,16 @@
     <div id="container">
         {% block content %}{% endblock %}
     </div>
+    
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("abbr.timeago").timeago();
+            $(".placeholder").placeholder();
+        });
+        
+        $.ajaxSetup ({
+            cache: false
+        });
+    </script>
 </body>
 </html>
