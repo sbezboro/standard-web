@@ -43,7 +43,6 @@ def query(server):
         try:
             player_stats = PlayerStats.objects.get(server=server, player=player)
             player_stats.last_seen = datetime.utcnow()
-            player_stats.banned = False
         except:
             player_stats = PlayerStats(server=server, player=player)
         
@@ -53,7 +52,9 @@ def query(server):
         if player_stats.time_spent % 6000 == 0:
             api.announce_player_time(server, player.username, player_stats.time_spent)
     
-    PlayerStats.objects.filter(player__username__in=server_status.get('banned_players', [])).update(banned=True)
+    banned_players = server_status.get('banned_players', [])
+    PlayerStats.objects.filter(server=server, player__username__in=banned_players).update(banned=True)
+    PlayerStats.objects.exclude(server=server, player__username__in=banned_players).update(banned=False)
     
     player_count = server_status.get('numplayers', 0)
     cpu_load = server_status.get('cpu_load', 0)
