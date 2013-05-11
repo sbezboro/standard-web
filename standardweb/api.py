@@ -168,10 +168,17 @@ def rank_query(request):
         
         time = h.elapsed_time_string(stats.time_spent)
         
+        try:
+            VeteranStatus.objects.get(player=player)
+            vetaran = True
+        except:
+            vetaran = False
+        
         response_data = {
             'result': 1,
             'rank': rank,
             'time': time,
+            'veteran': vetaran
         }
         
         if not exact:
