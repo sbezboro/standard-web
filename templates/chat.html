@@ -9,7 +9,7 @@
         <ul>
           {% for server in servers %}
           <li>
-            <a class="server" href="#server-{{ server.id }}" server-id="{{ server.id }}">{{ server.name }}</a>
+            <a class="server tooltip" href="#server-{{ server.id }}" server-id="{{ server.id }}" title="Address: {{ server.address }}">{{ server.name }}</a>
           </li>
           {% endfor %}
         </ul>

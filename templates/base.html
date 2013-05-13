@@ -4,6 +4,7 @@
     <title>{% block title %}Standard Survival Minecraft Server{% endblock %}</title>
     <meta name="description" content="A vanilla-inspired Minecraft survival server">
     <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css">
+    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/tipsy.css">
         
     <script>
         var _rollbarParams = {
@@ -36,6 +37,7 @@
     <script type="text/javascript" src="{{STATIC_URL}}js/jquery.flot.min.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}js/jquery.placeholder.min.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}js/jquery.timeago.min.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/jquery.tipsy.min.js"></script>
     <!--[if lte IE 8]><script type="text/javascript" src="{{STATIC_URL}}js/excanvas.min.js"></script><![endif]-->
     <script type="text/javascript" src="{{STATIC_URL}}js/graph.js"></script>
 </head>
@@ -74,6 +76,7 @@
         $(document).ready(function() {
             $("abbr.timeago").timeago();
             $(".placeholder").placeholder();
+            $(".tooltip").tipsy();
         });
         
         $.ajaxSetup ({

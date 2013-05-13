@@ -9,7 +9,7 @@
             <ul>
                 {% for server in servers %}
                 <li {% if server.id == server_id %}class="selected"{% endif %}>
-                    <a href="/{{server.id}}/ranking">{{ server.name }}</a>
+                    <a class="tooltip" href="/{{server.id}}/ranking" title="Address: {{ server.address }}">{{ server.name }}</a>
                 </li>
                 {% endfor %}
             </ul>
