@@ -1,17 +1,17 @@
-function loadPlayerGraph(elem) {
+function loadPlayerGraph($elem) {
     var offset = new Date().getTimezoneOffset() * 1000 * 60;
     
     var data = {};
     
-    if (elem.attr("weekindex")) {
-        data['weekIndex'] = elem.attr("weekindex");
+    if ($elem.attr("weekindex")) {
+        data['weekIndex'] = $elem.attr("weekindex");
     }
     
     $.ajax({
         url: "player_graph",
         data: data,
         success: function(data) {
-            elem.removeClass('progress');
+            $elem.removeClass('progress');
             
             var points = data.points;
             var startTime = data.start_time - offset;
@@ -40,7 +40,7 @@ function loadPlayerGraph(elem) {
             // Make sure the graph shows the start and end time boundaries
             data.push({data: [[startTime], [endTime]]})
             
-            $.plot(elem, data, {
+            $.plot($elem, data, {
                 grid: {hoverable: true, backgroundColor: "#ffffff"},
                 colors: ["#7E9BFF", "#F00"],
                 series: {lines: { fill: true }},
