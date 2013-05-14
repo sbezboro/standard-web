@@ -46,7 +46,7 @@ def announce_player_time(server, player_name, minutes):
 def forum_post(username, forum_name, topic_name, path):
     base_url = Site.objects.get_current().domain
     
-    for server in Server.objects.filter(id=4):
+    for server in Server.objects.all():
         try:
             api = get_api(server.address)
             
