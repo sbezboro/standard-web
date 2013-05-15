@@ -50,8 +50,10 @@ def logout(request):
     return redirect('/')
 
 
-def analytics(request):
-    server = Server.objects.get(id=2)
+def analytics(request, server_id=None):
+    server_id = int(server_id or 2)
+    
+    server = Server.objects.get(id=server_id)
     
     earliest_date = ServerStatus.objects.filter(server=server).order_by('timestamp')[1].timestamp
     
@@ -92,23 +94,30 @@ def analytics(request):
         '''
     
     return render_to_response('analytics.html', {
+        'server_id': server_id,
         'cohorts': cohorts
         }, context_instance=RequestContext(request))
 
 
-def admin(request):
+def admin(request, server_id=None):
+    server_id = int(server_id or 2)
+    
     if not request.user.is_superuser:
         return HttpResponseForbidden()
     
     return render_to_response('admin.html', {
         'servers': Server.objects.all(),
+        'server_id': server_id,
         'rts_address': settings.RTS_ADDRESS
     }, context_instance=RequestContext(request))
 
 
-def chat(request):
+def chat(request, server_id=None):
+    server_id = int(server_id or 2)
+    
     return render_to_response('chat.html', {
         'servers': Server.objects.all(),
+        'server_id': server_id,
         'rts_address': settings.RTS_ADDRESS
     }, context_instance=RequestContext(request))
 
@@ -259,10 +268,10 @@ def search(request):
 
 
 def player(request, username, server_id=None):
-    server_id = int(server_id or 2)
     if not username:
         raise Http404
     
+    server_id = int(server_id or 2)
     try:
         server = Server.objects.get(id=server_id)
     except:

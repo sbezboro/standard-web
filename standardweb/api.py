@@ -189,7 +189,7 @@ def rank_query(request):
             'result': 0
         }
     
-    return HttpResponse(json.dumps(response_data), mimetype="application/json")
+    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
 
 @api_func
@@ -223,4 +223,15 @@ def auth_session_key(request):
     return HttpResponse(json.dumps({
         'user_id': user.id,
         'username': user.username
-    }), mimetype="application/json")
+    }), content_type="application/json")
+
+
+@api_func
+def servers(request):
+    servers = [{
+        'id': server.id,
+        'address': server.address
+    } for server in Server.objects.all()]
+    
+    return HttpResponse(json.dumps(servers), content_type="application/json")
+
