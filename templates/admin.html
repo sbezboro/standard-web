@@ -8,8 +8,8 @@
       <div class="inner">
         <ul>
           {% for server in servers %}
-          <li>
-            <a class="server" href="#server-{{ server.id }}" server-id="{{ server.id }}">{{ server.name }}</a>
+          <li {% if server.id == server_id %}class="selected"{% endif %}>
+              <a class="tooltip" href="/{{server.id}}/server-admin" title="Address: {{ server.address }}">{{ server.name }}</a>
           </li>
           {% endfor %}
         </ul>
@@ -49,6 +49,8 @@
                 addConsoleLine("ERROR: Could not establish socket connection");
                 return;
             }
+              
+            addConsoleLine("Connecting...");
             
             socket = io.connect('http://{{ rts_address }}/console');
             
@@ -60,7 +62,7 @@
                 var djangoSessionKey = "{{ request.session.session_key }}";
                 socket.emit('auth', {
                     djangoSessionKey: djangoSessionKey,
-                    serverId: 2
+                    serverId: {{ server_id }}
                 });
             });
             
@@ -154,17 +156,8 @@
         $(document).ready(function() {
             var $console = $('#console');
             var $consoleTextbox = $('#console-textbox');
-            var $serverButton = $("a.server");
             
-            var serverId = 2;
-            var hash = window.location.hash;
-            if (hash && hash.indexOf('server-') != -1) {
-              serverId = hash.split('-')[1];
-            }
-            
-            $('a[server-id=' + serverId + ']').closest('li').addClass('selected');
-            
-            socketConnect(serverId);
+            socketConnect();
             
             $(document).keypress(function (e) {
                 if (!$consoleTextbox.is(":focus")
@@ -209,22 +202,6 @@
                         }
                         break;
                 }
-            });
-              
-            $serverButton.on("click", function(e) {
-                if ($(this).closest('li').hasClass('selected')) {
-                    return false;
-                }
-                
-                $("#console").empty();
-                
-                var serverId = $(this).attr('server-id');
-                socket.emit('switch-server', {
-                    serverId: serverId
-                });
-                
-                $(this).closest('div').find('li').removeClass('selected');
-                $(this).closest('li').addClass('selected');
             });
             
             $(window).resize(function() {
