@@ -3,6 +3,17 @@
 {% block title %}Analytics - Standard Survival Minecraft Server{% endblock %}
 
 {% block content %}
+    <div class="nav-header">
+        <div class="inner">
+            <ul>
+                {% for server in servers %}
+                <li {% if server.id == server_id %}class="selected"{% endif %}>
+                    <a class="tooltip" href="/{{server.id}}/analytics" title="Address: {{ server.address }}">{{ server.name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
     <div id="main">
         {% for cohort in cohorts %}
             {% if forloop.revcounter0 == 0 %}
@@ -28,7 +39,14 @@
             {% if cohort.active|length %}
                 <h3>Currently active users</h3>
                 {% for username in cohort.active %}
-                    <div class="player-section"><a href="/player/{{ username }}"><span><img class="face-thumb" src="/faces/16/{{ username }}.png">{{ username }}</span></a></div>
+                    <div class="player-section">
+                        <a href="/player/{{ username }}">
+                            <span>
+                                <img class="face-thumb" src="/faces/16/{{ username }}.png">
+                                {{ username }}
+                            </span>
+                        </a>
+                    </div>
                 {% endfor %}
             {% endif %}
                 {% if cohort.inactive %}
@@ -41,7 +59,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('.graph').each(function() {
-                loadPlayerGraph($(this));
+                loadPlayerGraph($(this), {{ server_id }});
             });
         });
     </script>

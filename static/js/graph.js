@@ -1,5 +1,6 @@
-function loadPlayerGraph($elem) {
+function loadPlayerGraph($elem, serverId) {
     var offset = new Date().getTimezoneOffset() * 1000 * 60;
+    serverId = serverId || 2
     
     var data = {};
     
@@ -8,7 +9,7 @@ function loadPlayerGraph($elem) {
     }
     
     $.ajax({
-        url: "player_graph",
+        url: "/" + serverId + "/player_graph",
         data: data,
         success: function(data) {
             $elem.removeClass('progress');

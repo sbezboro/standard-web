@@ -13,7 +13,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', views.index),
     url(r'^player_list', views.player_list),
-    url(r'^player_graph', views.player_graph),
+    url(r'^^((?P<server_id>\d{1})/)?player_graph', views.player_graph),
     url(r'^faces/(?P<size>\d{2})/(?P<username>\w{0,50}).png', views.get_face),
     url(r'^faces/(?P<username>\w{0,50}).png', views.get_face),
     url(r'^((?P<server_id>\d{1})/)?player/(?P<username>\w{0,50})', views.player),

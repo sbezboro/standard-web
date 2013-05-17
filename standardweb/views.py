@@ -94,6 +94,7 @@ def analytics(request, server_id=None):
         '''
     
     return render_to_response('analytics.html', {
+        'servers': Server.objects.all(),
         'server_id': server_id,
         'cohorts': cohorts
         }, context_instance=RequestContext(request))
@@ -167,8 +168,9 @@ def _get_player_graph_data(server, show_new_players=False, granularity=15, start
     }
 
 
-def player_graph(request):
-    server = Server.objects.get(id=2)
+def player_graph(request, server_id=None):
+    server_id = int(server_id or 2)
+    server = Server.objects.get(id=server_id)
     
     week_index = int(request.GET.get('weekIndex', -1))
     if week_index >= 0:
