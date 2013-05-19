@@ -13,7 +13,7 @@ class MinecraftPlayer(models.Model):
     nickname_ansi = models.CharField(max_length=256, null=True)
     
     def __str__(self):
-        return self.display_name
+        return self.nickname or self.username
     
     @property
     def nickname_html(self):
