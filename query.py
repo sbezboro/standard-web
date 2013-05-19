@@ -9,6 +9,8 @@ import sys
 import urllib2
 os.environ['DJANGO_SETTINGS_MODULE'] = 'standardweb.settings'
 
+import rollbar
+
 from django.conf import settings
 
 from standardweb.models import *
@@ -28,6 +30,7 @@ def query(server):
             player = MinecraftPlayer.objects.get(username=player_info.get('username'))
         except:
             player = MinecraftPlayer(username=player_info.get('username'))
+            player.save()
         
         if server.id == 2:
             nickname_ansi = player_info.get('nickname')
@@ -93,4 +96,9 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    rollbar.init(settings.ROLLBAR['access_token'], settings.ROLLBAR['environment'])
+    
+    try:
+        main()
+    except:
+        rollbar.report_exc_info(sys.exc_info())
