@@ -17,7 +17,7 @@ class MinecraftPlayer(models.Model):
     
     @property
     def nickname_html(self):
-        return ansi_converter.convert(self.nickname_ansi, full=False) if self.nickname else None
+        return ansi_converter.convert(self.nickname_ansi, full=False) if self.nickname_ansi else None
 
 class VeteranStatus(models.Model):
     player = models.ForeignKey('MinecraftPlayer')
