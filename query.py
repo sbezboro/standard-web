@@ -29,10 +29,11 @@ def query(server):
         except:
             player = MinecraftPlayer(username=player_info.get('username'))
         
-        nickname_ansi = player_info.get('nickname')
-        player.nickname_ansi = nickname_ansi
-        player.nickname = h.strip_ansi(nickname_ansi)
-        player.save()
+        if server.id == 2:
+            nickname_ansi = player_info.get('nickname')
+            player.nickname_ansi = nickname_ansi
+            player.nickname = h.strip_ansi(nickname_ansi)
+            player.save()
         
         ip = player_info.get('address')
         
