@@ -1,5 +1,8 @@
+import re
 import time
 from datetime import datetime, timedelta
+
+ansi_pat = re.compile(r'\x1b[^m]*m')
 
 def iso_date(date):
     return date.strftime("%Y-%m-%d %H:%M:%SZ")
@@ -24,3 +27,6 @@ def elapsed_time_string(minutes):
         string = string + str(minutes) + ' minutes'
     
     return string
+
+def strip_ansi(text):
+    return ansi_pat.sub('', text) if text else None

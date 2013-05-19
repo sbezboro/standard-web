@@ -13,6 +13,7 @@ from django.conf import settings
 
 from standardweb.models import *
 from standardweb.lib import api
+from standardweb.lib import helpers as h
 
 from datetime import datetime, timedelta
 
@@ -28,7 +29,9 @@ def query(server):
         except:
             player = MinecraftPlayer(username=player_info.get('username'))
         
-        player.nickname = player_info.get('nickname')
+        nickname_ansi = player_info.get('nickname')
+        player.nickname_ansi = nickname_ansi
+        player.nickname = h.strip_ansi(nickname_ansi)
         player.save()
         
         ip = player_info.get('address')

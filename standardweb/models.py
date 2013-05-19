@@ -2,12 +2,22 @@ from django.contrib.auth.models import User
 from django.db import models
 from datetime import datetime
 
+from ansi2html import Ansi2HTMLConverter
+ansi_converter = Ansi2HTMLConverter()
+
+from standardweb.lib import helpers as h
+
 class MinecraftPlayer(models.Model):
     username = models.CharField(max_length=30, unique=True)
     nickname = models.CharField(max_length=30, null=True)
+    nickname_ansi = models.CharField(max_length=256, null=True)
     
     def __str__(self):
-        return self.username
+        return self.display_name
+    
+    @property
+    def nickname_html(self):
+        return ansi_converter.convert(self.nickname_ansi, full=False) if self.nickname else None
 
 class VeteranStatus(models.Model):
     player = models.ForeignKey('MinecraftPlayer')
@@ -27,7 +37,7 @@ class PlayerStats(models.Model):
     last_login = models.DateTimeField(default = datetime.utcnow, null=True)
     banned = models.BooleanField(default=False)
     
-    def rank(self):
+    def get_rank(self):
         above = PlayerStats.objects.filter(server=self.server, time_spent__gte=self.time_spent).exclude(player_id=self.player_id)
         return len(above) + 1
 

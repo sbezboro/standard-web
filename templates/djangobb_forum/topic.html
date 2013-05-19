@@ -39,7 +39,7 @@
 								<strong>{{ post.user.forum_profile.status }}</strong>
 							{% else %}
 								{% if player.nickname %}
-									<strong>{{ player.nickname }}</strong>
+									<strong>{{ player.nickname_html|safe }}</strong>
 								{% else %}
 									<strong>{{ post.user.forum_profile.group }}</strong>
 								{% endif %}

@@ -220,7 +220,7 @@ def player_list(request):
                         if player.id == top10player_id:
                             rank = index + 1
                 
-                players.append({'username': player.username, 'nickname': player.nickname, 'rank': rank})
+                players.append({'username': player.username, 'nickname_html': player.nickname_html, 'rank': rank})
             
             stats['players'] = players
             stats['num_players'] = server_status['numplayers']
@@ -348,7 +348,7 @@ def player(request, username, server_id=None):
     
     online_now = datetime.utcnow() - timedelta(minutes = 1) < player_stats.last_seen
     
-    rank = player_stats.rank()
+    rank = player_stats.get_rank()
     
     return render_to_response('player.html', {
         'exists': True,
@@ -356,6 +356,7 @@ def player(request, username, server_id=None):
         'server_id': server_id,
         'username': player.username,
         'nickname': player.nickname,
+        'nickname_html': player.nickname_html,
         'banned': player_stats.banned,
         'online_now': online_now,
         'first_seen': h.iso_date(player_stats.first_seen),
@@ -386,6 +387,7 @@ def ranking(request, server_id=None):
         player_info.append({
             'username': player_stat.player.username,
             'nickname': player_stat.player.nickname,
+            'nickname_html': player_stat.player.nickname_html,
             'time_spent': h.elapsed_time_string(player_stat.time_spent),
             'online': datetime.utcnow() - timedelta(minutes = 1) < player_stat.last_seen,
         })

@@ -4,6 +4,7 @@ MySQL-python==1.2.3
 PIL==1.1.7
 South==0.7.5
 Whoosh==2.4.1
+ansi2html==0.9.4
 django-authopenid==1.0.1
 django-haystack==1.2.7
 django-messages==0.4.4

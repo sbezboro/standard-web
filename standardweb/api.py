@@ -164,7 +164,7 @@ def rank_query(request):
             player = player_info[0]
         
         stats = PlayerStats.objects.get(server=request.server, player=player)
-        rank = stats.rank()
+        rank = stats.get_rank()
         
         time = h.elapsed_time_string(stats.time_spent)
         

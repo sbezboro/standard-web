@@ -41,15 +41,13 @@ def rollbar_record_deploy():
 
     username = local('whoami', capture=True)
     revision = local('git log -n 1 --pretty=format:"%H"', capture=True)
-    comment = local('git log -n 1 --pretty=format:"%s"', capture=True)
 
     resp = requests.post('https://api.rollbar.com/api/1/deploy/', {
         'access_token': access_token,
         'environment': environment,
         'local_username': username,
         'rollbar_username': username,
-        'revision': revision,
-        'comment': comment
+        'revision': revision
     }, timeout=3)
 
     if resp.status_code == 200:

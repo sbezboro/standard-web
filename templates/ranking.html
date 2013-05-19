@@ -26,8 +26,8 @@
                 <td class="username">
                     <a href="/{{ server_id }}/player/{{ player.username }}">
                         <img class="face-thumb" src="/faces/16/{{ player.username }}.png"/>
-                        {% if player.nickname %}
-                            {{ player.nickname }}
+                        {% if player.nickname_html %}
+                            {{ player.nickname_html|safe }}
                         {% else %}
                             {{ player.username }}
                         {% endif %}

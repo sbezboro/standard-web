@@ -11,8 +11,8 @@
           <a href="/player/{{ player.username }}">
             <span>
               <img class="face-thumb" src="/faces/16/{{ player.username }}.png" alt="{{player.username}}">
-              {% if player.nickname %}
-                {{player.nickname}}
+              {% if player.nickname_html %}
+                {{player.nickname_html|safe}}
               {% else %}
                 {{player.username}}
               {% endif %}
