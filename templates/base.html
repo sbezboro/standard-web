@@ -55,7 +55,8 @@
             <div id="right">
                 {% if user.is_authenticated %}
                     {% if not user.is_superuser %}
-                        <a class="{% block select_player %}{% endblock %}" href="/player/{{ user.username }}">{{ user.username }}</a>
+                        
+                        <a class="{% block select_player %}{% endblock %}" href="/player/{{ user.username }}"> <img class="face-thumb" src="/faces/16/' + {{ user.username }} + '.png"> {{ user.username }}</a>
                     {% endif %}
                     <a href="/logout">Log out</a>
                 {% else %}
