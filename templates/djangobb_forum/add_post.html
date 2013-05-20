@@ -59,7 +59,7 @@
 			<div class="postleft">
 				<dl>
 					<dt><strong><a href="javascript:pasteN('{{ post.user.username }}');">{{ post.user.username }}</a></strong></dt>
-					<dd>{% forum_time post.created %}</dd>
+					<dd><abbr class="timeago" title="{% forum_time post.created %}"></abbr></dd>
 				</dl>
 			</div>
 			<div class="postright">

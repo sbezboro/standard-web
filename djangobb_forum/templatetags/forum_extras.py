@@ -1,6 +1,10 @@
 # -*- coding: utf-8
 import urllib
 
+import datetime
+
+from standardweb.lib import helpers as h
+
 from django import template
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
@@ -44,10 +48,13 @@ class ForumTimeNode(template.Node):
         self.time = template.Variable(time)
 
     def render(self, context):
+        # time given in the server's timezone
         time = self.time.resolve(context)
-        formated_time = u'%s %s' % (naturalday(time), time.strftime('%H:%M:%S'))
-        formated_time = mark_safe(formated_time)
-        return formated_time
+        
+        # find utc time difference
+        offset = datetime.datetime.utcnow() - datetime.datetime.now()
+        
+        return h.iso_date(time + offset)
 
 
 # TODO: this old code requires refactoring

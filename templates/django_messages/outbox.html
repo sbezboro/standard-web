@@ -27,7 +27,7 @@
 						</div>
 					</td>
 					<td class="tc2" style="white-space: nowrap; OVERFLOW: hidden"><a href="{% url djangobb:forum_profile msg.recipient %}">{{ msg.recipient }}</a></td>
-					<td class="tcr" style="white-space: nowrap">{% forum_time msg.sent_at %}</td>
+					<td class="tcr" style="white-space: nowrap"><abbr class="timeago" title="{% forum_time msg.sent_at %}"></abbr></td>
 				</tr>
 				{% endfor %}
 			{% else %}

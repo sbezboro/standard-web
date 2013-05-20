@@ -27,7 +27,7 @@
 {% for post in posts %}
 	<div id="p{{ post.id }}" class="blockpost roweven firstpost">
 		<a name="post-{{ post.id }}"></a>
-		<h2><span><span class="conr">#{{ forloop.counter }}&nbsp;</span><a href="{{ post.get_absolute_url }}">{% forum_time post.created %}</a></span></h2>
+		<h2><span><span class="conr">#{{ forloop.counter }}&nbsp;</span><a href="{{ post.get_absolute_url }}"><abbr class="timeago" title="{% forum_time post.created %}"></abbr></a></span></h2>
 		<div class="box">
 			<div class="inbox">
 				<div class="postleft">
@@ -110,7 +110,7 @@
 						{% endif %}
 					{% endif %}
 					{% if post.updated %}
-						<p class="postedit"><em>{% trans "Edited by" %} <b>{{ post.updated_by.username }}</b> ({% forum_time post.updated %})</em></p>
+						<p class="postedit"><em>{% trans "Edited by" %} <b>{{ post.updated_by.username }}</b> (<abbr class="timeago" title="{% forum_time post.updated %}"></abbr>)</em></p>
 					{% endif %}
 				</div>
 			</div>

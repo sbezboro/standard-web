@@ -5,7 +5,7 @@
 {% block sub_content %}
 
 <div id="p2" class="blockpost row_odd firstpost" style="margin-left: 14em;">
-		<h2><span>{% forum_time message.sent_at %}</span></h2>
+		<h2><span><abbr class="timeago" title="{% forum_time message.sent_at %}"></abbr></span></h2>
 		<div class="box">
 			<div class="inbox">
 				<div class="postleft">
