@@ -3,6 +3,7 @@
 *.pyc
 *.un~
 local_settings.py
+.DS_Store
 faces/*/*
 djangobb_index/*
 static/djangobb_forum/attachments/*
