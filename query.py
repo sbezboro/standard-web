@@ -33,9 +33,11 @@ def query(server):
             player.save()
         
         if server.id == 2:
-            nickname_ansi = player_info.get('nickname')
+            nickname_ansi = player_info.get('nickname_ansi')
+            nickname = player_info.get('nickname')
+            
             player.nickname_ansi = nickname_ansi
-            player.nickname = h.strip_ansi(nickname_ansi)
+            player.nickname = nickname
             player.save()
         
         ip = player_info.get('address')
