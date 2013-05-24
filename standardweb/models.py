@@ -46,6 +46,7 @@ class ServerStatus(models.Model):
     server = models.ForeignKey('Server')
     player_count = models.IntegerField(default = 0)
     cpu_load = models.FloatField(default = 0)
+    tps = models.FloatField(default = 0)
     
 class MojangStatus(models.Model):
     timestamp = models.DateTimeField(default = datetime.utcnow)
