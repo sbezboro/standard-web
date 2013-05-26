@@ -137,8 +137,8 @@ def _get_player_graph_data(server, show_new_players=False, granularity=15, start
     start_date = start_date or end_date - timedelta(days = 7)
     
     statuses = ServerStatus.objects.filter(server=server,
-                                           timestamp__gte=start_date,
-                                           timestamp__lte=end_date).order_by('timestamp')
+                                           timestamp__gt=start_date,
+                                           timestamp__lt=end_date).order_by('timestamp')
     
     if show_new_players:
         new_players = PlayerStats.objects.filter(server=server,
