@@ -61,7 +61,7 @@ def analytics(request, server_id=None):
     weeks = (datetime.utcnow() - earliest_date).days / 7
     
     for i in xrange(weeks + 1):
-        cohorts.append({'entrants': [], 'total_time_spent': 0, 'less_than_hour': 0, 'active': 0, 'returns': [], 'inactive': 0})
+        cohorts.append({'entrants': [], 'total_time_spent': 0, 'more_than_hour': 0, 'active': 0, 'returns': [], 'inactive': 0})
         
     players = MinecraftPlayer.objects.filter(stats__server_id=server.id).values('username', 'stats__first_seen', 'stats__last_seen', 'stats__time_spent')
     
@@ -76,8 +76,8 @@ def analytics(request, server_id=None):
         cohorts[entry_week]['entrants'].append(username)
         cohorts[entry_week]['total_time_spent'] += time_spent
         
-        if time_spent < 60:
-            cohorts[entry_week]['less_than_hour'] += 1
+        if time_spent > 60:
+            cohorts[entry_week]['more_than_hour'] += 1
         
         difference = last_seen - earliest_date
         last_week = difference.days / 7
@@ -86,17 +86,6 @@ def analytics(request, server_id=None):
             cohorts[entry_week]['active'] += 1
         elif last_week == entry_week: #only seen this entry_week
             cohorts[entry_week]['inactive'] += 1
-        '''
-        if cohort < weeks:
-            cohorts[cohort].setdefault('returns', [0] * (weeks - cohort))
-            
-            for i in xrange(0, cohort):
-                if datetime.utcnow() - timedelta(days = 7 * (i + 1)) < last_seen:
-                    cohorts[cohort]['returns'][cohort - i - 1] += 1
-                
-                    if i == 0:
-                        cohorts[cohort]['active'].append(player.username)
-        '''
     for cohort in cohorts:
         if len(cohort['entrants']):
             minutes = cohort['total_time_spent'] / len(cohort['entrants'])
