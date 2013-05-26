@@ -17,41 +17,27 @@
     <div id="main">
         {% for cohort in cohorts %}
             {% if forloop.revcounter0 == 0 %}
-                <h1>This week - {{ cohort.new }} new players</h1>
+                <h1>This week - {{ cohort.entrants|length }} new players</h1>
             {% else %}
-                <h1>{{ forloop.revcounter0 }} week{{ forloop.revcounter0|pluralize }} ago - {{ cohort.new }} new players</h1>
+                <h1>{{ forloop.revcounter0 }} week{{ forloop.revcounter0|pluralize }} ago - {{ cohort.entrants|length }} new players</h1>
             {% endif %}
             <div id="graph" class="graph progress" weekIndex="{{ forloop.counter0 }}"></div>
-            {% if cohort.returns|length %}
-                <h3>Returning users by week</h3>
-                <div>
-                    {% for return in cohort.returns %}
-                        {% if forloop.last %}
-                            <b>
-                        {% endif %}
-                        {{ return }}
-                        {% if forloop.last %}
-                            </b>
-                        {% endif %}
-                    {% endfor %}
-                </div>
+            
+            {% if cohort.average_time_spent %}
+                <h3>Average time spent per new player starting this week</h3>
+                {{ cohort.average_time_spent }}
             {% endif %}
-            {% if cohort.active|length %}
-                <h3>Currently active users</h3>
-                {% for username in cohort.active %}
-                    <div class="player-section">
-                        <a href="/player/{{ username }}">
-                            <span>
-                                <img class="face-thumb" src="/faces/16/{{ username }}.png">
-                                {{ username }}
-                            </span>
-                        </a>
-                    </div>
-                {% endfor %}
+            {% if forloop.revcounter0 > 0 %}
+                <h3>New players starting this week with less than one hour played</h3>
+                {{ cohort.less_than_hour }}
             {% endif %}
-                {% if cohort.inactive %}
-                <h3>Users last seen this week</h3>
+            {% if cohort.inactive %}
+                <h3>New players last seen this week</h3>
                 {{ cohort.inactive }}
+            {% endif %}
+            {% if cohort.inactive %}
+                <h3>New players still playing now</h3>
+                {{ cohort.active }}
             {% endif %}
         {% endfor %}
     </div>
