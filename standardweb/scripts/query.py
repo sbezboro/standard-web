@@ -79,7 +79,6 @@ def query(server):
     status.save()
 
 def main():
-    import pdb; pdb.set_trace()
     for server in Server.objects.all():
         try:
             query(server)

@@ -10,7 +10,6 @@ django-haystack==1.2.7
 django-messages==0.4.4
 django-pagination==1.0.7
 django-registration==0.8
-djangobb-forum==0.0.1a0
 gunicorn==0.14.5
 paramiko==1.10.0
 postmarkup==1.2.0
