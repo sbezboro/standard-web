@@ -80,7 +80,10 @@ def query(server):
 
 def main():
     for server in Server.objects.all():
-        query(server)
+        try:
+            query(server)
+        except:
+            rollbar.report_exc_info(sys.exc_info())
     
     try:
         response = urllib2.urlopen('http://status.mojang.com/check')
@@ -100,7 +103,11 @@ def main():
         auth = False
         skins = False
     
-    mojang_status = MojangStatus(website = website, login = login, session = session, account = account, auth = auth, skins = skins)
+    mojang_status = MojangStatus(website=website,
+                                 login=login, session=session,
+                                 account=account,
+                                 auth=auth,
+                                 skins=skins)
     mojang_status.save()    
 
 
