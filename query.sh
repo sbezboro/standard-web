@@ -1,2 +1,3 @@
 #!/bin/bash
-. /home/sbezboro/standard-web-env/bin/activate; python /home/sbezboro/standard-web/query.py
+cd /home/sbezboro/standard-web
+. ../standard-web-env/bin/activate; python -m standardweb.scripts.query
