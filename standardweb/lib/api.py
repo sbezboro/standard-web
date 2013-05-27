@@ -37,10 +37,12 @@ def get_server_status(server):
     return api.call('server_status')
     
 
-def announce_player_time(server, player_name, minutes):
+def send_player_stats(server, stats):
     api = get_api(server.address)
     
-    api.call('player_time', player_name, minutes)
+    api.call('player_stats', {
+        'data': stats
+    })
 
 
 def forum_post(username, forum_name, topic_name, path):
@@ -50,11 +52,12 @@ def forum_post(username, forum_name, topic_name, path):
         try:
             api = get_api(server.address)
             
-            api.call('forum_post',
-                     username,
-                     forum_name,
-                     topic_name,
-                     '%s%s' % (base_url, path))
+            api.call('forum_post', {
+                'username': username,
+                'forum_name': forum_name,
+                'topic_name': topic_name,
+                'path': '%s%s' % (base_url, path)
+            })
         except:
             rollbar.report_exc_info(sys.exc_info())
 

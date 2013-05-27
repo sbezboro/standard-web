@@ -25,6 +25,8 @@ def query(server):
     except:
         server_status = {}
     
+    stats = []
+    
     for player_info in server_status.get('players', []):
         try:
             player = MinecraftPlayer.objects.get(username=player_info.get('username'))
@@ -58,8 +60,12 @@ def query(server):
         player_stats.time_spent += 1
         player_stats.save()
         
-        if player_stats.time_spent % 6000 == 0:
-            api.announce_player_time(server, player.username, player_stats.time_spent)
+        stats.append({
+            'username': player.username,
+            'minutes': player_stats.time_spent
+        })
+    
+    api.send_player_stats(server, stats)
     
     banned_players = server_status.get('banned_players', [])
     PlayerStats.objects.filter(server=server, player__username__in=banned_players).update(banned=True)
