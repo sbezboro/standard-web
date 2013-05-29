@@ -178,6 +178,7 @@ def rank_query(request):
             'result': 1,
             'rank': rank,
             'time': time,
+            'minutes': stats.time_spent,
             'veteran': vetaran
         }
         
