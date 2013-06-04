@@ -11,6 +11,7 @@ from django.contrib.sites.models import Site
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.core.cache import cache
+from django.core.mail import EmailMessage
 from django.db.models import Q, F, Sum
 from django.utils.encoding import smart_str
 from django.db import transaction
@@ -29,6 +30,8 @@ from djangobb_forum.util import smiles, convert_text_to_html, TopicFromPostResul
 from djangobb_forum.templatetags.forum_extras import forum_moderated_by
 
 from haystack.query import SearchQuerySet, SQ
+
+from standardweb import settings
 
 
 def index(request, full=True):
@@ -236,9 +239,15 @@ def misc(request):
             body_html = convert_text_to_html(form.cleaned_data['body'], 'bbcode')
             
             body = '%s<br><br><hr>Sent by <b>%s</b> on the Standard Survival Forum<br>%s' \
-                   % (body_html, request.user.username, Site.objects.get_current().domain)   
+                   % (body_html, request.user.username, Site.objects.get_current().domain)
             
-            user.email_user(subject, body, from_email=from_email)
+            message = EmailMessage(subject, body,
+                '%s <%s>' % (request.user.username, settings.DEFAULT_FROM_EMAIL),
+                [user.email], bcc=[settings.DEFAULT_FROM_EMAIL],
+                headers={'Reply-To': from_email})
+            message.content_subtype = 'html'
+            message.send()
+            
             return HttpResponseRedirect(reverse('djangobb:index'))
 
     elif 'mail_to' in request.GET:
