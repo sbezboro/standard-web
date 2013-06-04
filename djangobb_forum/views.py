@@ -16,7 +16,7 @@ from django.utils.encoding import smart_str
 from django.db import transaction
 from django.views.decorators.csrf import csrf_exempt
 
-from djangobb_forum.util import build_form, paginate, set_language
+from djangobb_forum.util import build_form, convert_text_to_html, paginate, set_language
 from djangobb_forum.models import Category, Forum, Topic, Post, Profile, Reputation,\
     Attachment, PostTracking
 from djangobb_forum.forms import AddPostForm, EditPostForm, UserSearchForm,\
@@ -216,12 +216,30 @@ def misc(request):
     elif 'submit' in request.POST and 'mail_to' in request.GET:
         form = MailToForm(request.POST)
         if form.is_valid():
+            email = form.cleaned_data['email']
             user = get_object_or_404(User, username=request.GET['mail_to'])
             subject = form.cleaned_data['subject']
-            body = form.cleaned_data['body'] + '\n %s %s [%s]' % (Site.objects.get_current().domain,
-                                                                  request.user.username,
-                                                                  request.user.email)
-            user.email_user(subject, body, request.user.email)
+            
+            from_email = request.user.email or email
+            
+            if not from_email or '@' not in from_email:
+                form.errors['email'] = 'Please enter a valid email address!'
+                
+                return render(request, 'djangobb_forum/mail_to.html', {
+                    'form': form
+                })
+            
+            if not request.user.email:
+                request.user.email = from_email
+                request.user.save()
+            
+            body_html = convert_text_to_html(form.cleaned_data['body'], 'bbcode')
+            
+            body = '%s<br><br><hr>Sent by <b>%s</b> on the Standard Survival Forum<br>%s' \
+                   % (body_html, request.user.username, Site.objects.get_current().domain)   
+            
+            import pdb; pdb.set_trace()
+            user.email_user(subject, body, from_email=from_email)
             return HttpResponseRedirect(reverse('djangobb:index'))
 
     elif 'mail_to' in request.GET:

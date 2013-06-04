@@ -369,6 +369,7 @@ class ReputationForm(forms.ModelForm):
         return reputation
 
 class MailToForm(forms.Form):
+    email = forms.CharField(label=_('Your E-mail Address'), required=False)
     subject = forms.CharField(label=_('Subject'),
                               widget=forms.TextInput(attrs={'size':'75', 'maxlength':'70', 'class':'longinput'}))
     body = forms.CharField(required=False, label=_('Message'), 

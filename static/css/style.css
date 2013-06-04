@@ -283,6 +283,10 @@ a:hover {
     height: 17px;
 }
 
+.error {
+    color: rgb(202, 0, 0);
+}
+
 #admin-panel #console-area {
     margin-right: 250px;
 }

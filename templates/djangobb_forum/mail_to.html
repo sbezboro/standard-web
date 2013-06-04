@@ -12,6 +12,10 @@
 				<fieldset>
 					<legend>{% trans "Write and submit your e-mail message" %}</legend>
 					<div class="infldset txtarea">
+						{% if not request.user.email %}
+							<label><strong>{{ form.email.label }}</strong><br />
+							{{ form.email }}<div class="error">{{ form.email.errors }}</div><br /></label>
+						{% endif %}
 						<label><strong>{{ form.subject.label }}</strong><br />
 						{{ form.subject }}<br /></label>
 						<label><strong>{{ form.body.label }}</strong><br />
