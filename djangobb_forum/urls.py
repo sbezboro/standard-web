@@ -75,11 +75,11 @@ urlpatterns = patterns('',
     url('^subscription/topic/(?P<topic_id>\d+)/add/$', forum_views.add_subscription, name='forum_add_subscription'),
     
     # Feeds
-    url(r'^feeds/posts/$', LastPosts(), name='forum_posts_feed'),
-    url(r'^feeds/topics/$', LastTopics(), name='forum_topics_feed'),
-    url(r'^feeds/topic/(?P<topic_id>\d+)/$', LastPostsOnTopic(), name='forum_topic_feed'),
-    url(r'^feeds/forum/(?P<forum_id>\d+)/$', LastPostsOnForum(), name='forum_forum_feed'),
-    url(r'^feeds/category/(?P<category_id>\d+)/$', LastPostsOnCategory(), name='forum_category_feed'),
+    #url(r'^feeds/posts/$', LastPosts(), name='forum_posts_feed'),
+    #url(r'^feeds/topics/$', LastTopics(), name='forum_topics_feed'),
+    #url(r'^feeds/topic/(?P<topic_id>\d+)/$', LastPostsOnTopic(), name='forum_topic_feed'),
+    #url(r'^feeds/forum/(?P<forum_id>\d+)/$', LastPostsOnForum(), name='forum_forum_feed'),
+    #url(r'^feeds/category/(?P<category_id>\d+)/$', LastPostsOnCategory(), name='forum_category_feed'),
 )
 
 ### EXTENSIONS ###

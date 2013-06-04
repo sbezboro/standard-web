@@ -238,7 +238,6 @@ def misc(request):
             body = '%s<br><br><hr>Sent by <b>%s</b> on the Standard Survival Forum<br>%s' \
                    % (body_html, request.user.username, Site.objects.get_current().domain)   
             
-            import pdb; pdb.set_trace()
             user.email_user(subject, body, from_email=from_email)
             return HttpResponseRedirect(reverse('djangobb:index'))
 
