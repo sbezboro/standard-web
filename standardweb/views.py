@@ -282,14 +282,13 @@ def player(request, username, server_id=None):
         player = MinecraftPlayer.objects.get(username=username)
         player_stats = PlayerStats.objects.get(server=server, player=player)
     except Exception, e:
-        response = render_to_response('player.html', {
+        return render_to_response('player.html', {
             'exists': False,
             'servers': Server.objects.all(),
             'server_id': server_id,
             'username': username,
-            }, context_instance=RequestContext(request))
-        response.status_code=404
-        return response
+            'noindex': True
+        }, context_instance=RequestContext(request))
     
     death_info = {}
     pvp_deaths = {}

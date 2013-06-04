@@ -3,6 +3,9 @@
 <head>
     <title>{% block title %}Standard Survival Minecraft Server{% endblock %}</title>
     <meta name="description" content="A vanilla-inspired Minecraft survival server">
+    {% if noindex %}
+    <meta name="robots" content="noindex">
+    {% endif %}
     <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css">
     <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/tipsy.css">
         
