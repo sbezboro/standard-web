@@ -434,6 +434,8 @@ def get_face(request, size=16, username=None):
     
     image = None
     
+    path = '%s/faces/%s/%s.png' % (PROJECT_PATH, size, username)
+    
     try:
         url = 'http://s3.amazonaws.com/MinecraftSkins/%s.png' % username
         image_response = urllib.urlopen(url)
@@ -441,8 +443,6 @@ def get_face(request, size=16, username=None):
         if image_response.getcode() == 200:
             last_modified = image_response.info().getheader('Last-Modified')
             last_modified_date = datetime.strptime(last_modified, '%a, %d %b %Y %H:%M:%S %Z')
-            
-            path = '%s/faces/%s/%s.png' % (PROJECT_PATH, size, username)
             
             try:
                 file_date = datetime.fromtimestamp(os.path.getmtime(path))
@@ -457,7 +457,9 @@ def get_face(request, size=16, username=None):
     except:
         pass
     
-    image = image or _extract_face(Image.open(PROJECT_PATH + '/static/images/char.png'), size)
+    if not image:
+        image = _extract_face(Image.open(PROJECT_PATH + '/static/images/char.png'), size)
+        image.save(path)
     
     tmp = StringIO.StringIO()
     image.save(tmp, 'PNG')

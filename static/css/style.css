@@ -159,6 +159,44 @@ code {
     background-color: #fff;
 }
 
+.sub-header {
+    height: 30px;
+    text-align: left;
+    
+    border-bottom: 1px solid #aaa;
+    
+    background: #ddd;
+}
+
+.sub-header ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    border-left: 1px solid #bbb;
+}
+
+.sub-header li {
+    display: inline;
+    margin-right: -4px;
+    padding: 0;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.sub-header li div {
+    color: #222;
+    padding: 0 11px;
+    border-right: 1px solid #bbb;
+    display: table-cell;
+    height: 30px;
+    vertical-align: middle;
+}
+
+span.stat {
+    color: #555;
+    margin-left: 10px;
+}
+
 h1 {
     font-size: 3.8em;
     margin-bottom: 3px;
@@ -287,11 +325,11 @@ a:hover {
     color: rgb(202, 0, 0);
 }
 
-#admin-panel #console-area {
+.admin-panel .admin-left {
     margin-right: 250px;
 }
 
-#admin-panel #console {
+.admin-panel .console {
     height: 600px;
     overflow-y: scroll;
     overflow-x: hidden;
@@ -303,11 +341,11 @@ a:hover {
     list-style: none;
 }
 
-#admin-panel #console a {
+.admin-panel .console a {
     color: inherit;
 }
 
-#admin-panel #console-textbox {
+.admin-panel .console-textbox {
     width: 100%;
     height: 22px;
     font-family: "Lucida Console", Monaco, monospace;
@@ -317,17 +355,30 @@ a:hover {
     -webkit-box-sizing: border-box;
 }
 
-#admin-panel #players-area {
+.admin-panel .admin-right {
     float: right;
     width: 250px;
 }
 
-#admin-panel #players {
+.admin-panel .stats {
+    height: 30px;
+    background-color: #ddd;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #bbb;
+    vertical-align: middle;
+    height: 100%;
+    display: inline-block;
+}
+
+.admin-panel .stats span {
+}
+
+.admin-panel .players {
     padding: 5px;
     overflow-y: scroll;
 }
 
-#admin-panel #users {
+.admin-panel .users {
     padding: 5px;
     overflow-y: scroll;
     border-top: 2px solid #aaa;

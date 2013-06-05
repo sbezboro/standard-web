@@ -128,6 +128,10 @@
               socket.on('mc-connection-lost', function() {
                   addChatLine("Connection to Minecraft server lost, retrying...");
               });
+            
+              socket.on('mc-connection-restored', function() {
+                  addChatLine("Connection restored!");
+              });
               
               // Receive a chat line
               socket.on('chat', function(data) {
@@ -135,7 +139,7 @@
               });
               
               // Update list of players shown
-              socket.on('player-list', function(data) {
+              socket.on('server-status', function(data) {
                   var players = data.players;
                   var numPlayers = data.numPlayers;
                   var maxPlayers = data.maxPlayers;

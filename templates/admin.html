@@ -9,21 +9,40 @@
         <ul>
           {% for server in servers %}
           <li {% if server.id == server_id %}class="selected"{% endif %}>
-              <a class="tooltip" href="/{{server.id}}/server-admin" title="Address: {{ server.address }}">{{ server.name }}</a>
+            <a class="tooltip" href="/{{server.id}}/server-admin" title="Address: {{ server.address }}">{{ server.name }}</a>
           </li>
           {% endfor %}
         </ul>
       </div>
     </div>
-    <div id="admin-panel">
-        <div id="players-area">
-            <div id="players"></div>
-            <div id="users"></div>
-        </div>
-        <div id="console-area">
-            <div id="console"></div>
-            <input id="console-textbox" type="text">
-        </div>
+    <div class="sub-header">
+      <ul>
+        <li>
+          <div>Players<span class="stat player-count">-</span></div>
+        </li>
+        <li>
+          <div>TPS<span class="stat tps">-</span></div>
+        </li>
+        <li>
+          <div>CPU Load<span class="stat cpu">-</span></div>
+        </li>
+        <li>
+          <div>Free Memory<span class="stat memory">-</span></div>
+        </li>
+        <li>
+          <div>Free Disk Space<span class="stat disk-space">-</span></div>
+        </li>
+      </ul>
+    </div>
+    <div class="admin-panel">
+      <div class="admin-right">
+        <div class="players"></div>
+        <div class="users"></div>
+      </div>
+      <div class="admin-left">
+        <div class="console"></div>
+        <input class="console-textbox" type="text">
+      </div>
     </div>
     
     <script src="http://{{ rts_address }}/socket.io/socket.io.js"></script>
@@ -32,8 +51,9 @@
         var commandIndex = -1;
         var socket;
         
+        var $console;
+        
         function addConsoleLine(line) {
-            var $console = $('#console');
             var shouldScroll = $console.get(0).scrollHeight - $console.scrollTop() == $console.outerHeight();
             
             $console.append('<li>' + line + '</li>');
@@ -57,7 +77,7 @@
             // Authenticate using the current django session key. It must belong
             // to a superuser to proceed with socket.io connection
             socket.on('connect', function() {
-                $("#console").empty();
+                $console.empty();
                 
                 var djangoSessionKey = "{{ request.session.session_key }}";
                 socket.emit('auth', {
@@ -80,16 +100,26 @@
                 addConsoleLine("Connection to Minecraft server lost, retrying...");
             });
             
+            socket.on('mc-connection-restored', function() {
+                addConsoleLine("Connection restored!");
+            });
+            
             // Receive a console output line
             socket.on('console', function(data) {
                 addConsoleLine(data.line);
             });
             
-            // Update list of players shown
-            socket.on('player-list', function(data) {
+            // Update server status display
+            socket.on('server-status', function(data) {
                 var players = data.players;
                 var numPlayers = data.numPlayers;
                 var maxPlayers = data.maxPlayers;
+                var cpuLoad = data.cpuLoad;
+                var tps = data.tps;
+                var totalMemory = data.totalMemory;
+                var freeMemory = data.freeMemory;
+                var totalSpace = data.totalSpace;
+                var freeSpace = data.freeSpace;
                 
                 players = players.sort(function(a, b) {
                     a = (a.nickname ? a.nickname : a.username);
@@ -100,7 +130,7 @@
                     return 0;
                 });
                 
-                $('#players').html('<b>Player count: ' + numPlayers + ' / ' + maxPlayers + '</b>');
+                var playersHtml = '';
                 for (var i = 0; i < players.length; ++i) {
                     var username = players[i].username;
                     var nickname = players[i].nickname;
@@ -111,8 +141,15 @@
                                     '</a>',
                                 '</div>'].join('');
                     
-                    $('#players').append(html);
+                    playersHtml += html;
                 }
+                
+                $('.players').html(playersHtml);
+                $('.player-count').text(numPlayers + '/' + maxPlayers);
+                $('.cpu').text(cpuLoad);
+                $('.tps').text(tps);
+                $('.memory').text(freeMemory + '/' + totalMemory + 'MB');
+                $('.disk-space').text(freeSpace + '/' + totalSpace + 'MB');
             });
             
             socket.on('chat-users', function(data) {
@@ -141,21 +178,21 @@
                     }
                 }
                 
-                $('#users').html(html);
+                $('.users').html(html);
             });
         }
             
         function resize() {
-            $("#console").height($(window).height() - $("#header").outerHeight() - $(".nav-header").outerHeight() - 30);
-            $("#players").height($(window).height() - $("#header").outerHeight() - $(".nav-header").outerHeight() - 150);
-            $("#users").height(128);
+            $console.height($(window).height() - $("#header").outerHeight() - $(".nav-header").outerHeight() - $(".sub-header").outerHeight() - 30);
+            $(".players").height($(window).height() - $("#header").outerHeight() - $(".nav-header").outerHeight() - $(".sub-header").outerHeight() - 150);
+            $(".users").height(128);
         }
         
-        resize();
-        
         $(document).ready(function() {
-            var $console = $('#console');
-            var $consoleTextbox = $('#console-textbox');
+            $console = $('.console');
+            var $consoleTextbox = $('.console-textbox');
+        
+            resize();
             
             socketConnect();
             
@@ -206,7 +243,7 @@
             
             $(window).resize(function() {
                 resize();
-                $('#console').scrollTop($('#console').get(0).scrollHeight);
+                $console.scrollTop($console.get(0).scrollHeight);
             });
         })
     </script>
