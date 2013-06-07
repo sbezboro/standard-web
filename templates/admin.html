@@ -106,7 +106,15 @@
             
             // Receive a console output line
             socket.on('console', function(data) {
-                addConsoleLine(data.line);
+                if (data.line) {
+                    addConsoleLine(data.line);
+                } else if (data.batch) {
+                    console.log(data.batch);
+                    
+                    data.batch.map(function(line) {
+                        addConsoleLine(line);
+                    });
+                }
             });
             
             // Update server status display

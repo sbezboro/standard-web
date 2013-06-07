@@ -135,7 +135,15 @@
               
               // Receive a chat line
               socket.on('chat', function(data) {
-                  addChatLine(data.line);
+                  if (data.line) {
+                      addChatLine(data.line);
+                  } else if (data.batch) {
+                      console.log(data.batch);
+                      
+                      data.batch.map(function(line) {
+                          addChatLine(line);
+                      });
+                  }
               });
               
               // Update list of players shown
