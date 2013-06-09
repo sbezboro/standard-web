@@ -26,12 +26,6 @@
         <li>
           <div>CPU Load<span class="stat cpu">-</span></div>
         </li>
-        <li>
-          <div>Free Memory<span class="stat memory">-</span></div>
-        </li>
-        <li>
-          <div>Free Disk Space<span class="stat disk-space">-</span></div>
-        </li>
       </ul>
     </div>
     <div class="admin-panel">
@@ -124,10 +118,6 @@
                 var maxPlayers = data.maxPlayers;
                 var cpuLoad = data.cpuLoad;
                 var tps = data.tps;
-                var totalMemory = data.totalMemory;
-                var freeMemory = data.freeMemory;
-                var totalSpace = data.totalSpace;
-                var freeSpace = data.freeSpace;
                 
                 players = players.sort(function(a, b) {
                     a = (a.nickname ? a.nickname : a.username);
@@ -156,8 +146,6 @@
                 $('.player-count').text(numPlayers + '/' + maxPlayers);
                 $('.cpu').text(cpuLoad);
                 $('.tps').text(tps);
-                $('.memory').text(freeMemory + '/' + totalMemory + 'MB');
-                $('.disk-space').text(freeSpace + '/' + totalSpace + 'MB');
             });
             
             socket.on('chat-users', function(data) {
