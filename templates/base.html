@@ -12,6 +12,8 @@
     <script>
         var _rollbarParams = {
             "server.environment": {% if debug %}"development"{% else %}"production"{% endif %},
+            "client.javascript.code_version": "1",
+            "client.javascript.source_map_enabled": true,
             {% if user.is_authenticated %}person:{id:{{user.id}},username:'{{user.username}}',email:'{{user.email}}'}{% endif %}
         };
         _rollbarParams["notifier.snippet_version"] = "2"; var _rollbar=["76c3a5381627453a9c655f687aee7ef4", _rollbarParams]; var _ratchet=_rollbar;
@@ -37,7 +39,7 @@
     <script type="text/javascript" src="{{STATIC_URL}}js/jquery.timeago.min.js"></script>
     <script type="text/javascript" src="{{STATIC_URL}}js/jquery.tipsy.min.js"></script>
     <!--[if lte IE 8]><script type="text/javascript" src="{{STATIC_URL}}js/excanvas.min.js"></script><![endif]-->
-    <script type="text/javascript" src="{{STATIC_URL}}js/graph.js"></script>
+    <script type="text/javascript" src="{{STATIC_URL}}js/graph.min.js"></script>
 </head>
 
 <body>
