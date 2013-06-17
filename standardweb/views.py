@@ -449,7 +449,9 @@ def get_face(request, size=16, username=None):
             except:
                 file_date = None
             
-            if not file_date or last_modified_date > file_date:
+            if not file_date or last_modified_date > file_date \
+                or datetime.now() - file_date > timedelta(days=1):
+                
                 image = _extract_face(Image.open(StringIO.StringIO(image_response.read())), size)
                 image.save(path)
             else:
