@@ -62,7 +62,8 @@ def query(server):
         
         stats.append({
             'username': player.username,
-            'minutes': player_stats.time_spent
+            'minutes': player_stats.time_spent,
+            'rank': player_stats.get_rank()
         })
     
     api.send_player_stats(server, stats)
