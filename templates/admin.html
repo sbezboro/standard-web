@@ -24,7 +24,7 @@
           <div>TPS<span class="stat tps">-</span></div>
         </li>
         <li>
-          <div>CPU Load<span class="stat cpu">-</span></div>
+          <div>Load<span class="stat load">-</span></div>
         </li>
       </ul>
     </div>
@@ -32,6 +32,9 @@
       <div class="admin-right">
         <div class="players"></div>
         <div class="users"></div>
+      </div>
+      <div class="detail">
+        
       </div>
       <div class="admin-left">
         <div class="console"></div>
@@ -116,7 +119,7 @@
                 var players = data.players;
                 var numPlayers = data.numPlayers;
                 var maxPlayers = data.maxPlayers;
-                var cpuLoad = data.cpuLoad;
+                var load = data.load;
                 var tps = data.tps;
                 
                 players = players.sort(function(a, b) {
@@ -144,7 +147,7 @@
                 
                 $('.players').html(playersHtml);
                 $('.player-count').text(numPlayers + '/' + maxPlayers);
-                $('.cpu').text(cpuLoad);
+                $('.load').text(load);
                 $('.tps').text(tps);
             });
             
