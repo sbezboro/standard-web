@@ -73,7 +73,7 @@ def query(server):
     PlayerStats.objects.filter(server=server).exclude(player__username__in=banned_players).update(banned=False)
     
     player_count = server_status.get('numplayers', 0) or 0
-    cpu_load = server_status.get('cpu_load', 0) or 0
+    cpu_load = server_status.get('load', 0) or 0
     tps = server_status.get('tps', 0) or 0
     
     status = ServerStatus(server=server, player_count=player_count, cpu_load=cpu_load, tps=tps)
