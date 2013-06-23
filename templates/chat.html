@@ -171,9 +171,10 @@
               socketConnect();
             
               $(document).keypress(function (e) {
-                  if (!$chatTextbox.is(':focus')
-                      && !$('#searchBox').is(':focus')) {
-                      $chatTextbox.focus();
+                  var focused = $(':focus');
+                  if ($consoleTextbox != focused
+                      && (!focused[0] || focused[0].type == false)) {
+                      $consoleTextbox.focus();
                   }
               });
               

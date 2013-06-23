@@ -334,11 +334,12 @@ a:hover {
     overflow-y: scroll;
     overflow-x: hidden;
     font-family: "Lucida Console", Monaco, monospace;
-    font-size: 11px;
+    font-size: 10px;
     background-color: #000;
     color: #eee;
     padding: 4px;
     list-style: none;
+    -webkit-font-smoothing: none;
 }
 
 .admin-panel .console a {
@@ -353,6 +354,10 @@ a:hover {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
+}
+
+.admin-panel .console-textbox.len-warn {
+    background: #fff337;
 }
 
 .admin-panel .admin-right {
@@ -370,7 +375,9 @@ a:hover {
     display: inline-block;
 }
 
-.admin-panel .stats span {
+.admin-panel .detail {
+    float: right;
+    width: 200px;
 }
 
 .admin-panel .players {

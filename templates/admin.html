@@ -196,13 +196,20 @@
             socketConnect();
             
             $(document).keypress(function (e) {
-                if (!$consoleTextbox.is(":focus")
-                    && !$('#searchBox').is(':focus')) {
+                var focused = $(':focus');
+                if ($consoleTextbox != focused
+                    && (!focused[0] || focused[0].type == false)) {
                     $consoleTextbox.focus();
                 }
             });
             
             $consoleTextbox.keyup(function (e) {
+                if ($consoleTextbox.val().length >= 53) {
+                    $consoleTextbox.addClass('len-warn');
+                } else {
+                    $consoleTextbox.removeClass('len-warn');
+                }
+                
                 switch (e.which) {
                     case 13: //Enter
                         var data = {};
