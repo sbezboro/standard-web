@@ -137,8 +137,8 @@ DIV.block DIV.inbox, DIV.blockmenu DIV.inbox {PADDING: 3px 6px}
 
 .djangobb H1 {PADDING: 3px 0px 0px 0px}
 #brdtitle P {PADDING-TOP: 0px}
-DIV.linkst {PADDING: 8px 6px 3px 6px}
-DIV.linksb, DIV.postlinksb {PADDING: 3px 6px 8px 6px}
+DIV.linkst {PADDING: 8px 0px 8px 6px}
+DIV.linksb, DIV.postlinksb {PADDING: 3px 0px 8px 6px}
 #brdwelcome, #brdfooter DL A, DIV.blockmenu LI, DIV.rbox INPUT  {LINE-HEIGHT: 1.4em}
 #viewprofile DT, #viewprofile DD {PADDING: 0 3px; LINE-HEIGHT: 2em}
 
@@ -223,10 +223,6 @@ UL.bblinks LI {PADDING-RIGHT: 20px}
 
 UL.bblinks {PADDING-BOTTOM: 10px; PADDING-LEFT: 4px}
 
-/* 9.5 Horizontal positioning for the submit button on forms */
-
-DIV.blockform P INPUT {MARGIN-LEFT: 12px}
-
 /****************************************************************/
 /* 10. POST STATUS INDICATORS */
 /****************************************************************/
@@ -277,5 +273,10 @@ TD DIV.tclcon {MARGIN-LEFT: 2.3em}
 }
 
 .infldset input[type="text"] {
-	width: 200px;
+	width: 280px;
+}
+
+.byuser {
+	display: block;
+	font-size: smaller;
 }

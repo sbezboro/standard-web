@@ -18,6 +18,7 @@
 	<h2><span>{% if forum %}{% trans "New topic" %}{% else %}{% trans "New reply" %}{% endif %}</span></h2>
 	<div class="box">
 		<form id="post" action="{% if forum %}{% url djangobb:add_topic forum.id %}{% else %}{% url djangobb:add_post topic.id %}{% endif %}" method="post" enctype="multipart/form-data">
+
 			{% csrf_token %}
 			<div class="inform">
 				<fieldset>
@@ -43,12 +44,16 @@
 				</fieldset>
 			</div>
 			{% endif %}
-
-			<p><input type="submit" value="{% trans "Submit" %}" /><a href="javascript:history.go(-1)">{% trans "Go back" %}</a></p>
+			<p><input class="btn" type="submit" value="{% trans "Submit" %}" /></p>
 		</form>
 	</div>
 </div>
-
+<script>
+	$('input[type=submit]').on('click', function(e) {
+		$(this).closest('form').submit();
+		$(this).attr('disabled', 'disabled');
+	});
+</script>
 {% if not forum %}
 <div id="postreview" class="blockpost">
 
