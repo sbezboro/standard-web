@@ -227,6 +227,7 @@
                         
                         socket.emit('console-input', data);
                         $consoleTextbox.val("");
+                        $consoleTextbox.removeClass('len-warn');
                         $console.scrollTop($console.get(0).scrollHeight);
                         
                         commandHistory.unshift(input);
