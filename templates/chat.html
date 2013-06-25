@@ -172,9 +172,9 @@
             
               $(document).keypress(function (e) {
                   var focused = $(':focus');
-                  if ($consoleTextbox != focused
+                  if ($chatTextbox != focused
                       && (!focused[0] || focused[0].type == false)) {
-                      $consoleTextbox.focus();
+                      $chatTextbox.focus();
                   }
               });
               
