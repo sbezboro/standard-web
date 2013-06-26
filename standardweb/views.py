@@ -224,6 +224,7 @@ def player_list(request, server_id=None):
             stats['players'] = players
             stats['num_players'] = server_status['numplayers']
             stats['max_players'] = server_status['maxplayers']
+            stats['tps'] = server_status['tps']
         except:
             stats = None
         

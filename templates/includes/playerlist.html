@@ -1,5 +1,6 @@
 {% block playerlist %}
   {% if stats %}
+    <b>Ticks per second: {{ stats.tps|floatformat:"0.0" }}</b><br><br>
     <b>Player count: {{ stats.num_players }} / {{ stats.max_players }}</b><br><br>
     {% if stats.players|length > 0 %}
       <b>Players online:</b>

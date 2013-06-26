@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 
 {% block select_index %}selected{% endblock %}
+
+{% block script_files %}
+<script src="{{STATIC_URL}}js/ZeroClipboard.min.js"></script>
+{% endblock %}
+
 {% block content %}
-    <script src="{{STATIC_URL}}js/ZeroClipboard.min.js"></script>
     <div id="main">
         {% if not status.session %}
         <div class="warning">
