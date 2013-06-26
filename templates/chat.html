@@ -40,7 +40,7 @@
           $(document).ready(function() {
               var $chat = $('#chat');
               var $chatTextbox = $('#chat-textbox');
-              var sessionKey = '{{ request.session.session_key }}';
+              var sessionKey = '{% if request.user.is_authenticated %}{{ request.session.session_key }}{% endif %}';
               var baseUrl = 'http://{{ rts_address }}';
               var serverId = {{ server_id }};
               
