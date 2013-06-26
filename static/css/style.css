@@ -192,6 +192,10 @@ code {
     vertical-align: middle;
 }
 
+#address {
+    cursor: pointer;
+}
+
 span.stat {
     color: #555;
     margin-left: 10px;

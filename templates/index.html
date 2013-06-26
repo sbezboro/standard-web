@@ -2,6 +2,7 @@
 
 {% block select_index %}selected{% endblock %}
 {% block content %}
+    <script src="{{STATIC_URL}}js/ZeroClipboard.min.js"></script>
     <div id="main">
         {% if not status.session %}
         <div class="warning">
@@ -14,8 +15,8 @@
             <div id="caption">A vanilla-inspired Minecraft survival server</div>
         </div>
         <div id="left-section">
-            <h2>Server Address</h2>
-            <p><b>standardsurvival.com</b></p>
+            <h2>Connect To</h2>
+            <p><b id="address" data-clipboard-target="address">standardsurvival.com</b></p>
         
             <h2>Description</h2>
             <p>Standard Survival is a 24/7 Minecraft survival server set up to be an immersive vanilla-like experience. As a result, <b>all teleport commands such as /tp, /home, /spawn are disabled</b>, but you can still set a different spawn by sleeping in a bed.</p>
@@ -62,6 +63,32 @@
         }
         
         $(document).ready(function() {
+            var $address = $('#address');
+            $address.tipsy({
+                trigger: 'manual',
+                gravity: 'w',
+                offset: 10
+            });
+            
+            var clipboard = new ZeroClipboard($address, {
+                moviePath: "/static/flash/ZeroClipboard.swf"
+            });
+            
+            clipboard.on('complete', function(client, args) {
+                $address.tipsy('hide');
+                $address.attr('original-title', 'Copied!');
+                $address.tipsy('show');
+            });
+            
+            clipboard.on('mouseover', function(client) {
+                $address.attr('original-title', 'Click to copy to clipboard');
+                $address.tipsy('show');
+            });
+              
+            clipboard.on('mouseout', function(client) {
+                $address.tipsy('hide');
+            });
+            
             loadPlayerList();
             loadPlayerGraph($("#graph"));
         });
