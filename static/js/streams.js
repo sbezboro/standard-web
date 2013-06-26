@@ -332,7 +332,7 @@ function ChatStream(sessionKey, baseUrl, $outputArea, $textbox, serverId) {
           serverId: serverId
         };
         
-        if (sessionKey) {
+        if (sessionKey && sessionKey.length) {
             data['djangoSessionKey'] = sessionKey;
         }
         
