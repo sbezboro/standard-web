@@ -240,7 +240,7 @@ def online(user):
 @register.filter
 def attachment_link(attach):
     from django.template.defaultfilters import filesizeformat
-    if attach.content_type in ['image/png', 'image/gif', 'image/jpeg']:
+    if attach.content_type in ['image/png', 'image/gif', 'image/jpeg', 'image/x-png']:
         img = '<img src="%s"/>' % (attach.get_absolute_url())
         return mark_safe(img)
         #img = '<img src="%sdjangobb_forum/img/attachment/image.png" alt="attachment" />' % (settings.STATIC_URL)

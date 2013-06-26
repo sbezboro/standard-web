@@ -249,7 +249,7 @@ def search(request):
     query = request.GET.get('q')
     
     if not query:
-        raise Http404
+        return redirect('/')
     
     players = MinecraftPlayer.objects.filter(Q(username__icontains=query) | Q(nickname__icontains=query))[:20]
     
