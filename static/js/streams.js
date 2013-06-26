@@ -1,8 +1,5 @@
 var commandHistory = [];
 var commandIndex = -1;
-var socket;
-
-var $outputArea;
 
 function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, source) {
     var _this = this;
