@@ -82,6 +82,8 @@
                 $address.tipsy('hide');
                 $address.attr('original-title', 'Copied!');
                 $address.tipsy('show');
+                _gaq.push(['_trackPageview', '/address/copied']); 
+                _rollbar.push({level: 'info', msg: 'Address copied'});
             });
             
             clipboard.on('mouseover', function(client) {
