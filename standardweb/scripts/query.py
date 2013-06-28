@@ -16,6 +16,7 @@ from django.conf import settings
 from standardweb.models import *
 from standardweb.lib import api
 from standardweb.lib import helpers as h
+from standardweb.lib.constants import *
 
 from datetime import datetime, timedelta
 
@@ -27,6 +28,7 @@ def query(server):
     
     stats = []
     
+    online_player_ids = []
     for player_info in server_status.get('players', []):
         try:
             player = MinecraftPlayer.objects.get(username=player_info.get('username'))
@@ -34,6 +36,21 @@ def query(server):
             player = MinecraftPlayer(username=player_info.get('username'))
             player.save()
         
+        online_player_ids.append(player.id)
+        
+        try:
+            last_activity = PlayerActivity.objects.filter(server=server, player=player).latest('timestamp')
+        except:
+            last_activity = None
+        
+        # if the last activity for this player is an 'exit' activity (or there isn't an activity),
+        # create a new 'enter' activity since they just joined this minute
+        if not last_activity or last_activity.activity_type == PLAYER_ACTIVITY_TYPES['exit']:
+            enter = PlayerActivity(server=server, player=player,
+                                   activity_type=PLAYER_ACTIVITY_TYPES['enter'])
+            enter.save()
+        
+        # respect nicknames from the main (id=2) server
         if server.id == 2:
             nickname_ansi = player_info.get('nickname_ansi')
             nickname = player_info.get('nickname')
@@ -65,6 +82,23 @@ def query(server):
             'minutes': player_stats.time_spent,
             'rank': player_stats.get_rank()
         })
+    
+    five_minutes_ago = datetime.utcnow() - timedelta(minutes=5)
+    query = PlayerStats.objects.filter(server=server, last_seen__gt=five_minutes_ago)
+    recent_player_ids = [x[0] for x in query.values_list('player_id')]
+    
+    # find all players that have recently left and insert an 'exit' activity for them
+    # if their last activity was an 'enter'
+    for player_id in set(recent_player_ids) - set(online_player_ids):
+        try:
+            latest_activity = PlayerActivity.objects.filter(server=server, player=player_id).latest('timestamp')
+        except:
+            latest_activity = None
+        
+        if latest_activity and latest_activity.activity_type == PLAYER_ACTIVITY_TYPES['enter']:
+            ex = PlayerActivity(server=server, player_id=player_id,
+                                   activity_type=PLAYER_ACTIVITY_TYPES['exit'])
+            ex.save()
     
     api.send_player_stats(server, stats)
     

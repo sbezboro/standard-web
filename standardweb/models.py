@@ -21,7 +21,7 @@ class MinecraftPlayer(models.Model):
 
 class VeteranStatus(models.Model):
     player = models.ForeignKey('MinecraftPlayer')
-    rank = models.IntegerField(default = 0)
+    rank = models.IntegerField(default=0)
     
 class Server(models.Model):
     name = models.CharField(max_length=30)
@@ -31,10 +31,10 @@ class Server(models.Model):
 class PlayerStats(models.Model):
     player = models.ForeignKey('MinecraftPlayer', related_name='stats')
     server = models.ForeignKey('Server')
-    time_spent = models.IntegerField(default = 0)
-    first_seen = models.DateTimeField(default = datetime.utcnow)
-    last_seen = models.DateTimeField(default = datetime.utcnow)
-    last_login = models.DateTimeField(default = datetime.utcnow, null=True)
+    time_spent=models.IntegerField(default=0)
+    first_seen = models.DateTimeField(default=datetime.utcnow)
+    last_seen = models.DateTimeField(default=datetime.utcnow)
+    last_login = models.DateTimeField(default=datetime.utcnow, null=True)
     banned = models.BooleanField(default=False)
     
     def get_rank(self):
@@ -42,18 +42,18 @@ class PlayerStats(models.Model):
         return len(above) + 1
 
 class ServerStatus(models.Model):
-    timestamp = models.DateTimeField(default = datetime.utcnow)
+    timestamp = models.DateTimeField(default=datetime.utcnow)
     server = models.ForeignKey('Server')
-    player_count = models.IntegerField(default = 0)
-    cpu_load = models.FloatField(default = 0)
-    tps = models.FloatField(default = 0)
+    player_count=models.IntegerField(default=0)
+    cpu_load = models.FloatField(default=0)
+    tps = models.FloatField(default=0)
     
 class MojangStatus(models.Model):
-    timestamp = models.DateTimeField(default = datetime.utcnow)
+    timestamp = models.DateTimeField(default=datetime.utcnow)
     website = models.BooleanField(default=True)
     login = models.BooleanField(default=True)
     session = models.BooleanField(default=True)
-    account = models.BooleanField(default=True)
+    account =models.BooleanField(default=True)
     auth = models.BooleanField(default=True)
     skins = models.BooleanField(default=True)
     
@@ -66,30 +66,37 @@ class KillType(models.Model):
     displayname = models.CharField(max_length = 100)
 
 class DeathEvent(models.Model):
-    timestamp = models.DateTimeField(default = datetime.utcnow)
+    timestamp = models.DateTimeField(default=datetime.utcnow)
     server = models.ForeignKey('Server')
     death_type = models.ForeignKey('DeathType', related_name = 'death_type')
     victim = models.ForeignKey('MinecraftPlayer', related_name = 'd_victim')
     killer = models.ForeignKey('MinecraftPlayer', related_name = 'd_killer', null=True)
     
 class KillEvent(models.Model):
-    timestamp = models.DateTimeField(default = datetime.utcnow)
+    timestamp = models.DateTimeField(default=datetime.utcnow)
     server = models.ForeignKey('Server')
     kill_type = models.ForeignKey('KillType', related_name = 'kill_type')
     killer = models.ForeignKey('MinecraftPlayer', related_name = 'k_killer')
     victim = models.ForeignKey('MinecraftPlayer', related_name = 'k_victim', null=True)
 
 class IPTracking(models.Model):
-    timestamp = models.DateTimeField(default = datetime.utcnow)
+    timestamp = models.DateTimeField(default=datetime.utcnow)
     ip = models.IPAddressField()
     player = models.ForeignKey('MinecraftPlayer', related_name='ip', null=True)
     user = models.ForeignKey(User, null=True)
+
+class PlayerActivity(models.Model):
+    timestamp = models.DateTimeField(default=datetime.utcnow)
+    server = models.ForeignKey('Server')
+    player = models.ForeignKey('MinecraftPlayer')
+    activity_type = models.IntegerField()
+
 
 '''
 class FactionRelation(models.Model):
     faction1 = models.ForeignKey('Faction', related_name = 'faction1')
     faction2 = models.ForeignKey('Faction', related_name = 'faction2')
-    relation_type = models.IntegerField(default = 0)
+    relation_type = models.IntegerField(default=0)
     
     class Meta:
         unique_together = ('faction1', 'faction2')
