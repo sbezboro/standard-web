@@ -262,7 +262,15 @@ def show_forum(request, forum_id, full=True):
     forum = get_object_or_404(Forum, pk=forum_id)
     if not forum.category.has_access(request.user):
         return HttpResponseForbidden()
-    topics = forum.topics.filter(deleted=False).order_by('-sticky', '-updated').select_related()
+    
+    topics = forum.topics.filter(deleted=False)
+    
+    if forum.locked:
+        topics = topics.order_by('-sticky', '-created')
+    else:
+        topics = topics.order_by('-sticky', '-updated')
+    
+    topics = topics.select_related()
     moderator = request.user.is_superuser or\
         request.user in forum.moderators.all()
     to_return = {'categories': Category.objects.all(),

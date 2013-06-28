@@ -61,9 +61,6 @@
 						{% endif %}
 						<dd>{% trans "Registered:" %} {{ post.user.date_joined|date:"Y-m-d" }}</dd>
 						<dd>{% trans "Posts:" %} {{ post.user.forum_profile.post_count }}</dd>
-						{% if moderator %}
-							<dd>{% trans "IP:" %} {{ post.user_ip }}</dd>
-						{% endif %}
 						{% if forum_settings.REPUTATION_SUPPORT %}
 								<dd><a href="{% url djangobb:reputation post.user.username %}">{% trans "Reputation" %}</a>:
 								{% if request.user != post.user %} {# TODO: and user.is_authenticated #}
