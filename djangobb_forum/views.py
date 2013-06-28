@@ -352,11 +352,10 @@ def add_post(request, forum_id, topic_id):
         topic = get_object_or_404(Topic, pk=topic_id, deleted=False)
         posts = topic.posts.filter(deleted=False).select_related()
         
-        forum = topic.forum
-        if not forum.category.has_access(request.user):
+        if not topic.forum.category.has_access(request.user):
             return HttpResponseForbidden()
         
-        if not request.user.is_superuser and forum.locked:
+        if not request.user.is_superuser and topic.forum.locked:
             return HttpResponseForbidden()
         
     if topic and topic.closed:
