@@ -9,7 +9,7 @@
 <div class="linkst">
 	<div class="inbox">
 		<div class="pagelink conl">{% paginate %}</div>
-		{% if user.is_authenticated %}
+		{% if user.is_authenticated and not forum.locked or user.is_superuser %}
 			<p class="postlink conr"><a class="btn" href="{% url djangobb:add_topic forum.id %}">{% trans "New topic" %}</a></p>
 		{% endif %}
 		<ul><li><a href="{% url djangobb:index %}">{% trans "Forum" %}</a> </li><li>&raquo; {{ forum.name }}</li></ul>

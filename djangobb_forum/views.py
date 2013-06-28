@@ -331,16 +331,26 @@ def add_post(request, forum_id, topic_id):
     forum = None
     topic = None
     posts = None
-
+    
     if forum_id:
         forum = get_object_or_404(Forum, pk=forum_id)
         if not forum.category.has_access(request.user):
             return HttpResponseForbidden()
+        
+        if not request.user.is_superuser and forum.locked:
+            return HttpResponseForbidden()
+        
     elif topic_id:
         topic = get_object_or_404(Topic, pk=topic_id, deleted=False)
         posts = topic.posts.filter(deleted=False).select_related()
-        if not topic.forum.category.has_access(request.user):
+        
+        forum = topic.forum
+        if not forum.category.has_access(request.user):
             return HttpResponseForbidden()
+        
+        if not request.user.is_superuser and forum.locked:
+            return HttpResponseForbidden()
+        
     if topic and topic.closed:
         return HttpResponseRedirect(topic.get_absolute_url())
 

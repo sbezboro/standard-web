@@ -100,6 +100,7 @@ class Forum(models.Model):
     post_count = models.IntegerField(_('Post count'), blank=True, default=0)
     topic_count = models.IntegerField(_('Topic count'), blank=True, default=0)
     last_post = models.ForeignKey('Post', related_name='last_forum_post', blank=True, null=True)
+    locked = models.BooleanField('Locked', blank=True, default=False)
 
     class Meta:
         ordering = ['position']
