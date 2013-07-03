@@ -355,9 +355,6 @@ def add_post(request, forum_id, topic_id):
         if not topic.forum.category.has_access(request.user):
             return HttpResponseForbidden()
         
-        if not request.user.is_superuser and topic.forum.locked:
-            return HttpResponseForbidden()
-        
     if topic and topic.closed:
         return HttpResponseRedirect(topic.get_absolute_url())
 
