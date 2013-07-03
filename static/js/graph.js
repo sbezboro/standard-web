@@ -8,6 +8,12 @@ function loadPlayerGraph($elem, serverId) {
         data['weekIndex'] = $elem.attr("weekindex");
     }
     
+    try {
+        data.test = test;
+    } catch(e) {
+        _rollbar.push(e);
+    }
+    
     $.ajax({
         url: "/" + serverId + "/player_graph",
         data: data,
