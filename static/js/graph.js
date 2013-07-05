@@ -9,7 +9,7 @@ function loadPlayerGraph($elem, serverId) {
     }
     
     try {
-        data.test = test;
+        //data.test = test;
     } catch(e) {
         _rollbar.push(e);
     }
