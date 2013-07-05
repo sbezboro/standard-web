@@ -186,11 +186,12 @@ function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId) {
                 var nickname = players[i].nickname;
                 var nicknameAnsi = players[i].nicknameAnsi;
                 
-                var displayName = nickname ? nickname : username;
-                var displayNameAnsi = nicknameAnsi ? nicknameAnsi : username;
+                var displayName = nicknameAnsi ? nicknameAnsi : username;
                 
-                var html = ['<a href="#"><div class="player" username="' + username + '" displayName="' + displayName + '">',
-                                '<img class="face-thumb" src="/faces/16/' + username + '.png"><span>' + displayNameAnsi + '</span>',
+                var ipAddress = players[i].address;
+                
+                var html = ['<a href="#"><div class="player" username="' + username + '" ip-address="' + ipAddress + '">',
+                                '<img class="face-thumb" src="/faces/16/' + username + '.png"><span>' + displayName + '</span>',
                             '</div></a>'].join('');
                 
                 playersHtml += html;

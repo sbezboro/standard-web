@@ -42,6 +42,7 @@
         <a class="close" href="#">x</a>
         <img class="face">
         <h3 class="name"></h3>
+        <b>IP Address:</b> <span class="ip">123.23.2.32</span>
         <p>Actions:</p>
         <div class="options">
           <a class="btn donator" href="#">Set Donator</a><br>
@@ -90,13 +91,16 @@
             var $close = $detail.find('.close');
             var $name = $detail.find('.name');
             var $image = $detail.find('.face');
+            var $ip = $detail.find('.ip');
             var $donatorBtn = $detail.find('.donator');
             
             $(document).on('click', '.player', function(e) {
                 var username = $(this).attr('username');
                 var displayName = $(this).find('span').html();
+                var ipAddress = $(this).attr('ip-address');
                 
                 $name.html(displayName);
+                $ip.html(ipAddress);
                 
                 if (username != currentUsername) {
                     currentUsername = username;
