@@ -184,12 +184,14 @@ function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId) {
             for (var i = 0; i < players.length; ++i) {
                 var username = players[i].username;
                 var nickname = players[i].nickname;
+                var nicknameAnsi = players[i].nicknameAnsi;
                 
-                var html = ['<div class="player">',
-                                '<a href="/player/' + username + '">',
-                                    '<span><img class="face-thumb" src="/faces/16/' + username + '.png">' + (nickname ? nickname : username) + '</span>',
-                                '</a>',
-                            '</div>'].join('');
+                var displayName = nickname ? nickname : username;
+                var displayNameAnsi = nicknameAnsi ? nicknameAnsi : username;
+                
+                var html = ['<a href="#"><div class="player" username="' + username + '" displayName="' + displayName + '">',
+                                '<img class="face-thumb" src="/faces/16/' + username + '.png"><span>' + displayNameAnsi + '</span>',
+                            '</div></a>'].join('');
                 
                 playersHtml += html;
             }
@@ -252,6 +254,12 @@ function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId) {
         
         socket.emit('console-input', data);
         $textbox.removeClass('len-warn');
+    }
+    
+    this.setDonator = function(username) {
+        socket.emit('set-donator', {
+            username: username
+        });
     }
 }
 

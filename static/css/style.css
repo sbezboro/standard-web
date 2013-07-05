@@ -392,13 +392,55 @@ a:hover {
 }
 
 .admin-panel .detail {
+    padding: 10px;
     float: right;
-    width: 200px;
+    width: 240px;
+    border-right: 1px solid #999;
+    height: 100%;
+    display: table-cell;
+}
+
+.admin-panel .detail h3 {
+    float: right;
+    width: 160px;
+}
+
+.admin-panel .detail .close {
+    float: right;
+    font-size: 12px;
+    color: #222 !important;
+}
+
+.admin-panel .detail .options {
+    margin-top: 10px;
 }
 
 .admin-panel .players {
-    padding: 5px;
     overflow-y: scroll;
+}
+
+.admin-panel .players a {
+    color: #555 !important;
+}
+
+.admin-panel .player {
+    padding: 5px;
+    height: 20px;
+    border-right: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+    border-top: 1px solid #fff;
+    border-bottom: 1px solid #aaa;
+    background: #e5e5e5;
+}
+
+.admin-panel .player.selected {
+    background: #ccc;
+    border-bottom: 1px solid #fff;
+    border-top: 1px solid #aaa;
+}
+
+.admin-panel .player:hover {
+    background: #fff;
 }
 
 .admin-panel .users {

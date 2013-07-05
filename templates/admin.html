@@ -38,8 +38,14 @@
         <div class="players"></div>
         <div class="users"></div>
       </div>
-      <div class="detail">
-        
+      <div class="detail" style="display: none;">
+        <a class="close" href="#">x</a>
+        <img class="face">
+        <h3 class="name"></h3>
+        <p>Actions:</p>
+        <div class="options">
+          <a class="btn donator" href="#">Set Donator</a><br>
+        </div>
       </div>
       <div class="admin-left">
         <div class="console"></div>
@@ -49,16 +55,21 @@
     
     <script type="text/javascript">
         var $console;
+        var $detail;
         
         function resize() {
             $console.height($(window).height() - $("#header").outerHeight() - $(".nav-header").outerHeight() - $(".sub-header").outerHeight() - 30);
+            $detail.height($(window).height() - $("#header").outerHeight() - $(".nav-header").outerHeight() - $(".sub-header").outerHeight() - 42);
             $(".players").height($(window).height() - $("#header").outerHeight() - $(".nav-header").outerHeight() - $(".sub-header").outerHeight() - 150);
             $(".users").height(128);
         }
         
         $(document).ready(function() {
             $console = $('.console');
+            $detail = $('.detail');
+            
             var $consoleTextbox = $('.console-textbox');
+            
             var sessionKey = '{{ request.session.session_key }}';
             var baseUrl = 'http://{{ rts_address }}';
             var serverId = {{ server_id }};
@@ -74,6 +85,40 @@
             });
             
             consoleStream.connect(function(error) {});
+            
+            var currentUsername;
+            var $close = $detail.find('.close');
+            var $name = $detail.find('.name');
+            var $image = $detail.find('.face');
+            var $donatorBtn = $detail.find('.donator');
+            
+            $(document).on('click', '.player', function(e) {
+                var username = $(this).attr('username');
+                var displayName = $(this).find('span').html();
+                
+                $name.html(displayName);
+                
+                if (username != currentUsername) {
+                    currentUsername = username;
+                    
+                    $image.fadeTo(0, 0.2);
+                    $image.attr('src', '/faces/64/' + username + '.png');
+                }
+                
+                $detail.show();
+            });
+            
+            $image.on('load', function(e) {
+                $image.fadeTo(0, 1);
+            });
+            
+            $donatorBtn.on('click', function(e) {
+                consoleStream.setDonator(currentUsername);
+            })
+            
+            $close.on('click', function(e) {
+                $detail.hide();
+            });
         })
     </script>
 {% endblock %}
