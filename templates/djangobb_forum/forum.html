@@ -36,7 +36,7 @@
 			<tbody>
 			{% if topics %}
 				{% for topic in topics %}
-					<tr class="inew {% if topic.user.is_superuser %}admin{% endif %} {% if topic.sticky %}sticky{% endif %}">
+					<tr class="row{% if topic.user.is_superuser %} admin{% endif %}{% if topic.sticky %} sticky{% endif %}">
 						<td class="tcl">
 							<div class="intd">
 								<div {% if topic.sticky %}class="sticky"{% else %}{% if topic.closed %}class="closed"{% else %}{% if topic|has_unreads:user %}class="inew"{% else %}class="icon"{% endif %}{% endif %}{% endif %}><div class="nosize"><!-- --></div></div>

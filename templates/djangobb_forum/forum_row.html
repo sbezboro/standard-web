@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% if forum.last_post.topic %}
-	<tr {% if forum|forum_unreads:user %}class="inew"{% endif %}>
+	<tr class="row {% if forum|forum_unreads:user %}inew{% endif %}">
 {% else %}
 	<tr>
 {% endif %}

@@ -238,23 +238,23 @@ DIV.icon,DIV.inew, DIV.sticky, DIV.closed {
 	WIDTH: 16px;
 }
 
-tr.inew:hover, tr.inew:hover>td {
+.box tr.row:hover, .box tr.row:hover>td {
 	background: #eee;
 }
 
-.inew.admin, .inew.admin>td {
+.box tr.row.admin, .box tr.row.admin>td {
 	background: #e2f2ff;
 }
 
-.inew.admin:hover, .inew.admin:hover>td {
+.box tr.row.admin:hover, .box tr.row.admin:hover>td {
 	background: #b3f8ff;
 }
 
-.inew.sticky, .inew.sticky>td {
+.box tr.row.sticky, .box tr.row.sticky>td {
 	background: #cfffd5;
 }
 
-.inew.sticky:hover, .inew.sticky:hover>td {
+.box tr.row.sticky:hover, .box tr.row.sticky:hover>td {
 	background: #a0ff99;
 }
 
