@@ -40,7 +40,6 @@
 <div id="idx1" class="blocktable">
 {% for iter in cats %}
 	<h2 id="category_head_{{ iter.id }}">
-		<a class="toggle" href="#">Toggle shoutbox</a>
 		<span>
 			{{ iter.cat }}
 		</span>
@@ -79,15 +78,22 @@
 			</dl>
 			<dl class="conl">
 				<dt><strong>{% trans "User information" %}</strong></dt>
-				<dd>{% trans "Newest registered user:" %} {{ last_user|profile_link }}</dd>
-				<dd>{% trans "Registered users online:" %} <strong>{{ online_count }}</strong></dd>
-				<dd>{% trans "Guests online:" %} <strong>{{ guest_count }}</strong></dd>
+				<dd>{% trans "Guests:" %} <strong>{{ guest_count }}</strong></dd>
 			</dl>
             {% if online_count %}
                 <dl id="onlinelist" class= "clearb">
-                    <dt><strong>{% trans "Online:" %} </strong></dt>
+                    <dt><strong>{% trans "Logged in:" %} </strong></dt>
+										
                     {% for online in users_online %}
-                        <dd>{{ online|profile_link }}</dd>
+											{% with online.forum_profile.player as player %}
+												{% if player %}
+													<a href="/player/{{ player.username }}">
+														{{ player.displayname_html|safe }}
+													</a>
+												{% else %}
+													{{ online.username }}
+												{% endif %}
+											{% endwith %}
                     {% endfor %}
                 </dl>
             {% endif %}

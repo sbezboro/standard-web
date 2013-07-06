@@ -1,10 +1,12 @@
 {% load forum_extras %}
 {% load i18n %}
-<em>({% trans "Moderated by" %}</em> 
+(<em>{% trans "Moderated by" %}</em> 
 	{% for moderator in moderators %}
-		{% if forloop.last %}
-			{{ moderator|profile_link }})
-		{% else %}
-			{{ moderator|profile_link }},
-		{% endif %}
+		{% with moderator.forum_profile.player as player %}
+			{% if player %}
+				<a href="/player/{{ player.username }}">{{ player.displayname_html|safe }}</a>{% if forloop.last %}){% else %},{% endif %}
+			{% else %}
+				{{ moderator|profile_link }}{% if forloop.last %}){% else %},{% endif %}
+			{% endif %}
+		{% endwith %}
 	{% endfor %}

@@ -233,7 +233,7 @@ a:hover {
     font-weight: normal;
 }
 
-.btn:hover {
+.btn:hover,.btn:active {
     background-image: none;
     background-color: #e6e6e6;
 }

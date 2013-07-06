@@ -18,6 +18,15 @@ class MinecraftPlayer(models.Model):
     @property
     def nickname_html(self):
         return ansi_converter.convert(self.nickname_ansi, full=False) if self.nickname_ansi else None
+    
+    @property
+    def displayname_html(self):
+        return self.nickname_html if self.nickname else self.username
+    
+    @property
+    def last_seen(self):
+        return PlayerStats.objects.get(player=self, server=2).last_seen
+    
 
 class VeteranStatus(models.Model):
     player = models.ForeignKey('MinecraftPlayer')
@@ -31,7 +40,7 @@ class Server(models.Model):
 class PlayerStats(models.Model):
     player = models.ForeignKey('MinecraftPlayer', related_name='stats')
     server = models.ForeignKey('Server')
-    time_spent=models.IntegerField(default=0)
+    time_spent = models.IntegerField(default=0)
     first_seen = models.DateTimeField(default=datetime.utcnow)
     last_seen = models.DateTimeField(default=datetime.utcnow)
     last_login = models.DateTimeField(default=datetime.utcnow, null=True)

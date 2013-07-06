@@ -8,11 +8,13 @@
 {% autopaginate topics forum_settings.FORUM_PAGE_SIZE %}
 <div class="linkst">
 	<div class="inbox">
-		<div class="pagelink conl">{% paginate %}</div>
 		{% if user.is_authenticated and not forum.locked or user.is_superuser %}
 			<p class="postlink conr"><a class="btn" href="{% url djangobb:add_topic forum.id %}">{% trans "New topic" %}</a></p>
 		{% endif %}
+		<div>
 		<ul><li><a href="{% url djangobb:index %}">{% trans "Forum" %}</a> </li><li>&raquo; {{ forum.name }}</li></ul>
+		</div>
+		<div class="pagelink conl">{% paginate %}</div>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -34,25 +36,61 @@
 			<tbody>
 			{% if topics %}
 				{% for topic in topics %}
-					<tr>
+					<tr class="inew {% if topic.user.is_superuser %}admin{% endif %} {% if topic.sticky %}sticky{% endif %}">
 						<td class="tcl">
 							<div class="intd">
 								<div {% if topic.sticky %}class="sticky"{% else %}{% if topic.closed %}class="closed"{% else %}{% if topic|has_unreads:user %}class="inew"{% else %}class="icon"{% endif %}{% endif %}{% endif %}><div class="nosize"><!-- --></div></div>
 								<div class="tclcon">
-									{% if topic.sticky %}
-										{% trans "Sticky:" %}
-									{% endif %}
-									{% if topic|has_unreads:user %}
-										<strong>{% link topic %}</strong> <span class="byuser">{% trans "by" %} <a href="{% url djangobb:forum_profile topic.user.username %}">{{ topic.user.username }}</a></span>
-									{% else %}
-										{% link topic %} <span class="byuser">{% trans "by" %} <a href="{% url djangobb:forum_profile topic.user.username %}">{{ topic.user.username }}</a></span>
-									{% endif %}
+									{% with topic.user.forum_profile.player as player %}
+										{% if player %}
+											<a title="{{ player.username }}" href="/player/{{ player.username }}">
+												<img class="right face-thumb" src="/faces/16/{{ player.username }}.png">
+											</a>
+										{% endif %}
+										
+										{% if topic.sticky %}
+											{% trans "Sticky:" %}
+										{% endif %}
+										
+										{% if topic|has_unreads:user %}
+											<strong>{% link topic %}</strong> {% else %}
+											{% link topic %}
+										{% endif %}
+										
+										<span class="byuser">{% trans "by" %}
+											{% if player %}
+												<a href="/player/{{ player.username }}">
+													{{ player.displayname_html|safe }}
+												</a>
+											{% else %}
+												{{ topic.user.username }}
+											{% endif %}
+											</span>
+									{% endwith %}
 								</div>
 							</div>
 						</td>
 						<td class="tc2">{{ topic.reply_count }}</td>
 						<td class="tc3">{{ topic.views }}</td>
-						<td class="tcr"><a href="{{ topic.last_post.get_absolute_url }}"><abbr class="timeago" title="{% forum_time topic.updated %}"></abbr></a> <span class="byuser">{% trans "by" %} <a href="{% url djangobb:forum_profile topic.last_post.user.username %}">{{ topic.last_post.user.username }}</a></span></td>
+						<td class="tcr"><a href="{{ topic.last_post.get_absolute_url }}"><abbr class="timeago" title="{% forum_time topic.updated %}"></abbr></a>
+							{% with topic.last_post.user.forum_profile.player as player %}
+								{% if player %}
+									<a title="{{ player.username }}" href="/player/{{ player.username }}">
+										<img class="right face-thumb" src="/faces/16/{{ player.username }}.png">
+									</a>
+								{% endif %}
+								
+								<span class="byuser">{% trans "by" %}
+								{% if player %}
+									<a href="/player/{{ player.username }}">
+										{{ player.displayname_html|safe }}
+									</a>
+								{% else %}
+									{{ topic.last_post.user.username }}
+								{% endif %}
+								</span>
+							{% endwith %}
+						</td>
 					</tr>
 				{% endfor %}
 			{% else %}
@@ -69,7 +107,6 @@
 		{% if user.is_authenticated %}
 			<p class="postlink conr"><a class="btn" href="{% url djangobb:add_topic forum.id %}">{% trans "New topic" %}</a></p>
 		{% endif %}
-		<ul><li><a href="{% url djangobb:index %}">{% trans "Forum" %}</a> </li><li>&raquo; {{ forum.name }}</li></ul>
 		<div class="clearer"></div>
 	</div>
 </div>
@@ -91,9 +128,6 @@
 		<input type="button" onclick="window.location=('{% url djangobb:index %}'+getElementById('forum_id').value)" value=" {% trans "Go" %} " accesskey="g" />
 		</label></div>
 	</form>
-	{% if moderator %}
-		<p id="modcontrols"><a href="{% url djangobb:moderate forum.id %}">{% trans "Moderate forum" %}</a></p>
-	{% endif %}
 </div>
 {% endblock %}
 

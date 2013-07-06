@@ -35,10 +35,6 @@
 .djangobb H2, .djangobb H4 {FONT-SIZE: 1em}
 .djangobb H3 {FONT-SIZE: 1.1em}
 
-.djangobb h2 span {
-padding-left:9px;
-}
-
 /* 2.4 Larger text for particular items */
 DIV.postmsg P {LINE-HEIGHT: 1.4}
 DIV.postleft DT {FONT-SIZE: 1.1em}
@@ -242,6 +238,25 @@ DIV.icon,DIV.inew, DIV.sticky, DIV.closed {
 	WIDTH: 16px;
 }
 
+tr.inew:hover, tr.inew:hover>td {
+	background: #eee;
+}
+
+.inew.admin, .inew.admin>td {
+	background: #e2f2ff;
+}
+
+.inew.admin:hover, .inew.admin:hover>td {
+	background: #b3f8ff;
+}
+
+.inew.sticky, .inew.sticky>td {
+	background: #cfffd5;
+}
+
+.inew.sticky:hover, .inew.sticky:hover>td {
+	background: #a0ff99;
+}
 
 DIV.searchposts DIV.icon {MARGIN-LEFT: 0}
 
