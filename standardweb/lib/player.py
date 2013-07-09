@@ -5,8 +5,18 @@ from standardweb.lib import helpers as h
 
 from standardweb.models import *
 
+
 @CachedResult('player-server-data', time=60)
-def get_server_data(server, player, player_stats):
+def get_server_data(server, player):
+    """
+    Returns a dict of all the data for a particular player on
+    a particular server, or None if the player hasn't played on
+    the given server yet.
+    """
+    stats = PlayerStats.get_object_or_none(server=server, player=player)
+    if not stats:
+        return stats
+    
     death_info = {}
     pvp_deaths = {}
         
@@ -63,15 +73,15 @@ def get_server_data(server, player, player_stats):
     
     pvp_kills = sorted([{'username': key, 'nickname': nicknames.get(key), 'count': pvp_kills[key]} for key in pvp_kills], key=lambda k: (-k['count'], (k['nickname'] or k['username']).lower()))
     
-    online_now = datetime.utcnow() - timedelta(minutes=1) < player_stats.last_seen
+    online_now = datetime.utcnow() - timedelta(minutes=1) < stats.last_seen
     
     return {
-        'rank': player_stats.get_rank(),
-        'banned': player_stats.banned,
+        'rank': stats.get_rank(),
+        'banned': stats.banned,
         'online_now': online_now,
-        'first_seen': h.iso_date(player_stats.first_seen),
-        'last_seen': h.iso_date(player_stats.last_seen),
-        'time_spent': h.elapsed_time_string(player_stats.time_spent),
+        'first_seen': h.iso_date(stats.first_seen),
+        'last_seen': h.iso_date(stats.last_seen),
+        'time_spent': h.elapsed_time_string(stats.time_spent),
         'death_info': death_info,
         'death_count': death_count,
         'kill_info': kill_info,

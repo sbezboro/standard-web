@@ -7,6 +7,7 @@ from django.http import Http404
 from django.http import HttpResponse
 from django.http import HttpResponseForbidden
 from django.http import HttpResponseNotFound
+from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -196,7 +197,7 @@ def player_list(request, server_id=None):
     
     if not stats:
         stats = {}
-
+        
         try:
             server_id = int(server_id or 2)
             server = Server.objects.get(id=server_id)
@@ -271,16 +272,11 @@ def search(request):
 
 
 def player(request, username, server_id=None):
-    from djangobb_forum.models import Profile as ForumProfile
-    
     if not username:
         raise Http404
     
     server_id = int(server_id or 2)
-    try:
-        server = Server.objects.get(id=server_id)
-    except:
-        raise Http404
+    server = get_object_or_404(Server, pk=server_id)
     
     template = 'player.html'
     retval = {
@@ -289,9 +285,8 @@ def player(request, username, server_id=None):
         'username': username
     }
     
-    try:
-        player = MinecraftPlayer.objects.get(username=username)
-    except:
+    player = MinecraftPlayer.get_object_or_none(username=username)
+    if not player:
         # the username doesn't belong to any player seen on any server
         response = render_to_response(template, retval,
             context_instance=RequestContext(request))
@@ -304,10 +299,10 @@ def player(request, username, server_id=None):
         'player': player
     })
     
-    player_stats = None
-    try:
-        player_stats = PlayerStats.objects.get(server=server, player=player)
-    except:
+    # grab all data for this player on the selected server
+    data = libplayer.get_server_data(server, player)
+    
+    if not data:
         # the player has not played on the selected server
         retval.update({
             'noindex': True
@@ -315,18 +310,6 @@ def player(request, username, server_id=None):
         
         return render_to_response(template, retval,
             context_instance=RequestContext(request))
-    
-    forum_profile = None
-    try:
-        forum_profile = player.forum_profile.get()
-        retval.update({
-            'forum_profile': forum_profile
-        })
-    except:
-        pass
-    
-    # Grab all data for this player on the selected server
-    data = libplayer.get_server_data(server, player, player_stats)
     
     retval.update(data)
     
