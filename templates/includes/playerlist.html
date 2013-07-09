@@ -4,19 +4,15 @@
     <b>Player count: {{ stats.num_players }} / {{ stats.max_players }}</b><br><br>
     {% if stats.players|length > 0 %}
       <b>Players online:</b>
-      {% for player in stats.players %}
+      {% for player, rank in stats.players %}
         <div>
-          {% if player.rank %}
-            <a class="rank-star" href="/ranking?player={{ player.username }}">{{ player.rank }}</a>
+          {% if rank %}
+            <a class="rank-star" href="/ranking?player={{ player.username }}">{{ rank }}</a>
           {% endif %}
           <a href="/player/{{ player.username }}">
             <span>
-              <img class="face-thumb" src="/faces/16/{{ player.username }}.png" alt="{{player.username}}">
-              {% if player.nickname_html %}
-                {{player.nickname_html|safe}}
-              {% else %}
-                {{player.username}}
-              {% endif %}
+              <img class="face-thumb" src="/faces/16/{{ player.username }}.png" alt="{{ player.username }}">
+              {{ player.displayname_html|safe }}
             </span>
           </a>
         </div>

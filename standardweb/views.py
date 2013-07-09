@@ -220,7 +220,7 @@ def player_list(request, server_id=None):
                         if player.id == top10player_id:
                             rank = index + 1
                 
-                players.append({'username': player.username, 'nickname_html': player.nickname_html, 'rank': rank})
+                players.append((player, rank))
             
             stats['players'] = players
             stats['num_players'] = server_status['numplayers']

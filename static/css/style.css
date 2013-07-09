@@ -729,7 +729,7 @@ a:hover {
     text-shadow: 1px 1px #444;
 }
 
-a > .ansi-container:hover {
+a .ansi-container:hover {
     opacity: 0.7;
 }
 
