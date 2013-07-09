@@ -16,7 +16,7 @@ class StandardModel(models.Model):
             return cls.objects.get(**kwargs)
         except ObjectDoesNotExist, e:
             return None
-        except Exception:
+        except Exception, e:
             raise e
 
 
