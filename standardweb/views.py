@@ -14,6 +14,7 @@ from django.views.decorators.http import last_modified
 
 from standardweb.lib import api
 from standardweb.lib import helpers as h
+from standardweb.lib import player as libplayer
 from standardweb.models import *
 
 from PIL import Image
@@ -270,6 +271,8 @@ def search(request):
 
 
 def player(request, username, server_id=None):
+    from djangobb_forum.models import Profile as ForumProfile
+    
     if not username:
         raise Http404
     
@@ -279,102 +282,56 @@ def player(request, username, server_id=None):
     except:
         raise Http404
     
-    try:
-        player = MinecraftPlayer.objects.get(username=username)
-        player_stats = PlayerStats.objects.get(server=server, player=player)
-    except Exception, e:
-        return render_to_response('player.html', {
-            'exists': False,
-            'servers': Server.objects.all(),
-            'server_id': server_id,
-            'username': username,
-            'noindex': True
-        }, context_instance=RequestContext(request))
-    
-    death_info = {}
-    pvp_deaths = {}
-        
-    deaths = DeathEvent.objects.filter(server=server, victim=player).values('killer__username', 'killer__nickname', 'death_type__displayname')
-    death_count = len(deaths)
-    
-    pvp_kill_count = len(DeathEvent.objects.filter(server=server, killer=player, victim__isnull=False))
-    pvp_death_count = len(DeathEvent.objects.filter(server=server, victim=player, killer__isnull=False))
-    other_death_count = len(DeathEvent.objects.filter(server=server, victim=player, killer__isnull=True))
-    
-    nicknames = {}
-    
-    for death in deaths:
-        death_type = death.get('death_type__displayname')
-        if death_type:
-            death_info[death_type] = death_info.get(death_type, 0) + 1
-    
-        if death.get('killer__username'):
-            username = death.get('killer__username')
-            pvp_deaths[username] = pvp_deaths.get(username, 0) + 1
-            
-            nickname = death.get('killer__nickname')
-            if nickname:
-                nicknames[username] = nickname
-            
-            
-    death_info = sorted([{'type': key, 'count': death_info[key]} for key in death_info], key=lambda k: (-k['count'], k['type']))
-    pvp_deaths = sorted([{'username': key, 'nickname': nicknames.get(key), 'count': pvp_deaths[key]} for key in pvp_deaths], key=lambda k: (-k['count'], (k['nickname'] or k['username']).lower()))
-    
-    kill_info = {}
-    pvp_kills = {}
-    
-    kills = KillEvent.objects.filter(server=server, killer=player).values('kill_type__displayname')
-    kill_count = len(kills)
-    
-    other_kill_count = len(KillEvent.objects.filter(server=server, killer=player, victim__isnull=True))
-    
-    for kill in kills:
-        kill_type = kill.get('kill_type__displayname')
-        
-        kill_info[kill_type] = kill_info.get(kill_type, 0) + 1
-    
-    kill_info = sorted([{'type': key, 'count': kill_info[key]} for key in kill_info], key=lambda k: (-k['count'], k['type']))
-    
-    kills = DeathEvent.objects.filter(server=server, killer=player).values('victim__username', 'victim__nickname')
-    kill_count = kill_count + len(kills)
-    for kill in kills:
-        username = kill.get('victim__username')
-        pvp_kills[username] = pvp_kills.get(username, 0) + 1
-        
-        nickname = kill.get('victim__nickname')
-        if nickname:
-            nicknames[username] = nickname
-    
-    pvp_kills = sorted([{'username': key, 'nickname': nicknames.get(key), 'count': pvp_kills[key]} for key in pvp_kills], key=lambda k: (-k['count'], (k['nickname'] or k['username']).lower()))
-    
-    online_now = datetime.utcnow() - timedelta(minutes = 1) < player_stats.last_seen
-    
-    rank = player_stats.get_rank()
-    
-    return render_to_response('player.html', {
-        'exists': True,
+    template = 'player.html'
+    retval = {
         'servers': Server.objects.all(),
         'server_id': server_id,
-        'username': player.username,
-        'nickname': player.nickname,
-        'nickname_html': player.nickname_html,
-        'banned': player_stats.banned,
-        'online_now': online_now,
-        'first_seen': h.iso_date(player_stats.first_seen),
-        'last_seen': h.iso_date(player_stats.last_seen),
-        'time_spent': h.elapsed_time_string(player_stats.time_spent),
-        'death_info': death_info,
-        'death_count': death_count,
-        'kill_info': kill_info,
-        'kill_count': kill_count,
-        'pvp_kills': pvp_kills,
-        'pvp_deaths': pvp_deaths,
-        'pvp_death_count': pvp_death_count,
-        'pvp_kill_count': pvp_kill_count,
-        'other_death_count': other_death_count,
-        'other_kill_count': other_kill_count,
-        'rank': rank,
-        }, context_instance=RequestContext(request))
+        'username': username
+    }
+    
+    try:
+        player = MinecraftPlayer.objects.get(username=username)
+    except:
+        # the username doesn't belong to any player seen on any server
+        response = render_to_response(template, retval,
+            context_instance=RequestContext(request))
+        response.status_code = 404
+        
+        return response
+    
+    # the player has played on at least one server
+    retval.update({
+        'player': player
+    })
+    
+    player_stats = None
+    try:
+        player_stats = PlayerStats.objects.get(server=server, player=player)
+    except:
+        # the player has not played on the selected server
+        retval.update({
+            'noindex': True
+        })
+        
+        return render_to_response(template, retval,
+            context_instance=RequestContext(request))
+    
+    forum_profile = None
+    try:
+        forum_profile = player.forum_profile.get()
+        retval.update({
+            'forum_profile': forum_profile
+        })
+    except:
+        pass
+    
+    # Grab all data for this player on the selected server
+    data = libplayer.get_server_data(server, player, player_stats)
+    
+    retval.update(data)
+    
+    return render_to_response(template, retval,
+        context_instance=RequestContext(request))
 
 
 def ranking(request, server_id=None):

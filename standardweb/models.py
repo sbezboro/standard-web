@@ -2,9 +2,6 @@ from django.contrib.auth.models import User
 from django.db import models
 from datetime import datetime
 
-from ansi2html import Ansi2HTMLConverter
-ansi_converter = Ansi2HTMLConverter()
-
 from standardweb.lib import helpers as h
 
 class MinecraftPlayer(models.Model):
@@ -17,7 +14,7 @@ class MinecraftPlayer(models.Model):
     
     @property
     def nickname_html(self):
-        return ansi_converter.convert(self.nickname_ansi, full=False) if self.nickname_ansi else None
+        return h.ansi_to_html(self.nickname_ansi) if self.nickname_ansi else None
     
     @property
     def displayname_html(self):

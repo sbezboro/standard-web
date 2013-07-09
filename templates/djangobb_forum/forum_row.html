@@ -16,13 +16,6 @@
 				<h3>{% link forum %}</h3>
 				{{ forum.description|safe }}
 				<p>
-				{% cache 1000 moderators forum.id %}
-					{% with forum.moderators.all as moderators %}
-						{% if moderators %}
-							{% include 'djangobb_forum/moderators.html' %}
-						{% endif %}
-					{% endwith %}
-				{% endcache %}
 				</p>
 			</div>
 		</div>

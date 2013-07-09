@@ -89,6 +89,7 @@ code {
     background-color: #dfdfdf;
     text-align: left;
     margin-top: 0px;
+    border-bottom: 1px solid #ccc;
 }
 
 #sub-header h1 {
@@ -203,7 +204,7 @@ span.stat {
 
 h1 {
     font-size: 3.8em;
-    margin-bottom: 3px;
+    margin-bottom: 0px;
 }
 
 h2 {
@@ -541,6 +542,19 @@ a:hover {
     width: 25%;
 }
 
+.player-forum-section {
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #bbb;
+    width: 90%;
+    padding: 5px;
+    margin-top: 20px;
+}
+
+.player-forum-section b {
+    margin-left: 20px;
+}
+
 .stat-row {
     border: 1px solid #ddd;
     width: 80%;
@@ -711,11 +725,11 @@ a:hover {
     font-weight:normal;font-style:normal;
 }
 
-*[class^="ansi"] {
+.ansi-container span {
     text-shadow: 1px 1px #444;
 }
 
-a *[class^="ansi"]:hover {
+a > .ansi-container:hover {
     opacity: 0.7;
 }
 
