@@ -340,17 +340,6 @@ def ranking(request, server_id=None):
         }, context_instance=RequestContext(request))
 
 
-def _last_modified_func(request, size=None, username=None):
-    PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
-    path = '%s/faces/%s/%s.png' % (PROJECT_PATH, size, username)
-    
-    try:
-        return datetime.utcfromtimestamp(os.path.getmtime(path))
-    except:
-        rollbar.report_exc_info(sys.exc_info())
-        return None 
-
-
 def _extract_face(image, size):
     try:
         pix = image.load()
@@ -363,6 +352,17 @@ def _extract_face(image, size):
         pass
     
     return image.crop((8, 8, 16, 16)).resize((size, size))
+
+
+def _last_modified_func(request, size=None, username=None):
+    PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
+    path = '%s/faces/%s/%s.png' % (PROJECT_PATH, size, username)
+    
+    try:
+        return datetime.utcfromtimestamp(os.path.getmtime(path))
+    except:
+        rollbar.report_exc_info(sys.exc_info())
+        return None 
 
 
 @last_modified(_last_modified_func)
@@ -395,9 +395,17 @@ def get_face(request, size=16, username=None):
             if not file_date or last_modified_date > file_date \
                 or datetime.utcnow() - file_date > timedelta(days=1):
                 
+                rollbar.report_message('Saving image', 'debug', extra_data={
+                    'path': path,
+                    'file_date': file_date,
+                    'last_modified_date': last_modified_date})
                 image = _extract_face(Image.open(StringIO.StringIO(image_response.read())), size)
                 image.save(path)
             else:
+                rollbar.report_message('Loading image', 'debug', extra_data={
+                    'path': path,
+                    'file_date': file_date,
+                    'last_modified_date': last_modified_date})
                 image = Image.open(path)
     except Exception, e:
         rollbar.report_exc_info(sys.exc_info())
