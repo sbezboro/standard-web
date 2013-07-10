@@ -362,7 +362,6 @@ def _last_modified_func(request, size=None, username=None):
     try:
         return datetime.utcfromtimestamp(os.path.getmtime(path))
     except:
-        rollbar.report_exc_info(sys.exc_info())
         return None 
 
 
@@ -390,23 +389,13 @@ def get_face(request, size=16, username=None):
             try:
                 file_date = datetime.utcfromtimestamp(os.path.getmtime(path))
             except:
-                rollbar.report_exc_info(sys.exc_info())
                 file_date = None
             
             if not file_date or last_modified_date > file_date \
                 or datetime.utcnow() - file_date > timedelta(days=1):
-                
-                rollbar.report_message('Saving image', 'debug', extra_data={
-                    'path': path,
-                    'file_date': file_date,
-                    'last_modified_date': last_modified_date})
                 image = _extract_face(Image.open(StringIO.StringIO(image_response.read())), size)
                 image.save(path)
             else:
-                rollbar.report_message('Loading image', 'debug', extra_data={
-                    'path': path,
-                    'file_date': file_date,
-                    'last_modified_date': last_modified_date})
                 image = Image.open(path)
     except Exception, e:
         rollbar.report_exc_info(sys.exc_info())
