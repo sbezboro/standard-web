@@ -345,8 +345,9 @@ def _last_modified_func(request, size=None, username=None):
     path = '%s/faces/%s/%s.png' % (PROJECT_PATH, size, username)
     
     try:
-        return datetime.fromtimestamp(os.path.getmtime(path))
+        return datetime.utcfromtimestamp(os.path.getmtime(path))
     except:
+        rollbar.report_exc_info(sys.exc_info())
         return None 
 
 
@@ -386,19 +387,20 @@ def get_face(request, size=16, username=None):
             last_modified_date = datetime.strptime(last_modified, '%a, %d %b %Y %H:%M:%S %Z')
             
             try:
-                file_date = datetime.fromtimestamp(os.path.getmtime(path))
+                file_date = datetime.utcfromtimestamp(os.path.getmtime(path))
             except:
+                rollbar.report_exc_info(sys.exc_info())
                 file_date = None
             
             if not file_date or last_modified_date > file_date \
-                or datetime.now() - file_date > timedelta(days=1):
+                or datetime.utcnow() - file_date > timedelta(days=1):
                 
                 image = _extract_face(Image.open(StringIO.StringIO(image_response.read())), size)
                 image.save(path)
             else:
                 image = Image.open(path)
-    except:
-        pass
+    except Exception, e:
+        rollbar.report_exc_info(sys.exc_info())
     
     if not image:
         image = _extract_face(Image.open(PROJECT_PATH + '/static/images/char.png'), size)
