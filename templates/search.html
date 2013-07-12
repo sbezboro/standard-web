@@ -8,7 +8,14 @@
         {% if player_info %}
         {% for player_info in player_info %}
         <div class="search-row">
-            <a href="/player/{{ player_info.username }}"><img class="face-thumb" src="/faces/{{ player_info.username }}.png"/>{% if player_info.nickname %}{{ player_info.nickname }}{% else %}{{ player_info.username }}{% endif %}</a><br />
+            <a href="/player/{{ player_info.username }}">
+                <img class="face-thumb" src="/faces/16/{{ player_info.username }}.png"/>
+                {% if player_info.nickname %}
+                    {{ player_info.nickname }}
+                {% else %}
+                    {{ player_info.username }}
+                {% endif %}
+            </a><br />
         </div>
         {% endfor %}
         {% else %}

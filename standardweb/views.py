@@ -3,10 +3,7 @@ from django.contrib.auth.views import login as django_login
 from django.contrib.auth import logout as django_logout
 from django.core.cache import cache
 from django.db.models import Q
-from django.http import Http404
-from django.http import HttpResponse
-from django.http import HttpResponseForbidden
-from django.http import HttpResponseNotFound
+from django.http import Http404, HttpResponse, HttpResponseForbidden, HttpResponseNotFound, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render_to_response
@@ -276,7 +273,10 @@ def player(request, username, server_id=None):
     if not username:
         raise Http404
     
-    server_id = int(server_id or 2)
+    if not server_id:
+        return HttpResponseRedirect('/2/player/%s' % username)
+    
+    server_id = int(server_id)
     server = get_object_or_404(Server, pk=server_id)
     
     template = 'player.html'
@@ -373,10 +373,9 @@ def get_face(request, size=16, username=None):
         raise Http404
 
     PROJECT_PATH = os.path.abspath(os.path.dirname(__name__))
+    path = '%s/faces/%s/%s.png' % (PROJECT_PATH, size, username)
     
     image = None
-    
-    path = '%s/faces/%s/%s.png' % (PROJECT_PATH, size, username)
     
     try:
         url = 'http://s3.amazonaws.com/MinecraftSkins/%s.png' % username
