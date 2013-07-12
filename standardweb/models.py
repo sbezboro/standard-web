@@ -26,11 +26,15 @@ class MinecraftPlayer(StandardModel):
     nickname_ansi = models.CharField(max_length=256, null=True)
     
     def __str__(self):
-        return self.nickname or self.username
+        return self.displayname
     
     @property
     def nickname_html(self):
         return h.ansi_to_html(self.nickname_ansi) if self.nickname_ansi else None
+    
+    @property
+    def displayname(self):
+        return self.nickname or self.username
     
     @property
     def displayname_html(self):

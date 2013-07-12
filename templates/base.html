@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <title>{% block title %}Standard Survival Minecraft Server{% endblock %}</title>
-    <meta name="description" content="A vanilla-inspired Minecraft survival server">
+    <meta name="description" content="{% block description %}The website for the Standard Survival Minecraft Server, a vanilla-inspired server with a unique twist.{% endblock %}">
     {% if noindex %}
     <meta name="robots" content="noindex">
     {% endif %}
@@ -42,7 +42,7 @@
     <div id="header">
         <div id="inner">
             <a href="/" class="strong {% block select_index %}{% endblock %}">Standard Survival</a>
-            <a class="{% block select_ranking %}{% endblock %}" href="/ranking">Ranking</a>
+            <a class="{% block select_ranking %}{% endblock %}" href="/{% if server %}{{ server.id }}{% else %}2{% endif %}/ranking">Ranking</a>
             <a class="{% block select_forum %}{% endblock %}" href="/forum/">Forum</a>
             <a class="{% block select_vote %}{% endblock %}" href="/forum/topic/116/">Vote</a>
             <a class="{% block select_chat %}{% endblock %}" href="/chat">Live Chat</a>

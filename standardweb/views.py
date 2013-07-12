@@ -281,8 +281,8 @@ def player(request, username, server_id=None):
     
     template = 'player.html'
     retval = {
+        'server': server,
         'servers': Server.objects.all(),
-        'server_id': server_id,
         'username': username
     }
     
@@ -319,6 +319,9 @@ def player(request, username, server_id=None):
 
 
 def ranking(request, server_id=None):
+    if not server_id:
+        return HttpResponseRedirect('/2/ranking')
+    
     server_id = int(server_id or 2)
     server = Server.objects.get(id=server_id)
     
@@ -336,7 +339,7 @@ def ranking(request, server_id=None):
     
     return render_to_response('ranking.html', {
         'servers': Server.objects.all(),
-        'server_id': server_id,
+        'server': server,
         'player_info': player_info,
         }, context_instance=RequestContext(request))
 
