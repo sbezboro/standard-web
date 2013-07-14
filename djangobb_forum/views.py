@@ -420,13 +420,7 @@ def user(request, username, section='essentials', action=None, template='djangob
                 'form': form,
                })
     else:
-        template = 'djangobb_forum/user.html'
-        topic_count = Topic.objects.filter(deleted=False, user__id=user.id).count()
-        if user.forum_profile.post_count < forum_settings.POST_USER_SEARCH and not request.user.is_authenticated():
-            return HttpResponseRedirect(reverse('user_signin') + '?next=%s' % request.path)
-        return render(request, template, {'profile': user,
-                'topic_count': topic_count,
-               })
+        return HttpResponseRedirect('/player/%s' % username)
 
 
 @login_required
