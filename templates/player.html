@@ -26,14 +26,21 @@
                     <span class="banned">BANNED</span>
                 {% endif %}
             </h1>
-            {% comment %}
-            {% if player.forum_profile %}
+            {% with player.forum_profile as profile %}
+            {% if profile and profile.post_count and profile.last_post %}
+                {% load forum_extras %}
                 <div class="player-forum-section">
-                    <b>Posts:</b> {{ player.forum_profile.post_count }} - <a href="">See all</a>
-                    <b>Last post:</b> <a href="">{{ player.forum_profile.last_post }}</a>
+                    <b>Forum posts:</b> {{ profile.post_count }} - <a href="{% url djangobb:search %}?action=show_user&amp;user_id={{ profile.id }}">See all</a><br>
+                    <b>Last post:</b> <a href="{{ profile.last_post_url }}"><abbr class="timeago" title="{% forum_time profile.last_post %}"></abbr></a><br>
+                    {% if profile.location %}<b>Location:</b> {{ profile.location }}<br>{% endif %}
+                    {% if profile.privacy_permission == 0 and profile.user.email %}
+                        <a href="mailto:{{ profile.user.email }}">E-mail</a>
+                    {% elif profile.privacy_permission == 1 and profile.user.email %}
+                        <a href="{% url djangobb:misc %}?mail_to={{ player.username }}">Send e-mail</a>
+                    {% endif %}
                 </div>
             {% endif %}
-            {% endcomment %}
+            {% endwith %}
         </div>
     </div>
     <div class="nav-header">

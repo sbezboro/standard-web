@@ -333,6 +333,14 @@ class Profile(models.Model):
             return posts[0].created
         else:
             return  None
+    
+    def last_post_url(self):
+        posts = Post.objects.filter(deleted=False, user__id=self.user_id).order_by('-created')
+        if posts:
+            return posts[0].get_absolute_url()
+        else:
+            return None
+    
 
 class PostTracking(models.Model):
     """

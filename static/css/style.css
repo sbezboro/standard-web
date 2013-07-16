@@ -213,12 +213,12 @@ h2 {
 }
 
 a {
-    color: #545454;
+    color: #1a76b6;
     text-decoration: none;
 }
 
 a:hover {
-    color: #AAA;
+    color: #104b73;
 }
 
 .btn {
@@ -268,6 +268,14 @@ a:hover {
 
 #player-list span {
     display: inline-block;
+}
+
+#player-list a, .ranking-table a, .player-stat-section a, .search-row a {
+    color: #545454;
+}
+
+#player-list a:hover, .ranking-table a:hover, .player-stat-section a:hover, .search-row a:hover {
+    color: #AAA;
 }
 
 #graph-tooltip {
@@ -546,13 +554,13 @@ a:hover {
     margin: 0 auto;
     background: #fff;
     border: 1px solid #bbb;
-    width: 90%;
+    width: 95%;
     padding: 5px;
-    margin-top: 20px;
+    margin-bottom: 14px;
 }
 
-.player-forum-section b {
-    margin-left: 20px;
+.player-forum-section h3 {
+    margin: 0 0 10px;
 }
 
 .stat-row {
