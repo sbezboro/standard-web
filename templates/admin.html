@@ -39,13 +39,39 @@
         <div class="users"></div>
       </div>
       <div class="detail" style="display: none;">
-        <a class="close" href="#">x</a>
-        <img class="face">
-        <h3 class="name"></h3>
-        <b>IP Address:</b> <span class="ip">123.23.2.32</span>
-        <p>Actions:</p>
-        <div class="options">
-          <a class="btn donator" href="#">Set Donator</a><br>
+        <div class="detail-inner">
+          <a class="close" href="#">x</a>
+          <img class="face"/>
+          <a class="link" target="_blank">
+            <h3 class="display-name"></h3>
+          </a>
+          <div class="username"></div>
+          <br>
+          <div>
+            <b>IP Address:</b>
+            <span class="ip"></span>
+          </div>
+          <div>
+            <b>Rank:</b>
+            <span class="rank"></span>
+          </div>
+          <br>
+          <div>
+            <b>Health:</b>
+            <span class="health"></span>
+          </div>
+          <div>
+            <b>Location:</b>
+            <span class="location"></span>
+          </div>
+          <div>
+            <b>Titles:</b>
+            <span class="titles"></span>
+          </div>
+          <br>
+          <div class="options">
+            <a class="btn donator" href="#">Set Donator</a><br>
+          </div>
         </div>
       </div>
       <div class="admin-left">
@@ -58,26 +84,97 @@
         var $console;
         var $detail;
         
+        var $close;
+        var $displayName;
+        var $username;
+        var $image;
+        var $link;
+        var $ip;
+        var $rank;
+        var $health;
+        var $location;
+        var $titles;
+        var $donatorBtn;
+        
+        var consoleStream;
+        var currentUsername;
+        
+        var sessionKey = '{{ request.session.session_key }}';
+        var baseUrl = 'http://{{ rts_address }}';
+        var serverId = {{ server_id }};
+        
         function resize() {
             $console.height($(window).height() - $("#header").outerHeight() - $(".nav-header").outerHeight() - $(".sub-header").outerHeight() - 30);
-            $detail.height($(window).height() - $("#header").outerHeight() - $(".nav-header").outerHeight() - $(".sub-header").outerHeight() - 42);
+            $detail.height($(window).height() - $("#header").outerHeight() - $(".nav-header").outerHeight() - $(".sub-header").outerHeight() - 22);
             $(".players").height($(window).height() - $("#header").outerHeight() - $(".nav-header").outerHeight() - $(".sub-header").outerHeight() - 150);
             $(".users").height(128);
         }
+        
+        var updatePlayerDetail = function(username) {
+            var player = consoleStream.allPlayers[username];
+            if (!player) {
+                return;
+            }
+            
+            var href = '/' + serverId + '/player/' + username;
+            
+            if (player.nickname) {
+                $displayName.html('<span class="ansi-container">' + player.nicknameAnsi + '</span>');
+                $username.html('(' + username + ')');
+            } else {
+                $displayName.html(username);
+                $username.html('&nbsp');
+            }
+            
+            $link.attr('href', href);
+            
+            $ip.html(player.address);
+            $rank.html(player.rank);
+            $health.html(player.health);
+            $location.html('(' + player.x + ', ' + player.y + ', ' + player.z + ')');
+            
+            var titleNames = [];
+            player.titles.map(function(title) {
+                titleNames.push(title.display_name);
+            });
+            
+            if (!titleNames.length) {
+                $titles.html('None');
+            } else {
+                $titles.html(titleNames.join(', '));
+            }
+            
+            if (username != currentUsername) {
+                currentUsername = username;
+                
+                $image.fadeTo(0, 0.2);
+                $image.attr('src', '/faces/64/' + username + '.png');
+            }
+            
+            $detail.show();
+        };
         
         $(document).ready(function() {
             $console = $('.console');
             $detail = $('.detail');
             
+            $close = $detail.find('.close');
+            $displayName = $detail.find('.display-name');
+            $username = $detail.find('.username');
+            $image = $detail.find('.face');
+            $link = $detail.find('.link');
+            $ip = $detail.find('.ip');
+            $rank = $detail.find('.rank');
+            $health = $detail.find('.health');
+            $location = $detail.find('.location');
+            $titles = $detail.find('.titles');
+            $donatorBtn = $detail.find('.donator');
+            
             var $consoleTextbox = $('.console-textbox');
             
-            var sessionKey = '{{ request.session.session_key }}';
-            var baseUrl = 'http://{{ rts_address }}';
-            var serverId = {{ server_id }};
+            consoleStream = new ConsoleStream(sessionKey, baseUrl, $console,
+                                              $consoleTextbox, serverId);
             
-            var consoleStream = new ConsoleStream(sessionKey, baseUrl, $console,
-                                                  $consoleTextbox, serverId);
-        
             resize();
             
             $(window).resize(function() {
@@ -87,30 +184,21 @@
             
             consoleStream.connect(function(error) {});
             
-            var currentUsername;
-            var $close = $detail.find('.close');
-            var $name = $detail.find('.name');
-            var $image = $detail.find('.face');
-            var $ip = $detail.find('.ip');
-            var $donatorBtn = $detail.find('.donator');
-            
             $(document).on('click', '.player', function(e) {
                 var username = $(this).attr('username');
-                var displayName = $(this).find('span').html();
-                var ipAddress = $(this).attr('ip-address');
                 
-                $name.html(displayName);
-                $ip.html(ipAddress);
-                
-                if (username != currentUsername) {
-                    currentUsername = username;
-                    
-                    $image.fadeTo(0, 0.2);
-                    $image.attr('src', '/faces/64/' + username + '.png');
-                }
-                
-                $detail.show();
+                $('.player.selected').removeClass('selected');
+                $(this).addClass('selected');
+                updatePlayerDetail(username);
+                consoleStream.scrollToBottomIfAtBottom();
             });
+            
+            consoleStream.onUpdate = function() {
+                if (currentUsername) {
+                    updatePlayerDetail(currentUsername);
+                    $('.player[username="' + currentUsername + '"]').addClass('selected');
+                }
+            };
             
             $image.on('load', function(e) {
                 $image.fadeTo(0, 1);
@@ -121,7 +209,12 @@
             })
             
             $close.on('click', function(e) {
+                currentUsername = null;
+                
+                $('.player.selected').removeClass('selected');
+                
                 $detail.hide();
+                consoleStream.scrollToBottomIfAtBottom();
             });
         })
     </script>

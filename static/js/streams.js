@@ -20,6 +20,12 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, source) {
         $outputArea.scrollTop($outputArea.get(0).scrollHeight);
     }
     
+    this.scrollToBottomIfAtBottom = function() {
+        if (this.isAtBottom()) {
+            this.scrollToBottom();
+        }
+    }
+    
     this.addOutputLine = function(line) {
         var shouldScroll = _this.isAtBottom();
         
@@ -135,6 +141,9 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, source) {
 
 function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId) {
     Stream.call(this, sessionKey, baseUrl, $outputArea, $textbox, serverId, 'console');
+    this.allPlayers = {};
+    this.onUpdate;
+    
     var _this = this;
     var socket;
     
@@ -183,15 +192,15 @@ function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId) {
             var playersHtml = '';
             for (var i = 0; i < players.length; ++i) {
                 var username = players[i].username;
-                var nickname = players[i].nickname;
+                _this.allPlayers[username] = players[i];
+                
                 var nicknameAnsi = players[i].nicknameAnsi;
                 
                 var displayName = nicknameAnsi ? nicknameAnsi : username;
                 
-                var ipAddress = players[i].address;
-                
-                var html = ['<a href="#"><div class="player" username="' + username + '" ip-address="' + ipAddress + '">',
-                                '<img class="face-thumb" src="/faces/16/' + username + '.png"><span>' + displayName + '</span>',
+                var html = ['<a href="#"><div class="player" username="' + username + '">',
+                                '<img class="face-thumb" src="/faces/16/' + username + '.png"><span class="ansi-container">' + displayName + '</span>',
+                                '<span class="rank">#' + players[i].rank + '</span>',
                             '</div></a>'].join('');
                 
                 playersHtml += html;
@@ -201,6 +210,10 @@ function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId) {
             $('.player-count').text(numPlayers + '/' + maxPlayers);
             $('.load').text(load);
             $('.tps').text(tps);
+            
+            if (_this.onUpdate && typeof _this.onUpdate === 'function') {
+                _this.onUpdate();
+            }
         });
         
         socket.on('chat-users', function(data) {
