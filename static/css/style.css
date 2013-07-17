@@ -284,6 +284,21 @@ a:hover {
     -moz-border-radius: 4px;
 }
 
+.latest-news .title {
+    font-weight: bold;
+}
+
+.latest-news .time {
+    font-style: italic;
+    font-size: 10pt;
+    margin-bottom: 4px;
+}
+
+.latest-news .comments {
+    float: right;
+    font-size: 11pt;
+}
+
 .center-section {
     margin: auto;
     width: 600px;

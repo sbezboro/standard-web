@@ -31,10 +31,20 @@ import rollbar
 
 
 def index(request):
+    from djangobb_forum.models import Forum
+    from djangobb_forum.models import Post
     status = MojangStatus.objects.latest('timestamp')
     
+    news_forum = Forum.objects.get(pk=settings.NEWS_FORUM_ID)
+    news_topic = news_forum.topics.filter(deleted=False).order_by('-created')[0]
+    news_post = news_topic.posts.filter(deleted=False).order_by('created')[0]
+    comments = news_topic.posts.count() - 1
+    
     return render_to_response('index.html', {
-        'status': status
+        'status': status,
+        'news_topic': news_topic,
+        'news_post': news_post,
+        'comments': comments
     }, context_instance=RequestContext(request))
 
 

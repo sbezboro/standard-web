@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load forum_extras %}
 
 {% block select_index %}selected{% endblock %}
 
@@ -15,6 +16,22 @@
             <div id="caption">A vanilla-inspired Minecraft survival server</div>
         </div>
         <div id="left-section">
+            <h2>Latest News</h2>
+            <div class="latest-news">
+                <div class="title">
+                    <a href="{{ news_post.get_absolute_url }}">{{ news_topic.name }}</a>
+                </div>
+                <div class="time">
+                    <abbr class="timeago" title="{% forum_time news_post.created %}"></abbr>
+                </div>
+                <div class="content">
+                    {{ news_post.body_html|safe }}
+                </div>
+                <div class="comments">
+                    <a href="{{ news_post.get_absolute_url }}">{{ comments }} comment{{ comments|pluralize }}</a>
+                </div>
+                <div class="clear"></div>
+            </div>
             <h2>Connect To</h2>
             <p><b id="address" data-clipboard-target="address">standardsurvival.com</b></p>
         
@@ -25,10 +42,6 @@
             <h2>Player Graph</h2>
             <div id="graph" class="graph progress"></div>
             <br/>
-            <!--
-            <h2>A Thank You</h2>
-            <p>Thank you to all the donators that have supported me and the server over the past few months. At this point I have received enough donations to cover the yearly costs of both of the servers I use for Minecraft! I had no idea what to expect when I started the server in early May. I've learnt a lot since then and had a blast bringing my own flavour of server to the Minecraft multiplayer world. I'm happy to be able to provide such an enjoyable experience to so many people. Thanks again for all the support!</p>
-            -->
             <p>Hosting this Minecraft server is a lot of fun, but it does need time and especially money to run. Please consider helping me cover the cost of running the server by clicking the donate button below. Thanks.</p>
             <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" onclick="donateClick()">
                 <input type="hidden" name="cmd" value="_s-xclick">
@@ -47,6 +60,7 @@
     <a href="https://github.com/sbezboro/standard-web"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
     <script type="text/javascript">
         function donateClick() { 
+            _rollbar.push({level: 'info', msg: 'Donate clicked'});
             _gaq.push(['_trackPageview', '/donate/click']); 
             return true; 
         }
