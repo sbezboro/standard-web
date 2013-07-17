@@ -288,15 +288,8 @@ a:hover {
     font-weight: bold;
 }
 
-.latest-news .time {
-    font-style: italic;
+.latest-news .detail {
     font-size: 10pt;
-    margin-bottom: 4px;
-}
-
-.latest-news .comments {
-    float: right;
-    font-size: 11pt;
 }
 
 .center-section {
