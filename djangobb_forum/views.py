@@ -660,7 +660,6 @@ def add_subscription(request, topic_id):
     return HttpResponseRedirect(reverse('djangobb:topic', args=[topic.id]))
 
 
-@login_required
 def show_attachment(request, hash):
     attachment = get_object_or_404(Attachment, hash=hash)
     file_data = file(attachment.get_absolute_path(), 'rb').read()

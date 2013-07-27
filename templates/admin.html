@@ -184,6 +184,13 @@
             
             consoleStream.connect(function(error) {});
             
+            consoleStream.onUpdate = function() {
+                if (currentUsername) {
+                    updatePlayerDetail(currentUsername);
+                    $('.player[username="' + currentUsername + '"]').addClass('selected');
+                }
+            };
+            
             $(document).on('click', '.player', function(e) {
                 var username = $(this).attr('username');
                 
@@ -192,13 +199,6 @@
                 updatePlayerDetail(username);
                 consoleStream.scrollToBottomIfAtBottom();
             });
-            
-            consoleStream.onUpdate = function() {
-                if (currentUsername) {
-                    updatePlayerDetail(currentUsername);
-                    $('.player[username="' + currentUsername + '"]').addClass('selected');
-                }
-            };
             
             $image.on('load', function(e) {
                 $image.fadeTo(0, 1);
