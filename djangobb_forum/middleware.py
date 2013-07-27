@@ -8,11 +8,17 @@ from djangobb_forum import settings as forum_settings
 
 class LastLoginMiddleware(object):
     def process_request(self, request):
+        if request.path.endswith('.png'):
+            return
+        
         if request.user.is_authenticated():
             cache.set('djangobb_user%d' % request.user.id, True, forum_settings.USER_ONLINE_TIMEOUT)
 
 class ForumMiddleware(object):
     def process_request(self, request):
+        if request.path.endswith('.png'):
+            return
+        
         if request.user.is_authenticated():
             profile = request.user.forum_profile
             language = translation.get_language_from_request(request)
@@ -28,6 +34,9 @@ class ForumMiddleware(object):
 
 class UsersOnline(object):
     def process_request(self, request):
+        if request.path.endswith('.png'):
+            return
+        
         now = datetime.now()
         delta = now - timedelta(seconds=forum_settings.USER_ONLINE_TIMEOUT)
         users_online = cache.get('djangobb_users_online', {})

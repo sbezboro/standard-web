@@ -2,6 +2,9 @@ from standardweb.models import *
 
 class IPTrackingMiddleware:
     def process_request(self, request):
+        if request.path.endswith('.png'):
+            return
+        
         ip = request.META.get('REMOTE_ADDR')
         
         if request.user.is_authenticated() and ip:
