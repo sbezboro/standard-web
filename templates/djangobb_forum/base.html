@@ -41,6 +41,13 @@ var POST_PREVIEW_URL = "{% url djangobb:post_preview %}";
 {% endif %}
 {% block extra_meta %}{% endblock %}
 
+{% if user.is_authenticated and not user.email %}
+	<div class="alert warning">
+		<h4>Hey there!</h4>
+		Please fill out your email address in your profile <a href="{% url djangobb:forum_profile user %}">here</a>.
+	</div>
+{% endif%}
+
 <h2>Standard Survival Forum</h2>
 {% include 'djangobb_forum/header.html' %}
 {% block djangobb_content %}{% endblock %}

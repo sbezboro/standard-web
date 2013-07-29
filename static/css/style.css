@@ -19,6 +19,10 @@ input[type="text"], input[type="password"] {
     border-radius: 4px;
 }
 
+abbr[title], acronym[title] {
+    border-bottom-width: 0;
+}
+
 code {
     color: #db382d;
     background-color: #eee;
@@ -701,20 +705,25 @@ a:hover {
     color: #4e4e4e;
 }
 
-.warning {
-    background-color: #ffff00;
-    color: #000;
-    border: 1px solid #ffd700;
-    padding: 2px;
-    text-align: center;
+.alert {
+    padding: 10px;
+    margin-top: 20px;
+    font-size: 14px;
 }
 
-.warning a {
-    color: #0072ab;
+.alert.warning {
+    background-color: #fcf8e3;
+    color: #c09853;
+    border: 1px solid #e5e6b6;
+    border-radius: 4px;
 }
 
-.warning a:hover {
-    color: #005d8c;
+.alert h4 {
+    margin: 0 0 2px;
+    font-size: 15px;
+}
+
+.alert a:hover {
     text-decoration: underline;
 }
 

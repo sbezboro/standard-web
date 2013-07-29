@@ -5,11 +5,13 @@
 
 {% block content %}
     <div id="main">
-        {% if not status.session %}
-        <div class="warning">
-            Minecraft session servers are down! You won't be able to connect to this server until they are back up!
+        {% if status.session %}
+        <div class="alert warning">
+            <h4>Heads Up!</h4>
+            Minecraft session servers are down! You won't be able to connect to this server until they are back up.
         </div>
         {% endif %}
+        
         <div id="splash">
             <h1>Standard Survival</h1>
             <img src="{{STATIC_URL}}images/standard-survival.jpg" width="958px" height="331px" alt="Standard Survival Minecraft Server">
