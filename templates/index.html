@@ -5,7 +5,7 @@
 
 {% block content %}
     <div id="main">
-        {% if status.session %}
+        {% if not status.session %}
         <div class="alert warning">
             <h4>Heads Up!</h4>
             Minecraft session servers are down! You won't be able to connect to this server until they are back up.
