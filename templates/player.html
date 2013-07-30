@@ -30,15 +30,25 @@
             {% if profile and profile.post_count and profile.last_post %}
                 {% load forum_extras %}
                 <div class="player-forum-section">
-                    <b>Forum posts:</b> {{ profile.post_count }} - <a href="{% url djangobb:search %}?action=show_user&amp;user_id={{ profile.id }}">See all</a><br>
-                    <b>Last post:</b> <a href="{{ profile.last_post_url }}"><abbr class="timeago" title="{% forum_time profile.last_post %}"></abbr></a><br>
-                    {% if profile.location %}<b>Location:</b> {{ profile.location }}<br>{% endif %}
-                    {% if profile.privacy_permission == 0 and profile.user.email %}
-                        <a href="mailto:{{ profile.user.email }}">E-mail</a>
-                    {% elif profile.privacy_permission == 1 and profile.user.email %}
-                        <a href="{% url djangobb:misc %}?mail_to={{ player.username }}">Send e-mail</a>
-                    {% endif %}
+                    <h3>Forum posts:</h3>
+                    <a href="{% url djangobb:search %}?action=show_user&amp;user_id={{ profile.id }}">{{ profile.post_count }}</a>
                 </div>
+                <div class="player-forum-section">
+                    <h3>Last post:</h3> <a href="{{ profile.last_post_url }}"><abbr class="timeago" title="{% forum_time profile.last_post %}"></abbr></a>
+                </div>
+                {% if profile.location %}
+                <div class="player-forum-section">
+                    <h3>Location:</h3>
+                    <a href="https://maps.google.com/maps?q={{ profile.location }}">{{ profile.location }}</a>
+                </div>
+                {% endif %}
+                {% if profile.user.email and profile.privacy_permission < 2 %}
+                <div class="player-forum-section">
+                    <h3>E-mail</h3>
+                    <a href="{% url djangobb:misc %}?mail_to={{ player.username }}">Send</a>
+                </div>
+                {% endif %}
+                <div class="clear"></div>
             {% endif %}
             {% endwith %}
         </div>

@@ -574,12 +574,10 @@ a:hover {
 }
 
 .player-forum-section {
-    margin: 0 auto;
-    background: #fff;
-    border: 1px solid #bbb;
-    width: 95%;
-    padding: 5px;
+    width: 25%;
     margin-bottom: 14px;
+    float: left;
+    font-size: 15px;
 }
 
 .player-forum-section h3 {
