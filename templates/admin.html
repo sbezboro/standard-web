@@ -214,8 +214,9 @@
                 
                 $('.player.selected').removeClass('selected');
                 
-                $detail.hide();
-                consoleStream.scrollToBottomIfAtBottom();
+                consoleStream.scrollToBottomIfAtBottom(function() {
+                    $detail.hide();
+                });
             });
         })
     </script>
