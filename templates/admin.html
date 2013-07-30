@@ -196,8 +196,9 @@
                 
                 $('.player.selected').removeClass('selected');
                 $(this).addClass('selected');
-                updatePlayerDetail(username);
-                consoleStream.scrollToBottomIfAtBottom();
+                consoleStream.scrollToBottomIfAtBottom(function() {
+                    updatePlayerDetail(username);
+                });
             });
             
             $image.on('load', function(e) {

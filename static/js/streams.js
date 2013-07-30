@@ -11,6 +11,8 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, source) {
     this.serverId = serverId;
     this.source = source;
     this.socket = null;
+    this.numLines = 0;
+    this.maxLines = 200;
     
     this.isAtBottom = function() {
         return $outputArea.get(0).scrollHeight - $outputArea.scrollTop() == $outputArea.outerHeight();
@@ -20,21 +22,16 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, source) {
         $outputArea.scrollTop($outputArea.get(0).scrollHeight);
     }
     
-    this.scrollToBottomIfAtBottom = function() {
+    this.scrollToBottomIfAtBottom = function(callback) {
         if (this.isAtBottom()) {
+            callback();
+            
             this.scrollToBottom();
         }
     }
     
-    this.addOutputLine = function(line) {
-        var shouldScroll = _this.isAtBottom();
-        
-        $outputArea.append('<li>' + line + '</li>');
-        
-        // Scroll to see the new line of text if the bottom was already visible
-        if (shouldScroll) {
-            _this.scrollToBottom();
-        }
+    this.trimTopLines = function(num) {
+        $('li:lt(' + num + ')', $outputArea).remove();
     }
   
     this.addOutputLines = function(batch) {
@@ -47,10 +44,21 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, source) {
         
         $outputArea.append(html);
         
+        if (this.numLines + batch.length > this.maxLines) {
+            this.trimTopLines(this.numLines + batch.length - this.maxLines);
+            this.numLines = this.maxLines;
+        } else {
+            this.numLines += batch.length;
+        }
+        
         // Scroll to see the new line of text if the bottom was already visible
         if (shouldScroll) {
             _this.scrollToBottom();
         }
+    }
+    
+    this.addOutputLine = function(line) {
+        this.addOutputLines([line]);
     }
     
     this.messageEntered = function(input) {
@@ -81,6 +89,7 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, source) {
         
         socket.on('connect', function() {
             $outputArea.empty();
+            _this.numLines = 0;
             _this.socketConnected();
         });
         
@@ -143,6 +152,8 @@ function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId) {
     Stream.call(this, sessionKey, baseUrl, $outputArea, $textbox, serverId, 'console');
     this.allPlayers = {};
     this.onUpdate;
+    
+    this.maxLines = 1000;
     
     var _this = this;
     var socket;
