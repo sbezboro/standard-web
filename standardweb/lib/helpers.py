@@ -12,26 +12,16 @@ def iso_date(date):
     return date.strftime("%Y-%m-%d %H:%M:%SZ")
 
     
-def elapsed_time_string(minutes):
-    hours = int(minutes / 60)
+def elapsed_time_string(total_minutes):
+    hours = int(total_minutes / 60)
     
-    string = ''
+    if not hours:
+        return '%d %s' % (total_minutes, 'minute' if total_minutes == 1 else 'minutes')
     
-    if hours > 0:
-        if hours == 1:
-            string = '1 hour '
-        else:
-            string = str(hours) + ' hours '
-    
-    if hours > 0:
-        minutes = minutes % (hours * 60)
-    
-    if minutes == 1:
-        string = string + '1 minute'
-    else:
-        string = string + str(minutes) + ' minutes'
-    
-    return string
+    minutes = total_minutes % (hours * 60)
+        
+    return '%d %s %d %s' % (hours, 'hour' if hours == 1 else 'hours',
+                            minutes, 'minute' if minutes == 1 else 'minutes')
 
 
 def ansi_to_html(ansi):
