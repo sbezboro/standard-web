@@ -176,8 +176,6 @@ HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_ROOT, '../djangobb_index')
 
 SESSION_COOKIE_AGE = 2592000
 
-ROOT_URLCONF = 'standardweb.urls'
-
 DJANGOBB_GRAVATAR_SUPPORT = True
 
 try:
