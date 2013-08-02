@@ -133,9 +133,21 @@
             
             $link.attr('href', href);
             
+            var hours = Math.floor(player.time_spent / 60);
+            var minutes = hours > 1 ? player.time_spent % (hours * 60) : player.time_spent;
+            
+            var timeSpent;
+            
+            if (hours) {
+                timeSpent = hours + (hours == 1 ? ' hour ' : ' hours ')
+                    + minutes + (minutes == 1 ? ' minute ' : ' minutes');
+            } else {
+                timeSpent = minutes + (minutes == 1 ? ' minute ' : ' minutes');
+            }
+            
             $ip.html(player.address);
             $rank.html(player.rank);
-            $timeSpent.html(player.time_spent);
+            $timeSpent.html(timeSpent);
             $health.html(player.health);
             $location.html('(' + player.x + ', ' + player.y + ', ' + player.z + ')');
             
