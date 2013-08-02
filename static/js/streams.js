@@ -27,6 +27,8 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, source) {
             callback();
             
             this.scrollToBottom();
+        } else {
+            callback();
         }
     }
     

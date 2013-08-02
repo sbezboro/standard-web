@@ -55,6 +55,10 @@
             <b>Rank:</b>
             <span class="rank"></span>
           </div>
+          <div>
+            <b>Time Spent:</b>
+            <span class="time-spent"></span>
+          </div>
           <br>
           <div>
             <b>Health:</b>
@@ -91,6 +95,7 @@
         var $link;
         var $ip;
         var $rank;
+        var $timeSpent;
         var $health;
         var $location;
         var $titles;
@@ -130,6 +135,7 @@
             
             $ip.html(player.address);
             $rank.html(player.rank);
+            $timeSpent.html(player.time_spent);
             $health.html(player.health);
             $location.html('(' + player.x + ', ' + player.y + ', ' + player.z + ')');
             
@@ -147,7 +153,6 @@
             if (username != currentUsername) {
                 currentUsername = username;
                 
-                $image.fadeTo(0, 0.2);
                 $image.attr('src', '/faces/64/' + username + '.png');
             }
             
@@ -165,6 +170,7 @@
             $link = $detail.find('.link');
             $ip = $detail.find('.ip');
             $rank = $detail.find('.rank');
+            $timeSpent = $detail.find('.time-spent');
             $health = $detail.find('.health');
             $location = $detail.find('.location');
             $titles = $detail.find('.titles');
