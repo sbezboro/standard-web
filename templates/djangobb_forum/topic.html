@@ -41,6 +41,9 @@
 									<img class="face-large" title="{{ player.username }}" src="/faces/64/{{ player.username }}.png" width="64px" height=64px"/>
 								</a>
 							{% endif %}
+							{% if post.user.is_superuser %}
+								<img src="{% gravatar post.user.email %}">
+							{% endif%}
 						</dd>
 						
 						<dt class="name"><strong>
@@ -53,8 +56,11 @@
 							{% endif %}
 						</strong></dt>
 							{% if player.nickname %}
-								<dd>({{ player.username}})</dd>
+								<dd>({{ player.username }})</dd>
 							{% endif %}
+							{% if post.user.is_superuser %}
+								<dd>({{ post.user.first_name }})</dd>
+							{% endif%}
 						<br>
 				
 						<dd><b>{% trans "Posts:" %}</b> {{ post.user.forum_profile.post_count }}</dd>

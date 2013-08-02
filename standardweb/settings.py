@@ -176,6 +176,8 @@ HAYSTACK_WHOOSH_PATH = os.path.join(PROJECT_ROOT, '../djangobb_index')
 
 SESSION_COOKIE_AGE = 2592000
 
+DJANGOBB_GRAVATAR_SUPPORT = True
+
 try:
     from local_settings import *
 except ImportError:
