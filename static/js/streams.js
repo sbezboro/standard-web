@@ -116,7 +116,7 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, source) {
             }
         });
         
-        $textbox.keyup(function(e) {
+        $textbox.keydown(function(e) {
             switch (e.which) {
                 case 13: //Enter
                     var input = $textbox.val();
