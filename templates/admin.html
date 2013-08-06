@@ -47,32 +47,34 @@
           </a>
           <div class="username"></div>
           <br>
-          <div>
-            <b>IP Address:</b>
-            <span class="ip"></span>
+          <div class="stats">
+            <div>
+              <b>Rank</b>
+              <span class="rank"></span>
+            </div>
+            <div>
+              <b>Time Spent</b>
+              <span class="time-spent"></span>
+            </div>
+            <div>
+              <b>IP Address</b>
+              <span class="ip"></span>
+            </div>
           </div>
-          <div>
-            <b>Rank:</b>
-            <span class="rank"></span>
+          <div class="stats">
+            <div>
+              <b>Health</b>
+              <span class="health"></span>
+            </div>
+            <div>
+              <b>Location</b>
+              <span class="location"></span>
+            </div>
+            <div>
+              <b>Titles</b>
+              <span class="titles"></span>
+            </div>
           </div>
-          <div>
-            <b>Time Spent:</b>
-            <span class="time-spent"></span>
-          </div>
-          <br>
-          <div>
-            <b>Health:</b>
-            <span class="health"></span>
-          </div>
-          <div>
-            <b>Location:</b>
-            <span class="location"></span>
-          </div>
-          <div>
-            <b>Titles:</b>
-            <span class="titles"></span>
-          </div>
-          <br>
           <div class="options">
             <a class="btn donator" href="#">Set Donator</a><br>
           </div>
@@ -148,8 +150,8 @@
             $ip.html(player.address);
             $rank.html(player.rank);
             $timeSpent.html(timeSpent);
-            $health.html(player.health);
-            $location.html('(' + player.x + ', ' + player.y + ', ' + player.z + ')');
+            $health.html(player.health.toFixed(2));
+            $location.html('[' + player.world + '] ' + player.x + ', ' + player.y + ', ' + player.z);
             
             var titleNames = [];
             player.titles.map(function(title) {

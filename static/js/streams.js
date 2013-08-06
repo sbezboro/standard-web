@@ -121,13 +121,15 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, source) {
                 case 13: //Enter
                     var input = $textbox.val();
                     
-                    _this.messageEntered(input);
-                    
-                    $textbox.val("");
-                    _this.scrollToBottom();
-                    
-                    commandHistory.unshift(input);
-                    commandIndex = -1;
+                    if (input) {
+                        _this.messageEntered(input);
+                        
+                        $textbox.val("");
+                        _this.scrollToBottom();
+                        
+                        commandHistory.unshift(input);
+                        commandIndex = -1;
+                    }
                     break;
                 case 38: //Up
                     if (commandIndex < commandHistory.length - 1) {
