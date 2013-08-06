@@ -87,9 +87,7 @@
                     {% for online in users_online %}
 											{% with online.forum_profile.player as player %}
 												{% if player %}
-													<a href="/player/{{ player.username }}">
-														{{ player.displayname_html|safe }}
-													</a>{% if not forloop.last %},{% endif %}
+													<a href="/player/{{ player.username }}">{{ player.displayname_html|safe }}</a>{% if not forloop.last %},{% endif %}
 												{% else %}
 													{{ online.username }}{% if not forloop.last %},{% endif %}
 												{% endif %}
