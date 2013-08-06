@@ -89,9 +89,9 @@
 												{% if player %}
 													<a href="/player/{{ player.username }}">
 														{{ player.displayname_html|safe }}
-													</a>
+													</a>{% if not forloop.last %},{% endif %}
 												{% else %}
-													{{ online.username }}
+													{{ online.username }}{% if not forloop.last %},{% endif %}
 												{% endif %}
 											{% endwith %}
                     {% endfor %}
