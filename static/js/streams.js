@@ -41,6 +41,7 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, source) {
         
         var html = "";
         batch.map(function(line) {
+            line = _this.postProcessLine(line);
             html += '<li>' + line + '</li>';
         });
         
@@ -61,6 +62,10 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, source) {
     
     this.addOutputLine = function(line) {
         this.addOutputLines([line]);
+    }
+    
+    this.postProcessLine = function(line) {
+        return line;
     }
     
     this.messageEntered = function(input) {
@@ -157,18 +162,24 @@ function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId) {
     this.allPlayers = {};
     this.onUpdate;
     
-    this.maxLines = 1000;
+    this.maxLines = 2000;
     
     var _this = this;
     var socket;
     
-    $textbox.keyup(function(e) {
+    var serverMentionPat = /(&gt;.*|FactionChat.*|command:.*)(server)/gi;
+    
+    $textbox.keydown(function(e) {
         if ($textbox.val().length >= 53) {
             $textbox.addClass('len-warn');
         } else {
             $textbox.removeClass('len-warn');
         }
     });
+    
+    this.postProcessLine = function(line) {
+        return line.replace(serverMentionPat, '$1<span style="background:#A0A">$2</span>');
+    }
     
     this.socketInitialized = function() {
         socket = _this.socket;
