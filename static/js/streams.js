@@ -1,7 +1,7 @@
 var commandHistory = [];
 var commandIndex = -1;
     
-var mentionPat = '(&gt;.*|FactionChat.*|AllianceChat.*|command:.*)(MENTION_PART)';
+var mentionPat = '(&gt;.*|Server\].*|Web\ Chat.*|FactionChat.*|AllianceChat.*|command:.*)(MENTION_PART)';
 
 function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, source) {
     var _this = this;
