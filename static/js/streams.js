@@ -1,7 +1,9 @@
 var commandHistory = [];
 var commandIndex = -1;
+    
+var mentionPat = '(&gt;.*|FactionChat.*|AllianceChat.*|command:.*)(MENTION_PART)';
 
-function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, source) {
+function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, source) {
     var _this = this;
     
     this.sessionKey = sessionKey;
@@ -9,10 +11,12 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, source) {
     this.$outputArea = $outputArea;
     this.$textbox = $textbox;
     this.serverId = serverId;
+    this.data = data;
     this.source = source;
     this.socket = null;
     this.numLines = 0;
     this.maxLines = 200;
+    this.mentions = [];
     
     this.isAtBottom = function() {
         return $outputArea.get(0).scrollHeight - $outputArea.scrollTop() == $outputArea.outerHeight();
@@ -65,7 +69,28 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, source) {
     }
     
     this.postProcessLine = function(line) {
+        this.mentions.map(function(mention) {
+            if (_this.mentionSound && line.match(mention.regex)) {
+                _this.mentionSound.play();
+            }
+            line = line.replace(mention.regex, '$1<span style="' + mention.color + '">$2</span>');
+        });
+        
         return line;
+    }
+    
+    this.addMention = function(mentionString, color) {
+        var replacedPat = mentionPat.replace('MENTION_PART', mentionString);
+        var regex = new RegExp(replacedPat, 'gi');
+        
+        this.mentions.push({
+            regex: regex,
+            color: color
+        });
+    }
+    
+    this.setMentionSound = function(mentionSound) {
+        this.mentionSound = mentionSound;
     }
     
     this.messageEntered = function(input) {
@@ -157,8 +182,8 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, source) {
     }
 }
 
-function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId) {
-    Stream.call(this, sessionKey, baseUrl, $outputArea, $textbox, serverId, 'console');
+function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data) {
+    Stream.call(this, sessionKey, baseUrl, $outputArea, $textbox, serverId, data, 'console');
     this.allPlayers = {};
     this.onUpdate;
     
@@ -167,7 +192,7 @@ function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId) {
     var _this = this;
     var socket;
     
-    var serverMentionPat = /(&gt;.*|FactionChat.*|command:.*)(server)/gi;
+    this.addMention('server', 'background:#A0A');
     
     $textbox.keydown(function(e) {
         if ($textbox.val().length >= 53) {
@@ -176,10 +201,6 @@ function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId) {
             $textbox.removeClass('len-warn');
         }
     });
-    
-    this.postProcessLine = function(line) {
-        return line.replace(serverMentionPat, '$1<span style="background:#A0A">$2</span>');
-    }
     
     this.socketInitialized = function() {
         socket = _this.socket;
@@ -305,10 +326,14 @@ function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId) {
 
 ConsoleStream.prototype = Object.create(Stream.prototype);
 
-function ChatStream(sessionKey, baseUrl, $outputArea, $textbox, serverId) {
-    Stream.call(this, sessionKey, baseUrl, $outputArea, $textbox, serverId, 'chat');
+function ChatStream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data) {
+    Stream.call(this, sessionKey, baseUrl, $outputArea, $textbox, serverId, data, 'chat');
     var _this = this;
     var socket;
+    
+    if (this.data) {
+        this.addMention(data.username, 'background:#00ACC4');
+    }
     
     this.socketInitialized = function() {
         socket = _this.socket;

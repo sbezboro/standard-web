@@ -49,10 +49,29 @@
                   return false;
               });
               
+              var data = {
+                {% if request.user.is_authenticated %}
+                username: '{{ request.user.username }}'
+                {% endif %}
+              }
               var chatStream = new ChatStream(sessionKey, baseUrl, $chat,
-                                              $chatTextbox, serverId);
+                                              $chatTextbox, serverId, data);
               chatStream.connect(function(error) {});
-          })
+              
+              soundManager.setup({
+                  url: '/static/flash/',
+                  flashVersion: 9,
+                  debugMode: false,
+                  onready: function() {
+                      var mentionSound = soundManager.createSound({
+                          id: 'mention',
+                          url: '/static/sound/mention.wav'
+                      });
+                      
+                      chatStream.setMentionSound(mentionSound);
+                  }
+              });
+          });
       </script>
     </div>
 {% endblock %}

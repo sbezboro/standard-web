@@ -211,6 +211,20 @@
                 }
             };
             
+            soundManager.setup({
+                url: '/static/flash/',
+                flashVersion: 9,
+                debugMode: false,
+                onready: function() {
+                    var mentionSound = soundManager.createSound({
+                        id: 'mention',
+                        url: '/static/sound/mention.wav'
+                    });
+                    
+                    consoleStream.setMentionSound(mentionSound);
+                }
+            });
+            
             $(document).on('click', '.player', function(e) {
                 var username = $(this).attr('username');
                 
