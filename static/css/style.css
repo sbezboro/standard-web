@@ -385,6 +385,10 @@ a:hover {
     color: inherit;
 }
 
+.admin-panel .console-notification {
+    float: right;
+}
+
 .admin-panel .console-textbox {
     width: 100%;
     height: 22px;

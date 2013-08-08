@@ -16,6 +16,9 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
     this.socket = null;
     this.numLines = 0;
     this.maxLines = 200;
+    
+    this.playMentionSound = true;
+    this.mentionSound = null;
     this.mentions = [];
     
     this.isAtBottom = function() {
@@ -70,7 +73,8 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
     
     this.postProcessLine = function(line) {
         this.mentions.map(function(mention) {
-            if (_this.mentionSound && line.match(mention.regex)) {
+            if (_this.playMentionSound && _this.mentionSound
+                    && line.match(mention.regex)) {
                 _this.mentionSound.play();
             }
             line = line.replace(mention.regex, '$1<span style="' + mention.color + '">$2</span>');

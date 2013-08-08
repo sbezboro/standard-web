@@ -81,12 +81,14 @@
         </div>
       </div>
       <div class="admin-left">
+        <input class="console-notification" type="checkbox" checked/>
         <div class="console"></div>
         <input class="console-textbox" type="text">
       </div>
     </div>
     
     <script type="text/javascript">
+        var $notificationCheckBox;
         var $console;
         var $detail;
         
@@ -174,6 +176,7 @@
         };
         
         $(document).ready(function() {
+            $notificationCheckBox = $('.console-notification');
             $console = $('.console');
             $detail = $('.detail');
             
@@ -223,6 +226,11 @@
                     
                     consoleStream.setMentionSound(mentionSound);
                 }
+            });
+            
+            $notificationCheckBox.on('click', function(e) {
+                var enabled = $(this).is(':checked');
+                consoleStream.playMentionSound = enabled;
             });
             
             $(document).on('click', '.player', function(e) {
