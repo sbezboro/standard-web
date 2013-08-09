@@ -50,9 +50,12 @@
               });
               
               var data = {
-                {% if request.user.is_authenticated %}
-                username: '{{ request.user.username }}'
-                {% endif %}
+                  {% if player %}
+                  username: '{{ player.username }}',
+                      {% if player.nickname %}
+                      nickname: '{{ player.nickname }}'
+                      {% endif %}
+                  {% endif %}
               }
               var chatStream = new ChatStream(sessionKey, baseUrl, $chat,
                                               $chatTextbox, serverId, data);
@@ -62,6 +65,7 @@
                   url: '/static/flash/',
                   flashVersion: 9,
                   debugMode: false,
+                  preferFlash: false,
                   onready: function() {
                       var mentionSound = soundManager.createSound({
                           id: 'mention',
@@ -69,6 +73,9 @@
                       });
                       
                       chatStream.setMentionSound(mentionSound);
+                  },
+                  ontimeout: function() {
+                      _rollbar.push('Sound manager timeout');
                   }
               });
           });

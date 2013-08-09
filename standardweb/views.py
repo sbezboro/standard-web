@@ -124,10 +124,18 @@ def admin(request, server_id=None):
 def chat(request, server_id=None):
     server_id = int(server_id or 2)
     
+    player = None
+    if request.user.is_authenticated():
+        try:
+            player = MinecraftPlayer.objects.get(username=request.user.username)
+        except:
+            pass
+    
     return render_to_response('chat.html', {
         'servers': Server.objects.all(),
         'server_id': server_id,
-        'rts_address': settings.RTS_ADDRESS
+        'rts_address': settings.RTS_ADDRESS,
+        'player': player
     }, context_instance=RequestContext(request))
 
 

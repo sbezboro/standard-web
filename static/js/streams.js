@@ -337,6 +337,9 @@ function ChatStream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data) 
     
     if (this.data) {
         this.addMention(data.username, 'background:#00ACC4');
+        if (this.data.nickname) {
+            this.addMention(data.nickname, 'background:#00ACC4');
+        }
     }
     
     this.socketInitialized = function() {
