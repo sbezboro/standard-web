@@ -21,6 +21,8 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
     this.mentionSound = null;
     this.mentions = [];
     
+    this.focused = true;
+    
     this.isAtBottom = function() {
         return $outputArea.get(0).scrollHeight - $outputArea.scrollTop() == $outputArea.outerHeight();
     }
@@ -74,7 +76,7 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
     this.postProcessLine = function(line) {
         this.mentions.map(function(mention) {
             if (_this.playMentionSound && _this.mentionSound
-                    && line.match(mention.regex)) {
+                    && !_this.focused && line.match(mention.regex)) {
                 _this.mentionSound.play();
             }
             line = line.replace(mention.regex, '$1<span style="' + mention.color + '">$2</span>');
@@ -180,6 +182,14 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
             }
             
             return true;
+        });
+        
+        $(window).focus(function() {
+            _this.focused = true;
+        });
+        
+        $(window).blur(function() {
+            _this.focused = false;
         });
         
         return callback();
