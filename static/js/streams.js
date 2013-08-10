@@ -50,8 +50,7 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
         
         var html = "";
         batch.map(function(line) {
-            line = _this.postProcessLine(line);
-            html += '<li>' + line + '</li>';
+            html += '<li>' + _this.postProcessLine(line) + '</li>';
         });
         
         $outputArea.append(html);
@@ -74,25 +73,41 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
     }
     
     this.postProcessLine = function(line) {
-        this.mentions.map(function(mention) {
-            if (_this.playMentionSound && _this.mentionSound
-                    && !_this.focused && line.match(mention.regex)) {
-                _this.mentionSound.play();
+        var playSound = false;
+        
+        var i;
+        for (i = 0; i < this.mentions.length; ++i) {
+            var mention = this.mentions[i];
+            
+            if (this.playMentionSound && this.mentionSound
+                    && !this.focused && line.match(mention.regex)) {
+                playSound = true;
             }
-            line = line.replace(mention.regex, '$1<span style="' + mention.color + '">$2</span>');
-        });
+            
+            if (mention.style) {
+                line = line.replace(mention.regex, '$1<span style="' + mention.style + '">$2</span>');
+            }
+        }
+        
+        if (playSound) {
+            this.mentionSound.play();
+        }
         
         return line;
     }
     
-    this.addMention = function(mentionString, color) {
-        var replacedPat = mentionPat.replace('MENTION_PART', mentionString);
-        var regex = new RegExp(replacedPat, 'gi');
-        
+    this.addRegexMention = function(regex, style) {
         this.mentions.push({
             regex: regex,
-            color: color
+            style: style
         });
+    }
+    
+    this.addChatMention = function(string, style) {
+        var replacedPat = mentionPat.replace('MENTION_PART', string);
+        var regex = new RegExp(replacedPat, 'gi');
+        
+        this.addRegexMention(regex, style);
     }
     
     this.setMentionSound = function(mentionSound) {
@@ -184,11 +199,25 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
             return true;
         });
         
+        var sendActivity = function(active) {
+            socket.emit('user-activity', {
+                active: active
+            });
+        };
+        
         $(window).focus(function() {
+            if (!_this.focused) {
+                sendActivity(true);
+            }
+            
             _this.focused = true;
         });
         
         $(window).blur(function() {
+            if (_this.focused) {
+                sendActivity(false);
+            }
+            
             _this.focused = false;
         });
         
@@ -206,7 +235,9 @@ function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId, dat
     var _this = this;
     var socket;
     
-    this.addMention('server', 'background:#A0A');
+    this.addChatMention('server', 'background:#A0A');
+    // A player messaging console
+    this.addRegexMention('-&gt; me');
     
     $textbox.keydown(function(e) {
         if ($textbox.val().length >= 53) {
@@ -285,6 +316,7 @@ function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId, dat
                 var username = users[i].username;
                 var address = users[i].address;
                 var type = users[i].type;
+                var active = users[i].active;
                 
                 if (username == 'Server') {
                     html += ['<div class="user">',
@@ -294,11 +326,13 @@ function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId, dat
                     html += ['<div class="user">',
                                 '<a href="/player/' + username + '">',
                                     '<span><img class="face-thumb" src="/faces/16/' + username + '.png">' + username + '</span>',
+                                    active ? '<img src="/static/images/online.png">': '',
                                 '</a>',
                             '</div>'].join('');
                 } else {
                     html += ['<div class="user">',
                                 'Anonymous - ' + address,
+                                active ? '<img src="/static/images/online.png">': '',
                             '</div>'].join('');
                 }
             }
@@ -346,9 +380,9 @@ function ChatStream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data) 
     var socket;
     
     if (this.data) {
-        this.addMention(data.username, 'background:#00ACC4');
+        this.addChatMention(data.username, 'background:#00ACC4');
         if (this.data.nickname) {
-            this.addMention(data.nickname, 'background:#00ACC4');
+            this.addChatMention(data.nickname, 'background:#00ACC4');
         }
     }
     
