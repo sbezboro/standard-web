@@ -1,4 +1,5 @@
 import re
+import subprocess
 import time
 from datetime import datetime, timedelta
 
@@ -6,6 +7,13 @@ from ansi2html import Ansi2HTMLConverter
 
 ansi_converter = Ansi2HTMLConverter()
 ansi_pat = re.compile(r'\x1b[^m]*m')
+
+
+try:
+    git_revision = subprocess.check_output('git log -n 1 --pretty=format:"%H"', shell=True)
+except Exception, e:
+    print 'Could not get git revision, ignoring: %s', e
+    git_revision = ''
 
 
 def iso_date(date):

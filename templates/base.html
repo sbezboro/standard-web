@@ -8,11 +8,12 @@
     {% endif %}
     <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css">
     <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/tipsy.css">
-        
+    
+    {% load standardweb_extras %}
     <script>
         var _rollbarParams = {
             "server.environment": {% if debug %}"development"{% else %}"production"{% endif %},
-            "client.javascript.code_version": "i",
+            "client.javascript.code_version": "{% git_revision %}",
             "client.javascript.source_map_enabled": true,
             {% if user.is_authenticated %}person:{id:{{user.id}},username:'{{user.username}}',email:'{{user.email}}'}{% endif %}
         };
