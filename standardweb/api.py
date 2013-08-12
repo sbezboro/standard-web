@@ -46,11 +46,12 @@ def server_api(function):
         secret_key = request.REQUEST.get('secret-key')
         
         cache_key = 'api-%s-%s' % (server_id, secret_key)
-        request.server = cache.get(cache_key)
+        #request.server = cache.get(cache_key)
+        request.server = None
         if not request.server:
             try:
                 request.server = Server.objects.get(id=server_id, secret_key=secret_key)
-                cache.set(cache_key, request.server, 3600)
+                #cache.set(cache_key, request.server, 3600)
             except:
                 rollbar.report_message('API access denied!', level='error', request=request)
                 return HttpResponseForbidden()
