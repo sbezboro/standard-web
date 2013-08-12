@@ -418,7 +418,7 @@ def get_face(request, size=16, username=None):
             else:
                 image = Image.open(path)
     except Exception, e:
-        rollbar.report_exc_info(sys.exc_info())
+        rollbar.report_exc_info()
     
     if not image:
         image = _extract_face(Image.open(PROJECT_PATH + '/static/images/char.png'), size)

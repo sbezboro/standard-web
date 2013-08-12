@@ -10,6 +10,7 @@ uglifyjs static/js/jquery-1.8.3.js\
     static/js/ZeroClipboard.js\
     static/js/graph.js\
     static/js/streams.js\
+    static/js/util.js\
     --source-map static/js/all.min.map\
     --source-map-url all.min.map\
     --output static/js/all.min.js\

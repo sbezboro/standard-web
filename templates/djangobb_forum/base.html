@@ -13,7 +13,7 @@
 
 <script type="text/javascript">
 var STATIC_URL = "{{ STATIC_URL }}";
-var POST_PREVIEW_URL = "{% url djangobb:post_preview %}";
+var POST_PREVIEW_URL = "{% url "djangobb:post_preview" %}";
 </script>
 
 
@@ -44,7 +44,7 @@ var POST_PREVIEW_URL = "{% url djangobb:post_preview %}";
 {% if user.is_authenticated and not user.email %}
 	<div class="alert warning">
 		<h4>Hey there!</h4>
-		Please fill out your email address in your profile <a href="{% url djangobb:forum_profile user %}">here</a>.
+		Please fill out your email address in your profile <a href="{% url "djangobb:forum_profile" user %}">here</a>.
 	</div>
 {% endif%}
 

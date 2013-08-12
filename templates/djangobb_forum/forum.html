@@ -9,10 +9,10 @@
 <div class="linkst">
 	<div class="inbox">
 		{% if user.is_authenticated and not forum.locked or user.is_superuser %}
-			<p class="postlink conr"><a class="btn" href="{% url djangobb:add_topic forum.id %}">{% trans "New topic" %}</a></p>
+			<p class="postlink conr"><a class="btn" href="{% url "djangobb:add_topic" forum.id %}">{% trans "New topic" %}</a></p>
 		{% endif %}
 		<div>
-		<ul><li><a href="{% url djangobb:index %}">{% trans "Forum" %}</a> </li><li>&raquo; {{ forum.name }}</li></ul>
+		<ul><li><a href="{% url "djangobb:index" %}">{% trans "Forum" %}</a> </li><li>&raquo; {{ forum.name }}</li></ul>
 		</div>
 		<div class="pagelink conl">{% paginate %}</div>
 		<div class="clearer"></div>
@@ -105,7 +105,7 @@
 	<div class="inbox">
 		<div class="pagelink conl">{% paginate %}</div>
 		{% if user.is_authenticated %}
-			<p class="postlink conr"><a class="btn" href="{% url djangobb:add_topic forum.id %}">{% trans "New topic" %}</a></p>
+			<p class="postlink conr"><a class="btn" href="{% url "djangobb:add_topic" forum.id %}">{% trans "New topic" %}</a></p>
 		{% endif %}
 		<div class="clearer"></div>
 	</div>
@@ -116,7 +116,7 @@
 	<form id="qjump" method="get" action="forum">
 		<div><label>{% trans "Jump to" %}
 		<br />
-		<select name="id" id="forum_id" onchange="window.location=('{% url djangobb:index %}'+this.options[this.selectedIndex].value)">
+		<select name="id" id="forum_id" onchange="window.location=('{% url "djangobb:index" %}'+this.options[this.selectedIndex].value)">
 			{% for category in categories %}
 				<optgroup label="{{ category }}">
 					{% for forum in category.forums.all %}
@@ -125,7 +125,7 @@
 				</optgroup>
 			{% endfor %}
 		</select>
-		<input type="button" onclick="window.location=('{% url djangobb:index %}'+getElementById('forum_id').value)" value=" {% trans "Go" %} " accesskey="g" />
+		<input type="button" onclick="window.location=('{% url "djangobb:index" %}'+getElementById('forum_id').value)" value=" {% trans "Go" %} " accesskey="g" />
 		</label></div>
 	</form>
 </div>

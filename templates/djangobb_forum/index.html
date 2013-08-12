@@ -103,11 +103,11 @@
 {% block controls %}
 <dl id="searchlinks" class="conl">
 	<dt><strong>{% trans "Search links" %}</strong></dt>
-	<dd><a href="{% url djangobb:search %}?action=show_24h">{% trans "Show recent posts" %}</a></dd>
-	<dd><a href="{% url djangobb:search %}?action=show_unanswered">{% trans "Show unanswered posts" %}</a></dd>
+	<dd><a href="{% url "djangobb:search" %}?action=show_24h">{% trans "Show recent posts" %}</a></dd>
+	<dd><a href="{% url "djangobb:search" %}?action=show_unanswered">{% trans "Show unanswered posts" %}</a></dd>
 	{% if user.is_authenticated %}
-		<dd><a href="{% url djangobb:search %}?action=show_subscriptions">{% trans "Show your subscribed topics" %}</a></dd>
-		<dd><a href="{% url djangobb:search %}?action=show_user&amp;user_id={{ request.user.id }}">{% trans "Show your posts" %}</a></dd>
+		<dd><a href="{% url "djangobb:search" %}?action=show_subscriptions">{% trans "Show your subscribed topics" %}</a></dd>
+		<dd><a href="{% url "djangobb:search" %}?action=show_user&amp;user_id={{ request.user.id }}">{% trans "Show your posts" %}</a></dd>
 	{% endif %}
 </dl>
 {% endblock %}
@@ -115,7 +115,7 @@
 {% block lofi %}
 {% if forum_settings.LOFI_SUPPORT %}
     <p class="lofi">
-        <a href="{% url djangobb:lofi_index %}">Lo-Fi Version</a>
+        <a href="{% url "djangobb:lofi_index" %}">Lo-Fi Version</a>
     </p>
 {% endif %}
 {% endblock %}

@@ -59,7 +59,7 @@ def forum_post(username, forum_name, topic_name, path):
                 'path': '%s%s' % (base_url, path)
             })
         except:
-            rollbar.report_exc_info(sys.exc_info())
+            rollbar.report_exc_info()
 
 
 def set_donator(username):

@@ -10,7 +10,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponse, Http404
 from django.utils.functional import Promise
-from django.utils.translation import force_unicode, check_for_language
+from django.utils.translation import check_for_language
 from django.utils.simplejson import JSONEncoder
 from django.template.defaultfilters import urlize as django_urlize
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
@@ -81,7 +81,7 @@ class LazyJSONEncoder(JSONEncoder):
 
     def default(self, o):
         if isinstance(o, Promise):
-            return force_unicode(o)
+            return o
         else:
             return super(LazyJSONEncoder, self).default(o)
 

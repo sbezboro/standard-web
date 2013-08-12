@@ -31,7 +31,7 @@
                 {% load forum_extras %}
                 <div class="player-forum-section">
                     <h3>Forum posts:</h3>
-                    <a href="{% url djangobb:search %}?action=show_user&amp;user_id={{ profile.id }}">{{ profile.post_count }}</a>
+                    <a href="{% url "djangobb:search" %}?action=show_user&amp;user_id={{ profile.id }}">{{ profile.post_count }}</a>
                 </div>
                 <div class="player-forum-section">
                     <h3>Last post:</h3> <a href="{{ profile.last_post_url }}"><abbr class="timeago" title="{% forum_time profile.last_post %}"></abbr></a>
@@ -45,7 +45,7 @@
                 {% if profile.user.email and profile.privacy_permission < 2 %}
                 <div class="player-forum-section">
                     <h3>E-mail</h3>
-                    <a href="{% url djangobb:misc %}?mail_to={{ player.username }}">Send</a>
+                    <a href="{% url "djangobb:misc" %}?mail_to={{ player.username }}">Send</a>
                 </div>
                 {% endif %}
                 <div class="clear"></div>

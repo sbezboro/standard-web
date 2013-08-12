@@ -1,4 +1,4 @@
-Django==1.4
+Django==1.5
 Fabric==1.6.0
 MySQL-python==1.2.3
 PIL==1.1.7
@@ -18,5 +18,5 @@ pylibmc==1.2.3
 python-memcached==1.48
 python-openid==2.2.5
 requests==0.14.1
-rollbar==0.5.3
+rollbar==0.5.7
 wsgiref==0.1.2

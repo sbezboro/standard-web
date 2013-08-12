@@ -33,16 +33,16 @@
 						{% if moderator %}
 							<dd>{% trans "IP:" %} {{ post_user_ip }}</dd>
 						{% endif %}
-						<dd class="usercontacts"><a href="{% url djangobb:forum_profile message.sender %}">{% trans "Profile" %}</a>&nbsp;&nbsp;
+						<dd class="usercontacts"><a href="{% url "djangobb:forum_profile" message.sender %}">{% trans "Profile" %}</a>&nbsp;&nbsp;
 						{% if message.sender.forum_profile.privacy_permission == 0 %}
 							<a href="mailto:{{ message.sender.email }}">{% trans "E-mail" %}</a>&nbsp;&nbsp;
 						{% else %}
 							{% if message.sender.forum_profile.privacy_permission == 1 %}
-									<a href="{% url djangobb:misc %}?mail_to={{ message.sender }}">{% trans "Send e-mail" %}</a>&nbsp;&nbsp;
+									<a href="{% url "djangobb:misc" %}?mail_to={{ message.sender }}">{% trans "Send e-mail" %}</a>&nbsp;&nbsp;
 							{% endif %}
 						{% endif %}
 						{% if user_is_authenticated %}
-							<a href="{% url messages_reply %}?recipient={{ post_user.username }}">{% trans "PM" %}</a>&nbsp;&nbsp;</dd>
+							<a href="{% url "messages_reply" %}?recipient={{ post_user.username }}">{% trans "PM" %}</a>&nbsp;&nbsp;</dd>
 						{% endif %}
 					</dl>
 				</div>
@@ -72,10 +72,10 @@
 				<div class="postfootright">
 					<ul>
 						<li>
-							<a onclick="return confirm('{% trans "Are you sure you want to delete this post?" %}')" href="{% url messages_delete message.id %}">{% trans "Delete" %}</a>
+							<a onclick="return confirm('{% trans "Are you sure you want to delete this post?" %}')" href="{% url "messages_delete" message.id %}">{% trans "Delete" %}</a>
 						</li>
 						<li>
-							| <a href="{% url messages_reply message.id %}">{% trans "Reply" %}</a>
+							| <a href="{% url "messages_reply" message.id %}">{% trans "Reply" %}</a>
 						</li>
 					</ul>
 				</div>

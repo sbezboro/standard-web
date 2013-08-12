@@ -22,6 +22,7 @@
         f=d.getElementsByTagName("script")[0];s.src="//d37gvrvc0wt4s1.cloudfront.net/js/1/rollbar.min.js";s.async=!0;
         f.parentNode.insertBefore(s,f);};if(w.addEventListener){w.addEventListener("load",i,!1);}else{w.attachEvent("onload",i);}})(window,document);
     </script>
+    
     <script type="text/javascript">
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', 'UA-32372174-1']);
@@ -35,7 +36,6 @@
     </script>
     
     <script type="text/javascript" src="{{STATIC_URL}}js/all.min.js"></script>
-    <!--[if lte IE 8]><script type="text/javascript" src="{{STATIC_URL}}js/excanvas.min.js"></script><![endif]-->
     <script>
         !function(r,n,e){var t={"notifier.plugins.jquery.version":"0.0.1"};n._rollbar.push({_rollbarParams:t});r(e).ajaxError(function(r,e,t,u){
         var o=e.status;var a=t.url;n._rollbar.push({level:"warning",msg:"jQuery ajax error for url "+a,jquery_status:o,jquery_url:a,jquery_thrown_error:u,
@@ -45,6 +45,8 @@
         u=f(u)}return a.call(this,r,e,t,u)};var f=r.fn.off;r.fn.off=function(r,n,e){if(n&&typeof n==="function"){n=o[n];delete o[n]}else{e=o[e];
         delete o[e]}return f.call(this,r,n,e)}}(jQuery,window,document);
     </script>
+    
+    <!--[if lte IE 8]><script type="text/javascript" src="{{STATIC_URL}}js/excanvas.min.js"></script><![endif]-->
     {% block script_files %}{% endblock %}
 </head>
 
