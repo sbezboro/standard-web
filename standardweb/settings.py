@@ -6,7 +6,7 @@ PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = ['www.standardsurvival.com']
+ALLOWED_HOSTS = ['standardsurvival.com']
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
