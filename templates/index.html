@@ -25,6 +25,9 @@
                 </div>
                 <div class="detail">
                     <abbr class="timeago" title="{% forum_time news_post.created %}"></abbr> - {{ comments }} comment{{ comments|pluralize }}
+                    <p>
+                        <a href="{{ news_topic.forum.get_absolute_url }}">See all news</a>
+                    </p>
                 </div>
             </div>
             <h2>Connect To</h2>
