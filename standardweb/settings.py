@@ -89,7 +89,7 @@ MIDDLEWARE_CLASSES = (
     'djangobb_forum.middleware.LastLoginMiddleware',
     'djangobb_forum.middleware.UsersOnline',
     'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
-    'standardweb.middleware.ip_tracking.IPTrackingMiddleware'
+    'standardweb.middleware.IPTrackingMiddleware'
 )
 
 ROOT_URLCONF = 'urls'

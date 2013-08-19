@@ -4,6 +4,7 @@ from django.contrib.sites.models import Site
 from minecraft_api import MinecraftJsonApi
 
 from standardweb.models import *
+from standardweb.lib.constants import *
 
 import rollbar
 
@@ -16,6 +17,29 @@ def _global_console_command(command):
         api = get_api(server.address)
         
         api.call('runConsoleCommand', command)
+
+
+def _api_call(server, type, data=None):
+    api = get_api(server.address)
+    
+    if data:
+        result = api.call(type, {
+            'data': data
+        })
+    else:
+        result = api.call(type)
+    
+    if result.get('result') == API_CALL_RESULTS['exception']:
+        extra_data = {
+            'server_id': server.id,
+            'message': result.get('message'),
+            'data': data
+        }
+        
+        rollbar.report_message('Exception while calling server API', level='error',
+                               extra_data=extra_data)
+    
+    return result
 
 
 def get_api(host):
@@ -32,17 +56,11 @@ def get_api(host):
 
 
 def get_server_status(server):
-    api = get_api(server.address)
-    
-    return api.call('server_status')
-    
+    return _api_call(server, 'server_status').get('data')
+
 
 def send_player_stats(server, stats):
-    api = get_api(server.address)
-    
-    api.call('player_stats', {
-        'data': stats
-    })
+    _api_call(server, 'player_stats', data=stats)
 
 
 def forum_post(username, forum_name, topic_name, path):
@@ -50,9 +68,7 @@ def forum_post(username, forum_name, topic_name, path):
     
     for server in Server.objects.all():
         try:
-            api = get_api(server.address)
-            
-            api.call('forum_post', {
+            _api_call(server, 'forum_post', {
                 'username': username,
                 'forum_name': forum_name,
                 'topic_name': topic_name,
