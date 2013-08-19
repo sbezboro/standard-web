@@ -68,12 +68,13 @@ def forum_post(username, forum_name, topic_name, path):
     
     for server in Server.objects.all():
         try:
-            _api_call(server, 'forum_post', {
+            data = {
                 'username': username,
                 'forum_name': forum_name,
                 'topic_name': topic_name,
                 'path': '%s%s' % (base_url, path)
-            })
+            }
+            _api_call(server, 'forum_post', data=data)
         except:
             rollbar.report_exc_info()
 
