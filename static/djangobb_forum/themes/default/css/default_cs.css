@@ -156,3 +156,9 @@ font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
 background-image:none;
 }
 
+@media (max-width: 980px) {
+	div.postright {
+		margin-left: 8em;
+	}
+}
+

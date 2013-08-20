@@ -410,3 +410,9 @@ div.message {
 .djangobb .postmsg  img {
 	max-width: 100%;
 }
+
+@media (max-width: 980px) {
+	div.postleft {
+		width: 8em;
+	}
+}

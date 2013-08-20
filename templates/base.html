@@ -6,6 +6,10 @@
     {% if noindex %}
     <meta name="robots" content="noindex">
     {% endif %}
+    
+    <meta name="viewport" content="target-densitydpi=device-dpi, initial-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width" />
+    
     <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css">
     <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/tipsy.css">
     
@@ -53,27 +57,56 @@
 <body>
     <div id="header">
         <div id="inner">
-            <a href="/" class="strong {% block select_index %}{% endblock %}">Standard Survival</a>
-            <a class="{% block select_ranking %}{% endblock %}" href="/{% if server %}{{ server.id }}{% else %}2{% endif %}/ranking">Ranking</a>
-            <a class="{% block select_forum %}{% endblock %}" href="/forum/">Forum</a>
-            <a class="{% block select_vote %}{% endblock %}" href="/forum/topic/116/">Vote</a>
-            <a class="{% block select_chat %}{% endblock %}" href="/chat">Live Chat</a>
-            <a href="https://trello.com/b/UfOcuL9e/standard-survival">TODO Board</a>
-            {% if user.is_superuser %}<a href="/analytics">Analytics</a>{% endif %}
-            {% if user.is_superuser %}<a href="/server-admin">Server Admin</a>{% endif %}
-            <div id="right">
-                {% if user.is_authenticated %}
-                    {% if not user.is_superuser %}
-                        <a class="{% block select_player %}{% endblock %}" href="/player/{{ user.username }}"><img class="face-thumb" src="/faces/16/{{ user.username }}.png" alt="{{ user.username }}">{{ user.username }}</a>
+            <div class="desktop">
+                <a href="/" class="strong {% block select_index %}{% endblock %}">Standard Survival</a>
+                <a class="{% block select_ranking %}{% endblock %}" href="/{% if server %}{{ server.id }}{% else %}2{% endif %}/ranking">Ranking</a>
+                <a class="{% block select_forum %}{% endblock %}" href="/forum/">Forum</a>
+                <a class="{% block select_vote %}{% endblock %}" href="/forum/topic/116/">Vote</a>
+                <a class="{% block select_chat %}{% endblock %}" href="/chat">Live Chat</a>
+                <a href="https://trello.com/b/UfOcuL9e/standard-survival">TODO Board</a>
+                {% if user.is_superuser %}<a href="/analytics">Analytics</a>{% endif %}
+                {% if user.is_superuser %}<a href="/server-admin">Server Admin</a>{% endif %}
+                <div id="right">
+                    {% if user.is_authenticated %}
+                        {% if not user.is_superuser %}
+                            <a class="{% block select_player %}{% endblock %}" href="/player/{{ user.username }}"><img class="face-thumb" src="/faces/16/{{ user.username }}.png" alt="{{ user.username }}">{{ user.username }}</a>
+                        {% endif %}
+                        <a href="/logout">Log out</a>
+                    {% else %}
+                        <a href="#" onclick="alert('Log in to the Minecraft server (standardsurvival.com) and type /register to create an account!')">Sign up</a>
+                        <a class="{% block select_login %}{% endblock %}" href="/login?next={{ request.path }}">Log in</a>
                     {% endif %}
-                    <a href="/logout">Log out</a>
-                {% else %}
-                    <a href="#" onclick="alert('Log in to the Minecraft server (standardsurvival.com) and type /register to create an account!')">Sign up</a>
-                    <a class="{% block select_login %}{% endblock %}" href="/login?next={{ request.path }}">Log in</a>
-                {% endif %}
-                <form class="form-inline" method="GET" action="/search">
-                    <input class="placeholder" type="text" name="q" placeholder="Player search" value="{{ query }}"/>
-                </form>
+                    <form class="form-inline" method="GET" action="/search">
+                        <input class="placeholder" type="text" name="q" placeholder="Player search" value="{{ query }}"/>
+                    </form>
+                </div>
+            </div>
+            <div class="mobile">
+                <div class="mobile-nav">
+                    <a href="#" class="btn extender" data-target="mobile-nav-menu">=</a>
+                </div>
+                <ul id="mobile-nav-menu">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/ranking">Ranking</a></li>
+                    <li><a href="/forum">Forum</a></li>
+                    <li><a href="/forum/topic/116/">Vote</a></li>
+                    <li><a href="/chat">Live Chat</a></li>
+                    {% if user.is_superuser %}<li><a href="/analytics">Analytics</a></li>{% endif %}
+                    {% if user.is_superuser %}<li><a href="/server-admin">Server Admin</a></li>{% endif %}
+                        <li>&nbsp;</li>
+                    {% if user.is_authenticated %}
+                        {% if not user.is_superuser %}
+                            <li><a href="/player/{{ user.username }}"><img class="face-thumb" src="/faces/16/{{ user.username }}.png" alt="{{ user.username }}">{{ user.username }}</a></li>
+                        {% endif %}
+                        <li><a href="/logout">Log out</a></li>
+                    {% else %}
+                        <li><a href="#" onclick="alert('Log in to the Minecraft server (standardsurvival.com) and type /register to create an account!')">Sign up</a></li>
+                        <li><a href="/login?next={{ request.path }}">Log in</a></li>
+                    {% endif %}
+                    <li><form class="form-inline" method="GET" action="/search">
+                        <input class="placeholder" type="text" name="q" placeholder="Player search" value="{{ query }}"/>
+                    </form></li>
+                </ul>
             </div>
         </div>
     </div>

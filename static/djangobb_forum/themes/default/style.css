@@ -295,3 +295,9 @@ TD DIV.tclcon {MARGIN-LEFT: 2.3em}
 	display: block;
 	font-size: smaller;
 }
+
+@media (max-width: 980px) {
+	dd.postavatar img {
+		max-width: 6em;
+	}
+}
