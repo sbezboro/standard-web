@@ -169,19 +169,6 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
         
         $textbox.keydown(function(e) {
             switch (e.which) {
-                case 13: //Enter
-                    var input = $textbox.val();
-                    
-                    if (input) {
-                        _this.messageEntered(input);
-                        
-                        $textbox.val("");
-                        _this.scrollToBottom();
-                        
-                        commandHistory.unshift(input);
-                        commandIndex = -1;
-                    }
-                    break;
                 case 38: //Up
                     if (commandIndex < commandHistory.length - 1) {
                         commandIndex++;
@@ -197,6 +184,24 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
             }
             
             return true;
+        });
+        
+        $textbox.keyup(function(e) {
+            switch (e.which) {
+                case 13: //Enter
+                    var input = $textbox.val();
+                    
+                    if (input) {
+                        _this.messageEntered(input);
+                        
+                        $textbox.val("");
+                        _this.scrollToBottom();
+                        
+                        commandHistory.unshift(input);
+                        commandIndex = -1;
+                    }
+                    break;
+            }
         });
         
         var sendActivity = function(active) {
