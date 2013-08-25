@@ -6,6 +6,7 @@ import glob
 import json
 import os
 import sys
+import time
 import urllib2
 os.environ['DJANGO_SETTINGS_MODULE'] = 'standardweb.settings'
 
@@ -116,9 +117,15 @@ def query(server):
 def main():
     for server in Server.objects.all():
         try:
+            start = int(time.time())
+            
             query(server)
+            
+            rollbar.report_message('Server query complete', 'debug',
+                                   extra_data={'seconds': int(time.time()) - start,
+                                               'server_id': server.id})
         except:
-            rollbar.report_exc_info(sys.exc_info())
+            rollbar.report_exc_info()
     
     try:
         response = urllib2.urlopen('http://status.mojang.com/check')
@@ -152,4 +159,4 @@ if __name__ == '__main__':
     try:
         main()
     except:
-        rollbar.report_exc_info(sys.exc_info())
+        rollbar.report_exc_info()
