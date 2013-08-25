@@ -942,7 +942,7 @@ ansi1 { font-weight: bold; }.ansi3 { font-weight: italic; }.ansi4 { text-decorat
     
     #chat-container #chat {
         height: 240px;
-        font-size: 8px;
+        font-size: 10px;
     }
     
     .players-table {
