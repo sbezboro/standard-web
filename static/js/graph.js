@@ -10,7 +10,7 @@ function loadPlayerGraph($elem, serverId, maxPlayers) {
     }
     
     try {
-        data.test = test;
+        data.test = test; 
     } catch(e) {
         _rollbar.push(e);
     }
