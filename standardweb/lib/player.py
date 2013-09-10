@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+from standardweb.lib.constants import *
 from standardweb.lib.cache import CachedResult
 from standardweb.lib import helpers as h
 
@@ -91,5 +92,6 @@ def get_server_data(server, player):
         'pvp_death_count': pvp_death_count,
         'pvp_kill_count': pvp_kill_count,
         'other_death_count': other_death_count,
-        'other_kill_count': other_kill_count
+        'other_kill_count': other_kill_count,
+        'pvp_logs': stats.pvp_logs
     }
