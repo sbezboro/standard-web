@@ -88,6 +88,13 @@
                 <h2>Time played</h2>
                 {{ time_spent }}
             </div>
+            {% if pvp_logs %}
+                <div class="player-stat-section">
+                    <h2>PVP Logs</h2>
+                    {{ pvp_logs }}
+                </div>
+                <div class="clear"></div>
+            {% endif %}
             <div class="player-stat-section">
                 <h2>PVP kills</h2>
                 {{ pvp_kill_count }}

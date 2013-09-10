@@ -75,6 +75,7 @@ def query(server):
         except:
             player_stats = PlayerStats(server=server, player=player)
         
+        player_stats.pvp_logs = player_info.get('pvp_logs')
         player_stats.time_spent += 1
         player_stats.save()
         

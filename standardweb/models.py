@@ -73,6 +73,7 @@ class PlayerStats(StandardModel):
     last_seen = models.DateTimeField(default=datetime.utcnow)
     last_login = models.DateTimeField(default=datetime.utcnow, null=True)
     banned = models.BooleanField(default=False)
+    pvp_logs = models.IntegerField(default=0)
     
     def get_rank(self):
         above = PlayerStats.objects.filter(server=self.server, time_spent__gte=self.time_spent).exclude(player_id=self.player_id)
