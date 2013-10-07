@@ -3,7 +3,7 @@ from django.contrib.auth.views import login as django_login
 from django.contrib.auth import logout as django_logout
 from django.core.cache import cache
 from django.db.models import Q
-from django.http import Http404, HttpResponse, HttpResponseForbidden, HttpResponseNotFound, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render_to_response
@@ -22,9 +22,6 @@ import StringIO
 import calendar
 import json
 import os.path
-import shutil
-import sys
-import time
 import urllib
 
 import rollbar
@@ -32,7 +29,6 @@ import rollbar
 
 def index(request):
     from djangobb_forum.models import Forum
-    from djangobb_forum.models import Post
     status = MojangStatus.objects.latest('timestamp')
     
     news_forum = Forum.objects.get(pk=settings.NEWS_FORUM_ID)

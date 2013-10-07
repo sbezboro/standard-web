@@ -208,7 +208,7 @@ def auth_session_key(request):
     
     try:
         session_key = request.POST.get('session-key')
-        is_admin = bool(request.POST.get('is-admin'))
+        elevated = bool(request.POST.get('elevated'))
         
         session = Session.objects.get(session_key=session_key)
         user_id = session.get_decoded().get('_auth_user_id')
@@ -218,7 +218,7 @@ def auth_session_key(request):
         rollbar.report_message('Bad auth request!', level='error', request=request)
         return HttpResponseBadRequest()
     
-    if is_admin and (not request.user or not request.user.is_superuser):
+    if elevated and (not request.user or not request.user.is_superuser):
         rollbar.report_message('Session key not authorized for admin access!',
                                level='critical', request=request)
         return HttpResponseForbidden()

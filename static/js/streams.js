@@ -122,10 +122,6 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
         throw "Method should be implemented by inherited objects!";
     }
     
-    this.socketConnected = function() {
-        throw "Method should be implemented by inherited objects!";
-    }
-    
     this.connect = function(callback) {
         this.addOutputLine("Connecting...");
         
@@ -139,16 +135,35 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
         this.socket = socket;
         
         _this.socketInitialized();
+
+        socket.on('connect_failed', function(reason) {
+            if (reason === 'unauthorized') {
+                _this.addOutputLine("ERROR: you are not authorized!");
+            } else {
+                _rollbar.push({level: 'error', msg: 'Client could not connect to stream socket', reason: reason});
+                _this.addOutputLine("ERROR: failed to connect!");
+            }
+        });
         
         socket.on('connect', function() {
             $outputArea.empty();
             _this.numLines = 0;
-            _this.socketConnected();
+
+            socket.emit('server', {
+                serverId: serverId
+            });
         });
         
         socket.on('disconnect', function() {
             _rollbar.push({level: 'error', msg: 'Client disconnected from stream socket'});
             _this.addOutputLine("ERROR: socket connection lost!");
+        });
+        
+        socket.on('heartbeat', function(data) {
+            console.log(data);
+            socket.emit('heartbeat', {
+                timestamp: data.timestamp
+            });
         });
         
         socket.on('mc-connection-lost', function() {
@@ -233,7 +248,6 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
 function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data) {
     Stream.call(this, sessionKey, baseUrl, $outputArea, $textbox, serverId, data, 'console');
     this.allPlayers = {};
-    this.onUpdate;
     
     this.maxLines = 2000;
     
@@ -346,13 +360,6 @@ function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId, dat
         });
     }
     
-    this.socketConnected = function() {
-        socket.emit('auth', {
-            djangoSessionKey: sessionKey,
-            serverId: serverId
-        });
-    }
-    
     this.messageEntered = function(input) {
         var data = {};
         
@@ -454,19 +461,6 @@ function ChatStream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data) 
             
             $('.players-table').html(tableHtml);
         });
-    }
-    
-    this.socketConnected = function() {
-        var data = {
-          serverId: serverId
-        };
-        
-        if (sessionKey && sessionKey.length) {
-            data['djangoSessionKey'] = sessionKey;
-        }
-        
-        // Authenticate using the current django session key if it exists
-        socket.emit('auth', data);
     }
     
     this.messageEntered = function(input) {
