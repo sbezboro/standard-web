@@ -22,7 +22,7 @@ urlpatterns = patterns('',
     url(r'^((?P<server_id>\d{1})/)?chat$', views.chat),
     url(r'^pvp_leaderboard$', views.pvp_leaderboard),
     
-    url(r'^login$', views.login, {'template_name':'login.html', 'authentication_form': AuthenticationForm}, name='login'),
+    url(r'^login$', views.login, {'template_name':'login.html', 'authentication_form': AuthenticationForm, 'SSL': True}, name='login'),
     url(r'^logout$', views.logout, name='logout'),
     
     url(r'^classic/player/(?P<username>\w{0,50})$', views.player, kwargs={'server_id': 1}),

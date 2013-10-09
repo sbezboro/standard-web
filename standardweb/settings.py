@@ -6,7 +6,8 @@ PROJECT_ROOT = os.path.dirname(os.path.realpath(__file__))
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = ['standardsurvival.com']
+HOST = 'standardsurvival.com'
+ALLOWED_HOSTS = [HOST]
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -89,7 +90,8 @@ MIDDLEWARE_CLASSES = (
     'djangobb_forum.middleware.LastLoginMiddleware',
     'djangobb_forum.middleware.UsersOnline',
     'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
-    'standardweb.middleware.IPTrackingMiddleware'
+    'standardweb.middleware.IPTrackingMiddleware',
+    'standardweb.middleware.SSLRedirectMiddleware'
 )
 
 ROOT_URLCONF = 'urls'
