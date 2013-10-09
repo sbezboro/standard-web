@@ -34,7 +34,7 @@ class SSLRedirectMiddleware:
 
         secure = secure or request.user.is_authenticated()
 
-        if secure and not self._is_secure():
+        if secure and not self._is_secure(request):
             return self._redirect(request, secure)
 
     def _is_secure(self, request):
