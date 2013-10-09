@@ -180,6 +180,8 @@ SESSION_COOKIE_AGE = 2592000
 
 DJANGOBB_GRAVATAR_SUPPORT = True
 
+USE_SSL = True
+
 try:
     from local_settings import *
 except ImportError:

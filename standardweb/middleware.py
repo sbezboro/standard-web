@@ -29,7 +29,7 @@ class SSLRedirectMiddleware:
         else:
             secure = False
 
-        if settings.DEBUG or request.method == 'POST':
+        if not settings.USE_SSL or request.method == 'POST':
             return
 
         secure = secure or request.user.is_authenticated()
