@@ -112,8 +112,7 @@ def admin(request, server_id=None):
     
     return render_to_response('admin.html', {
         'servers': Server.objects.all(),
-        'server_id': server_id,
-        'rts_address': settings.RTS_ADDRESS
+        'server_id': server_id
     }, context_instance=RequestContext(request))
 
 
@@ -130,7 +129,6 @@ def chat(request, server_id=None):
     return render_to_response('chat.html', {
         'servers': Server.objects.all(),
         'server_id': server_id,
-        'rts_address': settings.RTS_ADDRESS,
         'player': player
     }, context_instance=RequestContext(request))
 

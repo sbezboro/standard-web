@@ -164,8 +164,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
     'django.core.context_processors.request',
     'django.contrib.messages.context_processors.messages',
-    'messages.context_processors.inbox',
     'djangobb_forum.context_processors.forum_settings',
+    'standardweb.context_processors.realtime',
 )
 
 LOGIN_URL = '/login'

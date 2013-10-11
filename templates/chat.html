@@ -5,7 +5,7 @@
 {% block select_chat %}selected{% endblock %}
 
 {% block script_files %}
-<script src="https://{{ rts_address }}/socket.io/socket.io.js"></script>
+<script src="{{ rts_address }}/socket.io/socket.io.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -40,7 +40,7 @@
               var $chat = $('#chat');
               var $chatTextbox = $('#chat-textbox');
               var sessionKey = '{% if request.user.is_authenticated %}{{ request.session.session_key }}{% endif %}';
-              var baseUrl = 'https://{{ rts_address }}';
+              var baseUrl = '{{ rts_address }}';
               var serverId = {{ server_id }};
               
               $(document).on("click", ".message-player", function(event) {
