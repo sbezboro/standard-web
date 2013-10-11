@@ -76,9 +76,24 @@ def get_server_data(server, player):
     
     online_now = datetime.utcnow() - timedelta(minutes=1) < stats.last_seen
     
+    online_data = []
+    last_week = datetime.utcnow() - timedelta(days=7)
+    activities = PlayerActivity.objects.filter(server=server, player=player, timestamp__gt=last_week)
+    
+    for activity in activities:
+        online_data.append((activity.timestamp, activity.activity_type))
+    
+    if activities:
+        if online_data[0][1] == PLAYER_ACTIVITY_TYPES['exit']:
+            online_data.insert((last_week, PLAYER_ACTIVITY_TYPES['enter']))
+        
+        if online_data[-1][1] == PLAYER_ACTIVITY_TYPES['enter']:
+            online_data.append((datetime.utcnow(), PLAYER_ACTIVITY_TYPES['exit']))
+    
     return {
         'rank': stats.get_rank(),
         'banned': stats.banned,
+        'online_data': online_data,
         'online_now': online_now,
         'first_seen': h.iso_date(stats.first_seen),
         'last_seen': h.iso_date(stats.last_seen),

@@ -166,6 +166,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.messages.context_processors.messages',
     'djangobb_forum.context_processors.forum_settings',
     'standardweb.context_processors.realtime',
+    'standardweb.context_processors.git_revision',
 )
 
 LOGIN_URL = '/login'

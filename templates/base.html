@@ -9,15 +9,15 @@
     
     <meta name="viewport" content="target-densitydpi=device-dpi, initial-scale=1.0, maximum-scale=1" />
     <meta name="viewport" content="width=device-width" />
-    
-    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/style.css">
-    <link rel="stylesheet" type="text/css" href="{{STATIC_URL}}css/tipsy.css">
-    
+
     {% load standardweb_extras %}
+
+    <link rel="stylesheet" type="text/css" href="{% static_url 'css/style.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static_url 'css/tipsy.css' %}">
     <script>
         var _rollbarParams = {
             "server.environment": {% if debug %}"development"{% else %}"production"{% endif %},
-            "client.javascript.code_version": "{% git_revision %}",
+            "client.javascript.code_version": "{{ git_revision }}",
             "client.javascript.source_map_enabled": true,
             {% if user.is_authenticated %}person:{id:{{user.id}},username:'{{user.username}}',email:'{{user.email}}'}{% endif %}
         };
@@ -39,7 +39,7 @@
         })();
     </script>
     
-    <script type="text/javascript" src="{{STATIC_URL}}js/all.min.js"></script>
+    <script type="text/javascript" src="{% static_url 'js/all.min.js' %}"></script>
     <script>
         !function(r,n,e){var t={"notifier.plugins.jquery.version":"0.0.1"};n._rollbar.push({_rollbarParams:t});r(e).ajaxError(function(r,e,t,u){
         var o=e.status;var a=t.url;n._rollbar.push({level:"warning",msg:"jQuery ajax error for url "+a,jquery_status:o,jquery_url:a,jquery_thrown_error:u,
@@ -50,7 +50,7 @@
         delete o[e]}return f.call(this,r,n,e)}}(jQuery,window,document);
     </script>
     
-    <!--[if lte IE 8]><script type="text/javascript" src="{{STATIC_URL}}js/excanvas.min.js"></script><![endif]-->
+    <!--[if lte IE 8]><script type="text/javascript" src="{% static_url 'js/excanvas.min.js' %}"></script><![endif]-->
     {% block script_files %}{% endblock %}
 </head>
 
