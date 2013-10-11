@@ -79,7 +79,8 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
+    #'django.contrib.sessions.middleware.SessionMiddleware',
+    'standardweb.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -91,7 +92,7 @@ MIDDLEWARE_CLASSES = (
     'djangobb_forum.middleware.UsersOnline',
     'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
     'standardweb.middleware.IPTrackingMiddleware',
-    'standardweb.middleware.SSLRedirectMiddleware'
+    'standardweb.middleware.SSLRedirectMiddleware',
 )
 
 ROOT_URLCONF = 'urls'
@@ -182,6 +183,9 @@ SESSION_COOKIE_AGE = 2592000
 DJANGOBB_GRAVATAR_SUPPORT = True
 
 USE_SSL = True
+
+OLD_SESSION_COOKIE_NAME = 'sessionid'
+SESSION_COOKIE_NAME = 'djangosessionid'
 
 try:
     from local_settings import *

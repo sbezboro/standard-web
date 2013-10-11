@@ -1,7 +1,11 @@
 from django.conf import settings
+from django.contrib.sessions import middleware
 from django.http import HttpResponseRedirect
 
+from importlib import import_module
+
 from standardweb.models import *
+
 
 class IPTrackingMiddleware:
     def process_request(self, request):
@@ -18,6 +22,7 @@ class IPTrackingMiddleware:
                 existing_user_ip.save()
         
         return None
+
 
 class SSLRedirectMiddleware:
     ssl_kwarg = 'SSL'
@@ -46,3 +51,18 @@ class SSLRedirectMiddleware:
         new_url = '%s://%s%s' % (protocol, settings.HOST, request.get_full_path())
 
         return HttpResponseRedirect(new_url)
+
+
+class SessionMiddleware(middleware.SessionMiddleware):
+    """
+    Temp session middleware to transfer cookies from 'sessionid' to 'djangosessionid',
+    then eventually back to 'sessionid'
+    """
+    def process_request(self, request):
+        engine = import_module(settings.SESSION_ENGINE)
+        session_key = request.COOKIES.get(settings.SESSION_COOKIE_NAME, None)
+
+        if session_key is None:
+            session_key = request.COOKIES.get(settings.OLD_SESSION_COOKIE_NAME, None)
+
+        request.session = engine.SessionStore(session_key)
