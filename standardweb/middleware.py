@@ -43,7 +43,7 @@ class SSLRedirectMiddleware:
             return self._redirect(request, secure)
 
     def _is_secure(self, request):
-        return request.is_secure() or 'HTTP_X_FORWARDED_SSL' in request.META
+        return request.is_secure() or 'HTTP_X_FORWARDED_PROTOCOL' in request.META
 
     def _redirect(self, request, secure):
         protocol = 'https' if secure else 'http'
