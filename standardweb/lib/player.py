@@ -75,7 +75,8 @@ def get_server_data(server, player):
     pvp_kills = sorted([{'username': key, 'nickname': nicknames.get(key), 'count': pvp_kills[key]} for key in pvp_kills], key=lambda k: (-k['count'], (k['nickname'] or k['username']).lower()))
     
     online_now = datetime.utcnow() - timedelta(minutes=1) < stats.last_seen
-    
+
+    '''
     online_data = []
     last_week = datetime.utcnow() - timedelta(days=7)
     activities = PlayerActivity.objects.filter(server=server, player=player, timestamp__gt=last_week)
@@ -89,11 +90,11 @@ def get_server_data(server, player):
         
         if online_data[-1][1] == PLAYER_ACTIVITY_TYPES['enter']:
             online_data.append((datetime.utcnow(), PLAYER_ACTIVITY_TYPES['exit']))
+    '''
     
     return {
         'rank': stats.get_rank(),
         'banned': stats.banned,
-        'online_data': online_data,
         'online_now': online_now,
         'first_seen': h.iso_date(stats.first_seen),
         'last_seen': h.iso_date(stats.last_seen),
