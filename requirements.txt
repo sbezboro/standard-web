@@ -19,4 +19,6 @@ python-memcached==1.48
 python-openid==2.2.5
 requests==0.14.1
 rollbar==0.5.7
+six==1.3.0
+uWSGI==1.9.18.1
 wsgiref==0.1.2
