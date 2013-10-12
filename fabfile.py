@@ -28,7 +28,7 @@ def update_and_restart_webs():
             if result.failed:
                 abort('Could not install required packages. Aborting.')
             
-            run('supervisor restart %s' % WEB_SERVICE)
+            run('supervisorctl restart %s' % WEB_SERVICE)
 
 
 def rollbar_record_deploy():
