@@ -1,8 +1,4 @@
-import getpass
-import os
-import sys
-
-from fabric.api import run, local, cd, env, roles, execute, prefix
+from fabric.api import abort, run, local, cd, env, roles, execute, prefix
 import requests
 
 import standardweb.local_settings as settings
@@ -32,7 +28,7 @@ def update_and_restart_webs():
             if result.failed:
                 abort('Could not install required packages. Aborting.')
             
-            run('service %s restart' % WEB_SERVICE)
+            run('supervisor restart %s' % WEB_SERVICE)
 
 
 def rollbar_record_deploy():
