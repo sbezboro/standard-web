@@ -12,7 +12,7 @@ class IPTrackingMiddleware:
     @CachedResult('ip-lookup', time=300)
     def _lookup_ip(self, ip, user_id):
         try:
-            ip_tracking = IPTracking.objects.get(ip=ip, user_id=user_id)
+            IPTracking.objects.get(ip=ip, user_id=user_id)
         except:
             ip_tracking = IPTracking(ip=ip, user_id=user_id)
             ip_tracking.save()

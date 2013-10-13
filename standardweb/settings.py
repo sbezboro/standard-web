@@ -88,10 +88,10 @@ MIDDLEWARE_CLASSES = (
     'pagination.middleware.PaginationMiddleware',
     'django.middleware.cache.FetchFromCacheMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
-    'djangobb_forum.middleware.LastLoginMiddleware',
-    'djangobb_forum.middleware.UsersOnline',
+    #'djangobb_forum.middleware.LastLoginMiddleware',
+    #'djangobb_forum.middleware.UsersOnline',
     'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
-    'standardweb.middleware.IPTrackingMiddleware',
+    #'standardweb.middleware.IPTrackingMiddleware',
     'standardweb.middleware.SSLRedirectMiddleware',
 )
 
