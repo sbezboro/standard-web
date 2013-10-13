@@ -5,9 +5,20 @@ from django.http import HttpResponseRedirect
 from importlib import import_module
 
 from standardweb.models import *
+from standardweb.lib.cache import CachedResult
 
 
 class IPTrackingMiddleware:
+    @CachedResult('ip-lookup', time=300)
+    def _lookup_ip(self, ip, user_id):
+        try:
+            ip_tracking = IPTracking.objects.get(ip=ip, user_id=user_id)
+        except:
+            ip_tracking = IPTracking(ip=ip, user_id=user_id)
+            ip_tracking.save()
+
+        return ip_tracking
+
     def process_request(self, request):
         if request.path.endswith('.png'):
             return
@@ -15,11 +26,7 @@ class IPTrackingMiddleware:
         ip = request.META.get('REMOTE_ADDR')
         
         if request.user.is_authenticated() and ip:
-            try:
-                IPTracking.objects.get(ip=ip, user=request.user)
-            except:
-                existing_user_ip = IPTracking(ip=ip, user=request.user)
-                existing_user_ip.save()
+            self._lookup_ip(ip, request.user.id)
         
         return None
 

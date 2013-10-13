@@ -1,7 +1,5 @@
 import re
 import subprocess
-import time
-from datetime import datetime, timedelta
 
 from ansi2html import Ansi2HTMLConverter
 
