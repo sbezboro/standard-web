@@ -17,7 +17,7 @@ class IPTrackingMiddleware:
             ip_tracking = IPTracking(ip=ip, user_id=user_id)
             ip_tracking.save()
 
-        return ip_tracking
+        return True
 
     def process_request(self, request):
         if request.path.endswith('.png'):
