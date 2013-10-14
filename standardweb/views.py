@@ -394,25 +394,28 @@ def get_face(request, size=16, username=None):
     
     try:
         url = 'http://s3.amazonaws.com/MinecraftSkins/%s.png' % username
-        image_response = urllib.urlopen(url)
-        
-        if image_response.getcode() == 200:
-            last_modified = image_response.info().getheader('Last-Modified')
+        resp = urllib.urlopen(url)
+    except:
+        try:
+            image = Image.open(path)
+        except IOError:
+            pass
+    else:
+        if resp.getcode() == 200:
+            last_modified = resp.info().getheader('Last-Modified')
             last_modified_date = datetime.strptime(last_modified, '%a, %d %b %Y %H:%M:%S %Z')
-            
+
             try:
                 file_date = datetime.utcfromtimestamp(os.path.getmtime(path))
             except:
                 file_date = None
-            
+
             if not file_date or last_modified_date > file_date \
                 or datetime.utcnow() - file_date > timedelta(days=1):
-                image = _extract_face(Image.open(StringIO.StringIO(image_response.read())), size)
+                image = _extract_face(Image.open(StringIO.StringIO(resp.read())), size)
                 image.save(path)
             else:
                 image = Image.open(path)
-    except Exception, e:
-        rollbar.report_exc_info()
     
     if not image:
         image = _extract_face(Image.open(PROJECT_PATH + '/static/images/char.png'), size)
