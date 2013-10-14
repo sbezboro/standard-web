@@ -26,7 +26,6 @@ import os.path
 import urllib
 
 
-@cache_page(60)
 def index(request):
     from djangobb_forum.models import Forum
     status = MojangStatus.objects.latest('timestamp')
@@ -204,47 +203,44 @@ def player_graph(request, server_id=None):
 
 def player_list(request, server_id=None):
     stats = cache.get('minecraft-stats')
-    
+
     if not stats:
-        stats = {}
-        
-        try:
-            server_id = int(server_id or 2)
-            server = Server.objects.get(id=server_id)
-            
-            server_status = api.get_server_status(server)
-            
-            server_status['players'].sort(key=lambda x: (x.get('nickname') or x.get('username')).lower())
-            
-            players = []
-            top10_player_ids = PlayerStats.objects.filter(server=server).order_by('-time_spent')[:10].values_list('player', flat=True)
-            for player_info in server_status['players']:
-                try:
-                    player = MinecraftPlayer.objects.get(username=player_info.get('username'))
-                except:
-                    player = MinecraftPlayer(username=player_info.get('username'))
-                    player.save()
-                
-                rank = None
-                if player.id in top10_player_ids:
-                    for index, top10player_id in enumerate(top10_player_ids):
-                        if player.id == top10player_id:
-                            rank = index + 1
-                
-                players.append((player, rank))
-            
-            stats['players'] = players
-            stats['num_players'] = server_status['numplayers']
-            stats['max_players'] = server_status['maxplayers']
-            stats['tps'] = server_status['tps']
-        except:
-            stats = None
-        
+        server_id = int(server_id or 2)
+        server = Server.objects.get(id=server_id)
+
+        server_status = api.get_server_status(server)
+
+        server_status['players'].sort(key=lambda x: (x.get('nickname') or x.get('username')).lower())
+
+        players = []
+        top10_player_ids = PlayerStats.objects.filter(server=server).order_by('-time_spent')[:10].values_list('player', flat=True)
+        for player_info in server_status['players']:
+            try:
+                player = MinecraftPlayer.objects.get(username=player_info.get('username'))
+            except:
+                player = MinecraftPlayer(username=player_info.get('username'))
+                player.save()
+
+            rank = None
+            if player.id in top10_player_ids:
+                for index, top10player_id in enumerate(top10_player_ids):
+                    if player.id == top10player_id:
+                        rank = index + 1
+
+            players.append((player, rank))
+
+        stats = {
+            'players': players,
+            'num_players': server_status['numplayers'],
+            'max_players': server_status['maxplayers'],
+            'tps': server_status['tps']
+        }
+
         cache.set('minecraft-stats', stats, 5)
         
     return render_to_response('includes/playerlist.html', {
-        'stats': stats},
-        context_instance=RequestContext(request))
+        'stats': stats
+    }, context_instance=RequestContext(request))
 
 
 def pvp_leaderboard(request):

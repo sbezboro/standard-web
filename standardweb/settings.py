@@ -79,6 +79,7 @@ TEMPLATE_LOADERS = (
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
     #'django.contrib.sessions.middleware.SessionMiddleware',
     'standardweb.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -122,6 +123,7 @@ INSTALLED_APPS = (
     'messages',
     'djangobb_forum',
     'standardweb',
+    #'debug_toolbar',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
