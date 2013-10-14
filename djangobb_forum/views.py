@@ -67,7 +67,6 @@ def index(request, full=True):
                 'users_online': users_online,
                 'online_count': users_count,
                 'guest_count': guest_count,
-                'last_user': User.objects.latest('date_joined'),
                 }
     if full:
         return render(request, 'djangobb_forum/index.html', to_return)

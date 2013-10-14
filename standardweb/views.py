@@ -8,6 +8,7 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.views.decorators.cache import cache_page
 from django.views.decorators.http import last_modified
 
 from standardweb.lib import api
@@ -24,9 +25,8 @@ import json
 import os.path
 import urllib
 
-import rollbar
 
-
+@cache_page(60)
 def index(request):
     from djangobb_forum.models import Forum
     status = MojangStatus.objects.latest('timestamp')
@@ -338,7 +338,9 @@ def ranking(request, server_id=None):
     server = Server.objects.get(id=server_id)
     
     player_info = []
-    player_stats = PlayerStats.objects.filter(server=server).order_by('-time_spent')[:40]
+    player_stats = PlayerStats.objects.filter(server=server) \
+                       .order_by('-time_spent')[:40] \
+                       .select_related()
     
     for player_stat in player_stats:
         player_info.append({
