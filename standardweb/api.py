@@ -206,10 +206,33 @@ def rank_query(request):
 
 
 @api_func
+@server_api
+def join_server(request):
+    # do nothing for now
+    return HttpResponse()
+
+
+@api_func
+@server_api
+def leave_server(request):
+    username = request.POST.get('username')
+
+    player = MinecraftPlayer.get_object_or_none(username=username)
+    if player:
+        player_stats = PlayerStats.get_object_or_none(server=request.server, player=player)
+
+        if player_stats:
+            player_stats.last_seen = datetime.utcnow()
+            player_stats.save()
+
+    return HttpResponse()
+
+
+@api_func
 def auth_session_key(request):
     """
     Authenticates a Django session key and returns its corresponding user_id and username.
-    Also authorizes admin access if 'is-admin' is set in the request.
+    Also authorizes admin access if 'elevated' is set in the request.
     """
     
     from django.contrib.sessions.models import Session
