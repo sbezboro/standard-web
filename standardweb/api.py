@@ -42,19 +42,26 @@ def api_func(function):
 def server_api(function):
     @wraps(function)
     def decorator(request, *args, **kwargs):
-        server_id = request.REQUEST.get('server-id')
-        secret_key = request.REQUEST.get('secret-key')
+        if request.META.has_key('HTTP_AUTHORIZATION'):
+            auth = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
+            server_id, secret_key = auth.strip().decode('base64').split(':')
+        else:
+            # provided for backward compatibility, to be removed soon
+            server_id = request.REQUEST.get('server-id')
+            secret_key = request.REQUEST.get('secret-key')
         
         cache_key = 'api-%s-%s' % (server_id, secret_key)
-        #request.server = cache.get(cache_key)
-        request.server = None
-        if not request.server:
+        server = cache.get(cache_key)
+        if not server:
             try:
-                request.server = Server.objects.get(id=server_id, secret_key=secret_key)
-                #cache.set(cache_key, request.server, 3600)
+                server = Server.objects.get(id=server_id, secret_key=secret_key)
+                cache.set(cache_key, server, 3600)
             except:
-                rollbar.report_message('API access denied!', level='error', request=request)
-                return HttpResponseForbidden()
+                pass
+
+        if not server:
+            rollbar.report_message('API access denied!', level='error', request=request)
+            return HttpResponseForbidden()
         
         return function(request, *args, **kwargs)
     

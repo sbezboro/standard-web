@@ -8,8 +8,6 @@ from standardweb.lib.constants import *
 
 import rollbar
 
-import sys
-
 apis = {}
 
 def _global_console_command(command):
