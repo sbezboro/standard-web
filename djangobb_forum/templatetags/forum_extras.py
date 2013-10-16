@@ -1,4 +1,5 @@
 # -*- coding: utf-8
+import hashlib
 import urllib
 
 import datetime
@@ -12,8 +13,6 @@ from django.utils.safestring import mark_safe
 from django.utils.encoding import smart_unicode
 from django.db import settings
 from django.utils.html import escape
-from django.utils.hashcompat import md5_constructor
-from django.contrib.humanize.templatetags.humanize import naturalday
 
 from pagination.templatetags.pagination_tags import paginate
 
@@ -265,7 +264,7 @@ def new_reports():
 def gravatar(email):
     if forum_settings.GRAVATAR_SUPPORT:
         size = max(forum_settings.AVATAR_WIDTH, forum_settings.AVATAR_HEIGHT)
-        url = "http://www.gravatar.com/avatar/%s?" % md5_constructor(email.lower()).hexdigest()
+        url = "http://www.gravatar.com/avatar/%s?" % hashlib.md5(email.lower()).hexdigest()
         url += urllib.urlencode({
             'size': size,
             'default': forum_settings.GRAVATAR_DEFAULT,
