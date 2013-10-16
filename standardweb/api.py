@@ -62,6 +62,8 @@ def server_api(function):
         if not server:
             rollbar.report_message('API access denied!', level='error', request=request)
             return HttpResponseForbidden()
+
+        request.server = server
         
         return function(request, *args, **kwargs)
     
