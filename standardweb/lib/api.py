@@ -61,6 +61,10 @@ def send_player_stats(server, stats):
     _api_call(server, 'player_stats', data=stats)
 
 
+def send_stats(server, data):
+    _api_call(server, 'stats', data=data)
+
+
 def forum_post(username, forum_name, topic_name, path):
     base_url = Site.objects.get_current().domain
     

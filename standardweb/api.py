@@ -43,7 +43,7 @@ def server_api(function):
     @wraps(function)
     def decorator(request, *args, **kwargs):
         server = None
-        
+
         if request.META.has_key('HTTP_AUTHORIZATION'):
             auth = request.META['HTTP_AUTHORIZATION'].split(' ')[1]
             server_id, secret_key = auth.strip().decode('base64').split(':')
