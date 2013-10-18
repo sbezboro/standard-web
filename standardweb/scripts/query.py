@@ -155,15 +155,15 @@ def main():
 
     for server in Server.objects.all():
         try:
-            start = int(time.time())
+            start = int(round(time.time() * 1000))
             
             _query_server(server, mojang_status)
 
-            durations.append((server.id, int(time.time()) - start))
+            durations.append((server.id, int(round(time.time() * 1000)) - start))
         except:
             rollbar.report_exc_info()
 
-    extra_data = {'server.%d' % server_id: duration for server_id, duration in durations}
+    extra_data = {'server.%d.ms' % server_id: duration for server_id, duration in durations}
     extra_data['login'] = mojang_status.login
     extra_data['session'] = mojang_status.session
     rollbar.report_message('Server queries complete', 'debug',
