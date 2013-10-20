@@ -98,6 +98,8 @@ def _query_server(server, mojang_status):
                                    activity_type=PLAYER_ACTIVITY_TYPES['exit'])
             ex.save()
 
+    api.send_player_stats(server, stats)
+    """
     api.send_stats(server, {
         'player_stats': stats,
         'login': mojang_status.login,
@@ -105,6 +107,7 @@ def _query_server(server, mojang_status):
         'account': mojang_status.account,
         'auth': mojang_status.auth
     })
+    """
     
     banned_players = server_status.get('banned_players', [])
     PlayerStats.objects.filter(server=server, player__username__in=banned_players).update(banned=True)
