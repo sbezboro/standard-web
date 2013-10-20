@@ -76,25 +76,6 @@
 				<dd>{% trans "Total number of topics:" %} <strong>{{ topics }}</strong></dd>
 				<dd>{% trans "Total number of posts:" %} <strong>{{ posts }}</strong></dd>
 			</dl>
-			<dl class="conl">
-				<dt><strong>{% trans "User information" %}</strong></dt>
-				<dd>{% trans "Guests:" %} <strong>{{ guest_count }}</strong></dd>
-			</dl>
-            {% if online_count %}
-                <dl id="onlinelist" class= "clearb">
-                    <dt><strong>{% trans "Logged in:" %} </strong></dt>
-										
-                    {% for online in users_online %}
-											{% with online.forum_profile.player as player %}
-												{% if player %}
-													<a href="/player/{{ player.username }}">{{ player.displayname_html|safe }}</a>{% if not forloop.last %},{% endif %}
-												{% else %}
-													{{ online.username }}{% if not forloop.last %},{% endif %}
-												{% endif %}
-											{% endwith %}
-                    {% endfor %}
-                </dl>
-            {% endif %}
 		</div>
 	</div>
 </div>
