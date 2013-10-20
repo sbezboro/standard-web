@@ -98,8 +98,10 @@ def log_death(request):
             killer.save()
         
         death_event = DeathEvent(server=request.server, death_type=death_type, victim=victim, killer=killer)
+        DeathCount.increment(request.server, death_type, victim, killer)
     else:
         death_event = DeathEvent(server=request.server, death_type=death_type, victim=victim)
+        DeathCount.increment(request.server, death_type, victim, None)
     
     death_event.save()
     
@@ -125,6 +127,7 @@ def log_kill(request):
         kill_type.save()
     
     kill_event = KillEvent(server=request.server, kill_type=kill_type, killer=killer)
+    KillCount.increment(request.server, kill_type, killer)
     
     kill_event.save()
     

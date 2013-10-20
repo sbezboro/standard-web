@@ -121,7 +121,44 @@ class KillEvent(StandardModel):
     server = models.ForeignKey('Server')
     kill_type = models.ForeignKey('KillType', related_name = 'kill_type')
     killer = models.ForeignKey('MinecraftPlayer', related_name = 'k_killer')
-    victim = models.ForeignKey('MinecraftPlayer', related_name = 'k_victim', null=True)
+
+
+class DeathCount(StandardModel):
+    server = models.ForeignKey('Server')
+    death_type = models.ForeignKey('DeathType', related_name = 'dc_death_type')
+    victim = models.ForeignKey('MinecraftPlayer', related_name = 'dc_victim')
+    killer = models.ForeignKey('MinecraftPlayer', related_name = 'dc_killer', null=True)
+    count = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = ('server', 'victim', 'death_type', 'killer')
+
+    @classmethod
+    def increment(cls, server, death_type, victim, killer):
+        death_count, created = cls.objects.get_or_create(server=server,
+                                                         death_type=death_type,
+                                                         victim=victim,
+                                                         killer=killer)
+        death_count.count += 1
+        death_count.save()
+
+
+class KillCount(StandardModel):
+    server = models.ForeignKey('Server')
+    kill_type = models.ForeignKey('KillType', related_name = 'kc_kill_type')
+    killer = models.ForeignKey('MinecraftPlayer', related_name = 'kc_killer')
+    count = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = ('server', 'killer', 'kill_type')
+
+    @classmethod
+    def increment(cls, server, kill_type, killer):
+        kill_count, created = cls.objects.get_or_create(server=server,
+                                                        kill_type=kill_type,
+                                                        killer=killer)
+        kill_count.count += 1
+        kill_count.save()
 
 
 class IPTracking(StandardModel):

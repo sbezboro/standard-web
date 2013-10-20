@@ -126,7 +126,7 @@
                 {{ other_kill_count }}
                 <br/>
                 <br/>
-                {% for kill in kill_info %}
+                {% for kill in other_kills %}
                     <div class="stat-row">
                         <div class="username">{{ kill.type }} </div>
                         <div class="count">{{ kill.count }}</div>
@@ -139,7 +139,7 @@
                 {{ other_death_count }}
                 <br/>
                 <br/>
-                {% for death in death_info %}
+                {% for death in other_deaths %}
                     <div class="stat-row">
                         <div class="username">{{ death.type }} </div> 
                         <div class="count">{{ death.count }}</div>
