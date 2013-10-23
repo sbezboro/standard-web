@@ -417,6 +417,7 @@ def get_face(request, size=16, username=None):
 
     if not image:
         try:
+            # try opening existing image if it exists on disk if any of the above fails
             image = Image.open(path)
         except IOError:
             pass
