@@ -10,6 +10,7 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'standardweb.settings'
 import rollbar
 
 from django.conf import settings
+from django.db import transaction
 
 from standardweb.models import *
 from standardweb.lib import api
@@ -154,14 +155,17 @@ def main():
     durations = []
 
     for server in Server.objects.all():
-        try:
+        with transaction.commit_manually():
             start = int(round(time.time() * 1000))
 
-            _query_server(server, mojang_status)
-
-            durations.append((server.id, int(round(time.time() * 1000)) - start))
-        except:
-            rollbar.report_exc_info()
+            try:
+                _query_server(server, mojang_status)
+            except:
+                transaction.rollback()
+                rollbar.report_exc_info()
+            else:
+                transaction.commit()
+                durations.append((server.id, int(round(time.time() * 1000)) - start))
 
     extra_data = {'server.%d.ms' % server_id: duration for server_id, duration in durations}
     extra_data['login'] = mojang_status.login
