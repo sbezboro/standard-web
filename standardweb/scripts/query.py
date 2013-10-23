@@ -24,7 +24,7 @@ def _query_server(server, mojang_status):
     except:
         server_status = {}
     
-    stats = []
+    player_stats = []
     
     online_player_ids = []
     for player_info in server_status.get('players', []):
@@ -67,19 +67,19 @@ def _query_server(server, mojang_status):
                 existing_player_ip.save()
         
         try:
-            player_stats = PlayerStats.objects.get(server=server, player=player)
-            player_stats.last_seen = datetime.utcnow()
+            stats = PlayerStats.objects.get(server=server, player=player)
+            stats.last_seen = datetime.utcnow()
         except:
-            player_stats = PlayerStats(server=server, player=player)
+            stats = PlayerStats(server=server, player=player)
         
-        player_stats.pvp_logs = player_info.get('pvp_logs')
-        player_stats.time_spent += 1
-        player_stats.save()
+        stats.pvp_logs = player_info.get('pvp_logs')
+        stats.time_spent += 1
+        stats.save()
         
-        stats.append({
+        player_stats.append({
             'username': player.username,
-            'minutes': player_stats.time_spent,
-            'rank': player_stats.get_rank()
+            'minutes': stats.time_spent,
+            'rank': stats.get_rank()
         })
     
     five_minutes_ago = datetime.utcnow() - timedelta(minutes=5)
@@ -98,14 +98,6 @@ def _query_server(server, mojang_status):
             ex = PlayerActivity(server=server, player_id=player_id,
                                 activity_type=PLAYER_ACTIVITY_TYPES['exit'])
             ex.save()
-
-    api.send_stats(server, {
-        'player_stats': stats,
-        'login': mojang_status.login,
-        'session': mojang_status.session,
-        'account': mojang_status.account,
-        'auth': mojang_status.auth
-    })
     
     banned_players = server_status.get('banned_players', [])
     PlayerStats.objects.filter(server=server, player__username__in=banned_players).update(banned=True)
@@ -117,6 +109,14 @@ def _query_server(server, mojang_status):
     
     status = ServerStatus(server=server, player_count=player_count, cpu_load=cpu_load, tps=tps)
     status.save()
+
+    api.send_stats(server, {
+        'player_stats': player_stats,
+        'login': mojang_status.login,
+        'session': mojang_status.session,
+        'account': mojang_status.account,
+        'auth': mojang_status.auth
+    })
 
 
 def _get_mojang_status():
