@@ -156,7 +156,7 @@ def main():
     for server in Server.objects.all():
         try:
             start = int(round(time.time() * 1000))
-            
+
             _query_server(server, mojang_status)
 
             durations.append((server.id, int(round(time.time() * 1000)) - start))
