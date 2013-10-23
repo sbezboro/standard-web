@@ -397,10 +397,7 @@ def get_face(request, size=16, username=None):
         url = 'http://s3.amazonaws.com/MinecraftSkins/%s.png' % username
         resp = urllib.urlopen(url)
     except:
-        try:
-            image = Image.open(path)
-        except IOError:
-            pass
+        pass
     else:
         if resp.getcode() == 200:
             last_modified = resp.info().getheader('Last-Modified')
@@ -417,6 +414,12 @@ def get_face(request, size=16, username=None):
                 image.save(path)
             else:
                 image = Image.open(path)
+
+    if not image:
+        try:
+            image = Image.open(path)
+        except IOError:
+            pass
     
     if not image:
         image = _extract_face(Image.open(PROJECT_PATH + '/static/images/char.png'), size)
