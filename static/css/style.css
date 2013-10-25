@@ -74,7 +74,6 @@ code {
 }
 
 #main {
-    margin-bottom: 20px;
     margin: 0 auto;
     width: 960px;
     padding-bottom: 40px;
@@ -147,7 +146,6 @@ code {
 }
 
 .nav-header li {
-    display: inline;
     margin-right: -4px;
     padding: 0;
     vertical-align: middle;
@@ -191,7 +189,6 @@ code {
 }
 
 .sub-header li {
-    display: inline;
     margin-right: -4px;
     padding: 0;
     vertical-align: middle;
@@ -219,6 +216,7 @@ span.stat {
 h1 {
     font-size: 3.8em;
     margin-bottom: 0px;
+    text-shadow: 1px 1px #bfbfbf;
 }
 
 h2 {
@@ -284,11 +282,11 @@ a:hover {
     display: inline-block;
 }
 
-#player-list a, .ranking-table a, .player-stat-section a, .search-row a {
+#player-list a, .ranking-table a, .player-stat-section a, .leaderboard-stat-section a, .search-row a {
     color: #545454;
 }
 
-#player-list a:hover, .ranking-table a:hover, .player-stat-section a:hover, .search-row a:hover {
+#player-list a:hover, .ranking-table a:hover, .player-stat-section a:hover, .leaderboard-stat-section a:hover, .search-row a:hover {
     color: #AAA;
 }
 
@@ -706,6 +704,10 @@ a:hover {
     white-space: nowrap;
 }
 
+.leaderboard-stat-section {
+    width: 30%;
+}
+
 .search-row {
     font-size: 14pt;
 }
@@ -832,7 +834,6 @@ ansi1 { font-weight: bold; }.ansi3 { font-weight: italic; }.ansi4 { text-decorat
     }
     
     #main {
-        margin-bottom: 20px;
         margin: 0 auto;
         width: 95%;
         padding-bottom: 40px;
@@ -918,6 +919,14 @@ ansi1 { font-weight: bold; }.ansi3 { font-weight: italic; }.ansi4 { text-decorat
     
     .ranking-table {
         font-size: 12px;
+    }
+
+    .leaderboard-stat-section {
+        width: 100%;
+    }
+
+    .leaderboard-stat-section .stat-row {
+        width: 100%;
     }
     
     .mobile-nav {

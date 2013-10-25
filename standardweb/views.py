@@ -357,6 +357,36 @@ def ranking(request, server_id=None):
         }, context_instance=RequestContext(request))
 
 
+def leaderboards(request, server_id=None):
+    if not server_id:
+        return HttpResponseRedirect('/2/leaderboards')
+
+    server_id = int(server_id or 2)
+    server = Server.objects.get(id=server_id)
+
+    _leaderboards = []
+
+    enderdragon = KillType.objects.get(type='enderdragon')
+    enderdragon_kills = KillCount.objects.filter(server=server, kill_type=enderdragon) \
+                            .select_related('killer') \
+                            .order_by('-count')
+    if enderdragon_kills:
+        _leaderboards.append(('Ender Dragon Kills', enderdragon_kills))
+
+    wither = KillType.objects.get(type='wither')
+    wither_kills = KillCount.objects.filter(server=server, kill_type=wither) \
+                            .select_related('killer') \
+                            .order_by('-count')
+    if wither_kills:
+        _leaderboards.append(('Wither Kills', wither_kills))
+
+    return render_to_response('leaderboards.html', {
+        'servers': Server.objects.all(),
+        'server': server,
+        'leaderboards': _leaderboards,
+        }, context_instance=RequestContext(request))
+
+
 def _extract_face(image, size):
     try:
         pix = image.load()

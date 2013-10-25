@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Leaderboards - {{ server.address }} - Standard Survival Minecraft Server{% endblock %}
+
+{% block description %}A list of the top 10 and top 40 players on the Minecraft server {{ server.address }} based on time spent on the server{% endblock %}
+
+{% block select_leaderboards %}selected{% endblock %}
+{% block content %}
+    <div class="nav-header">
+        <div class="inner">
+            <ul>
+                {% for s in servers %}
+                <li {% if server == s %}class="selected"{% endif %}>
+                    <a class="tooltip" href="/{{s.id}}/leaderboards" title="Address: {{ s.address }}">{{ s.name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div id="main">
+        <h2>Leaderboards</h2>
+        {% for name, kills in leaderboards %}
+            <div class="leaderboard-stat-section">
+                <h3>{{ name }}</h3>
+                {% for kill in kills %}
+                    {% with kill.killer as player %}
+                    <div class="stat-row">
+                        <div class="username">
+                            <a href="/{{ server.id }}/player/{{ player.username }}">
+                                <img class="face-thumb" alt="{{ player.username }}" src="/faces/16/{{ player.username }}.png"/>
+                                {% if player.nickname %}
+                                    {{ player.nickname }}
+                                {% else %}
+                                    {{ player.username }}
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div class="count">{{ kill.count }}</div>
+                        <div class="clear"></div>
+                    </div>
+                    {% endwith %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

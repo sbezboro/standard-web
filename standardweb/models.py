@@ -99,35 +99,35 @@ class MojangStatus(StandardModel):
 
 
 class DeathType(StandardModel):
-    type = models.CharField(max_length = 100)
-    displayname = models.CharField(max_length = 100)
+    type = models.CharField(max_length=100)
+    displayname = models.CharField(max_length=100)
 
 
 class KillType(StandardModel):
-    type = models.CharField(max_length = 100)
-    displayname = models.CharField(max_length = 100)
+    type = models.CharField(max_length=100)
+    displayname = models.CharField(max_length=100)
 
 
 class DeathEvent(StandardModel):
     timestamp = models.DateTimeField(default=datetime.utcnow)
     server = models.ForeignKey('Server')
-    death_type = models.ForeignKey('DeathType', related_name = 'death_type')
-    victim = models.ForeignKey('MinecraftPlayer', related_name = 'd_victim')
-    killer = models.ForeignKey('MinecraftPlayer', related_name = 'd_killer', null=True)
+    death_type = models.ForeignKey('DeathType', related_name='death_type')
+    victim = models.ForeignKey('MinecraftPlayer', related_name='d_victim')
+    killer = models.ForeignKey('MinecraftPlayer', related_name='d_killer', null=True)
 
 
 class KillEvent(StandardModel):
     timestamp = models.DateTimeField(default=datetime.utcnow)
     server = models.ForeignKey('Server')
-    kill_type = models.ForeignKey('KillType', related_name = 'kill_type')
-    killer = models.ForeignKey('MinecraftPlayer', related_name = 'k_killer')
+    kill_type = models.ForeignKey('KillType', related_name='kill_type')
+    killer = models.ForeignKey('MinecraftPlayer', related_name='k_killer')
 
 
 class DeathCount(StandardModel):
     server = models.ForeignKey('Server')
-    death_type = models.ForeignKey('DeathType', related_name = 'dc_death_type')
-    victim = models.ForeignKey('MinecraftPlayer', related_name = 'dc_victim')
-    killer = models.ForeignKey('MinecraftPlayer', related_name = 'dc_killer', null=True)
+    death_type = models.ForeignKey('DeathType', related_name='dc_death_type', db_index=True)
+    victim = models.ForeignKey('MinecraftPlayer', related_name='dc_victim')
+    killer = models.ForeignKey('MinecraftPlayer', related_name='dc_killer', null=True)
     count = models.IntegerField(default=0)
 
     class Meta:
@@ -145,8 +145,8 @@ class DeathCount(StandardModel):
 
 class KillCount(StandardModel):
     server = models.ForeignKey('Server')
-    kill_type = models.ForeignKey('KillType', related_name = 'kc_kill_type')
-    killer = models.ForeignKey('MinecraftPlayer', related_name = 'kc_killer')
+    kill_type = models.ForeignKey('KillType', related_name='kc_kill_type', db_index=True)
+    killer = models.ForeignKey('MinecraftPlayer', related_name='kc_killer')
     count = models.IntegerField(default=0)
 
     class Meta:
@@ -177,8 +177,8 @@ class PlayerActivity(StandardModel):
 
 '''
 class FactionRelation(models.Model):
-    faction1 = models.ForeignKey('Faction', related_name = 'faction1')
-    faction2 = models.ForeignKey('Faction', related_name = 'faction2')
+    faction1 = models.ForeignKey('Faction', related_name='faction1')
+    faction2 = models.ForeignKey('Faction', related_name='faction2')
     relation_type = models.IntegerField(default=0)
     
     class Meta:

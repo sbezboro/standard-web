@@ -8,6 +8,8 @@ from standardweb.models import *
 from standardweb.lib.cache import CachedResult
 
 
+SESSION_PATHS_BLACKLIST = ['/api/', '/faces/']
+
 class IPTrackingMiddleware:
     @CachedResult('ip-lookup', time=300)
     def _lookup_ip(self, ip, user_id):
@@ -69,7 +71,10 @@ class SessionMiddleware(middleware.SessionMiddleware):
         engine = import_module(settings.SESSION_ENGINE)
         session_key = request.COOKIES.get(settings.SESSION_COOKIE_NAME, None)
 
-        if session_key is None:
-            session_key = request.COOKIES.get(settings.OLD_SESSION_COOKIE_NAME, None)
+        #if session_key is None:
+        #    session_key = request.COOKIES.get(settings.OLD_SESSION_COOKIE_NAME, None)
 
-        request.session = engine.SessionStore(session_key)
+        if any(request.path_info.startswith(x) for x in SESSION_PATHS_BLACKLIST):
+            request.session = {}
+        else:
+            request.session = engine.SessionStore(session_key)

@@ -60,10 +60,10 @@
             <div class="desktop">
                 <a href="/" class="strong {% block select_index %}{% endblock %}">Standard Survival</a>
                 <a class="{% block select_ranking %}{% endblock %}" href="/{% if server %}{{ server.id }}{% else %}2{% endif %}/ranking">Ranking</a>
+                <a class="{% block select_leaderboards %}{% endblock %}" href="/{% if server %}{{ server.id }}{% else %}2{% endif %}/leaderboards">Leaderboards</a>
                 <a class="{% block select_forum %}{% endblock %}" href="/forum/">Forum</a>
                 <a class="{% block select_vote %}{% endblock %}" href="/forum/topic/116/">Vote</a>
                 <a class="{% block select_chat %}{% endblock %}" href="/chat">Live Chat</a>
-                <a href="https://trello.com/b/UfOcuL9e/standard-survival">TODO Board</a>
                 {% if user.is_superuser %}<a href="/analytics">Analytics</a>{% endif %}
                 {% if user.is_superuser %}<a href="/server-admin">Server Admin</a>{% endif %}
                 <div id="right">
@@ -88,6 +88,7 @@
                 <ul id="mobile-nav-menu" style="display:none;">
                     <li><a href="/">Home</a></li>
                     <li><a href="/ranking">Ranking</a></li>
+                    <li><a href="/leaderboards">Leaderboards</a></li>
                     <li><a href="/forum">Forum</a></li>
                     <li><a href="/forum/topic/116/">Vote</a></li>
                     <li><a href="/chat">Live Chat</a></li>

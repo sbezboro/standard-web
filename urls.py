@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^search/$', views.search),
     url(r'^((?P<server_id>\d{1})/)?ranking$', views.ranking),
     url(r'^rankings$', RedirectView.as_view(url='/ranking')),
+    url(r'^((?P<server_id>\d{1})/)?leaderboards$', views.leaderboards),
     url(r'^((?P<server_id>\d{1})/)?chat$', views.chat),
     url(r'^pvp_leaderboard$', views.pvp_leaderboard),
     
