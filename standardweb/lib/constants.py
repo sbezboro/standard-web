@@ -8,4 +8,5 @@ API_CALL_RESULTS = {
   'exception': 1,
   'not_handled': 2,
   'banned': 3,
+  'muted': 4
 }
