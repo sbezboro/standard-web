@@ -1,7 +1,11 @@
 import re
 import subprocess
 
+from standardweb.lib import cache
+
 from ansi2html import Ansi2HTMLConverter
+
+from django.contrib import messages
 
 ansi_converter = Ansi2HTMLConverter()
 ansi_pat = re.compile(r'\x1b[^m]*m')
@@ -37,3 +41,26 @@ def ansi_to_html(ansi):
 
 def strip_ansi(text):
     return ansi_pat.sub('', text) if text else None
+
+
+@cache.CachedResult('mojang_status')
+def mojang_status():
+    from standardweb.models import MojangStatus
+    return MojangStatus.objects.latest('timestamp')
+
+
+def _flash(request, level, message, title=None):
+    content = ''
+    if title:
+        content = '<h4>%s</h4>' % title
+    content += message
+
+    messages.add_message(request, level, content)
+
+
+def flash_warning(request, message, title=None):
+    _flash(request, messages.constants.WARNING, message, title=title)
+
+
+def flash_info(request, message, title=None):
+    _flash(request, messages.constants.INFO, message, title=title)

@@ -8,11 +8,9 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.views.decorators.cache import cache_page
 from django.views.decorators.http import last_modified
 
 from standardweb.lib import api
-from standardweb.lib import helpers as h
 from standardweb.lib import player as libplayer
 from standardweb.models import *
 
@@ -28,15 +26,20 @@ import urllib
 
 def index(request):
     from djangobb_forum.models import Forum
-    status = MojangStatus.objects.latest('timestamp')
     
     news_forum = Forum.objects.get(pk=settings.NEWS_FORUM_ID)
     news_topic = news_forum.topics.filter(deleted=False).order_by('-created')[0]
     news_post = news_topic.posts.filter(deleted=False).order_by('created')[0]
     comments = news_topic.posts.count() - 1
+
+    h.flash_info(request, 'Click <a href="http://bukkit.org/">here</a> to get more info about status of the update that changed the world.',
+                    title='Waiting for 1.7.2')
+
+    if not h.mojang_status().session:
+        h.flash_warning(request, 'Minecraft session servers are down! You won\'t be able to connect to this server until they are back up.',
+                     title='Heads up!')
     
     return render_to_response('index.html', {
-        'status': status,
         'news_topic': news_topic,
         'news_post': news_post,
         'comments': comments
@@ -124,6 +127,10 @@ def chat(request, server_id=None):
             player = MinecraftPlayer.objects.get(username=request.user.username)
         except:
             pass
+
+    if not h.mojang_status().session:
+        h.flash_warning(request, 'Minecraft session servers are down! You won\'t be able to connect to this server until they are back up.',
+                     title='Heads up!')
     
     return render_to_response('chat.html', {
         'servers': Server.objects.all(),
