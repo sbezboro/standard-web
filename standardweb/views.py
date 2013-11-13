@@ -32,12 +32,12 @@ def index(request):
     news_post = news_topic.posts.filter(deleted=False).order_by('created')[0]
     comments = news_topic.posts.count() - 1
 
-    h.flash_info(request, 'Click <a href="http://bukkit.org/">here</a> to get more info about status of the update that changed the world.',
-                    title='Waiting for 1.7.2')
+    h.flash_info(request, 'The server will stay on 1.6.4 until CraftBukkit and relevant plugins are updated to be compatible and very stable. Click <a href="http://bukkit.org/">here</a> to get more info about status of the update that changed the world.',
+                 title='Waiting for 1.7.2')
 
     if not h.mojang_status().session:
         h.flash_warning(request, 'Minecraft session servers are down! You won\'t be able to connect to this server until they are back up.',
-                     title='Heads up!')
+                        title='Heads up!')
     
     return render_to_response('index.html', {
         'news_topic': news_topic,
