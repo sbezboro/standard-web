@@ -378,7 +378,7 @@ a:hover {
     height: 600px;
     overflow-y: scroll;
     overflow-x: hidden;
-    font-family: "Lucida Console", Monaco, monospace;
+    font-family: "Lucida Console", Monaco, Consolas, monospace;
     font-size: 10px;
     background-color: #000;
     color: #eee;
