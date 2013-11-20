@@ -16,7 +16,8 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
     this.socket = null;
     this.numLines = 0;
     this.maxLines = 200;
-    
+
+    this.nextMentionSound = 0;
     this.playMentionSound = true;
     this.mentionSound = null;
     this.mentions = [];
@@ -88,9 +89,12 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
                 line = line.replace(mention.regex, '$1<span style="' + mention.style + '">$2</span>');
             }
         }
-        
-        if (playSound) {
+
+        var now = new Date().getTime();
+
+        if (playSound && now > this.nextMentionSound) {
             this.mentionSound.play();
+            this.nextMentionSound = now + 500;
         }
         
         return line;
