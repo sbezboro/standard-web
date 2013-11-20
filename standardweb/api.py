@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.core.cache import cache
+from django.db import transaction
 from django.db.models import Q
 from django.http import HttpResponse
 from django.http import HttpResponseBadRequest
@@ -74,28 +75,16 @@ def log_death(request):
     type = request.POST.get('type')
     victim_name = request.POST.get('victim')
     killer_name = request.POST.get('killer')
-    
-    try:
-        victim = MinecraftPlayer.objects.get(username=victim_name)
-    except:
-        victim = MinecraftPlayer(username=victim_name)
-        victim.save()
+
+    victim = MinecraftPlayer.factory(username=victim_name)
     
     if victim_name == killer_name:
         type = 'suicide'
-        
-    try:
-        death_type = DeathType.objects.get(type=type)
-    except:
-        death_type = DeathType(type=type)
-        death_type.save()
+
+    death_type = DeathType.factory(type=type)
     
     if type == 'player':
-        try:
-            killer = MinecraftPlayer.objects.get(username=killer_name)
-        except:
-            killer = MinecraftPlayer(username=killer_name)
-            killer.save()
+        killer = MinecraftPlayer.factory(username=killer_name)
         
         death_event = DeathEvent(server=request.server, death_type=death_type, victim=victim, killer=killer)
         DeathCount.increment(request.server, death_type, victim, killer)
@@ -113,18 +102,9 @@ def log_death(request):
 def log_kill(request):
     type = request.POST.get('type')
     killer_name = request.POST.get('killer')
-    
-    try:
-        killer = MinecraftPlayer.objects.get(username=killer_name)
-    except:
-        killer = MinecraftPlayer(username=killer_name)
-        killer.save()
-        
-    try:
-        kill_type = KillType.objects.get(type=type)
-    except:
-        kill_type = KillType(type=type)
-        kill_type.save()
+
+    killer = MinecraftPlayer.factory(username=killer_name)
+    kill_type = KillType.factory(type=type)
     
     kill_event = KillEvent(server=request.server, kill_type=kill_type, killer=killer)
     KillCount.increment(request.server, kill_type, killer)
@@ -133,28 +113,78 @@ def log_kill(request):
     
     return HttpResponse()
 
+
+@api_func
+@server_api
+def log_ore_discovery(request):
+    username = request.POST.get('username')
+    type = request.POST.get('type')
+    x = int(request.POST.get('x'))
+    y = int(request.POST.get('y'))
+    z = int(request.POST.get('z'))
+
+    with transaction.commit_manually():
+        try:
+            player = MinecraftPlayer.factory(username=username)
+
+            material_type = MaterialType.factory(type=type)
+
+            ore_event = OreDiscoveryEvent(server=request.server, material_type=material_type, player=player,
+                                          x=x, y=y, z=z)
+            OreDiscoveryCount.increment(request.server, material_type, player)
+
+            ore_event.save()
+        except:
+            transaction.rollback()
+            rollbar.report_exc_info()
+        else:
+            transaction.commit()
+
+    return HttpResponse()
+
+
+@api_func
+@server_api
+def log_ore_smelt(request):
+    username = request.POST.get('username')
+    type = request.POST.get('type')
+    amount = int(request.POST.get('amount'))
+
+    with transaction.commit_manually():
+        try:
+            player = MinecraftPlayer.factory(username=username)
+
+            material_type = MaterialType.factory(type=type)
+
+            print amount
+            OreSmeltCount.increment(request.server, material_type, player, amount)
+        except:
+            transaction.rollback()
+            rollbar.report_exc_info()
+        else:
+            transaction.commit()
+
+    return HttpResponse()
+
+
 @api_func
 @server_api
 def link(request):
     username = request.POST.get('username')
     password = request.POST.get('password')
-    
+
+    player = MinecraftPlayer.factory(username=username)
+
     try:
-        player = MinecraftPlayer.objects.get(username=username)
-        
-        try:
-            user = User.objects.get(username=username)
-            user.set_password(password)
-            user.save()
-            
-            return HttpResponse('Your website password has been changed!')
-        except:
-            user = User.objects.create_user(username, password=password)
-            profile = ForumProfile(user=user, player=player, language='en', time_zone=-5)
-            profile.save()
-            
-    except Exception as e:
-        return HttpResponseNotFound()
+        user = User.objects.get(username=username)
+        user.set_password(password)
+        user.save()
+
+        return HttpResponse('Your website password has been changed!')
+    except:
+        user = User.objects.create_user(username, password=password)
+        profile = ForumProfile(user=user, player=player, language='en', time_zone=-5)
+        profile.save()
     
     rollbar.report_message('Website account created', level='info', request=request)
     return HttpResponse('Your username has been linked to a website account!')

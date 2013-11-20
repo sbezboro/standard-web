@@ -16,8 +16,17 @@ class StandardModel(models.Model):
             return cls.objects.get(**kwargs)
         except ObjectDoesNotExist, e:
             return None
-        except Exception, e:
-            raise e
+        except:
+            raise
+
+    @classmethod
+    def factory(cls, **kwargs):
+        obj = cls.get_object_or_none(**kwargs)
+        if not obj:
+            obj = cls(**kwargs)
+            obj.save()
+
+        return obj
 
 
 class MinecraftPlayer(StandardModel):
@@ -161,6 +170,57 @@ class KillCount(StandardModel):
         kill_count.save()
 
 
+class MaterialType(StandardModel):
+    type = models.CharField(max_length=32, unique=True)
+    displayname = models.CharField(max_length=64)
+
+
+class OreDiscoveryEvent(StandardModel):
+    timestamp = models.DateTimeField(default=datetime.utcnow)
+    server = models.ForeignKey('Server')
+    player = models.ForeignKey('MinecraftPlayer', related_name='ode_player')
+    material_type = models.ForeignKey('MaterialType', db_index=True)
+    x = models.IntegerField()
+    y = models.IntegerField()
+    z = models.IntegerField()
+
+
+class OreDiscoveryCount(StandardModel):
+    server = models.ForeignKey('Server')
+    player = models.ForeignKey('MinecraftPlayer', related_name='odc_player')
+    material_type = models.ForeignKey('MaterialType', db_index=True)
+    count = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = ('server', 'player', 'material_type')
+
+    @classmethod
+    def increment(cls, server, material_type, player):
+        ore_count, created = cls.objects.get_or_create(server=server,
+                                                       material_type=material_type,
+                                                       player=player)
+        ore_count.count += 1
+        ore_count.save()
+
+
+class OreSmeltCount(StandardModel):
+    server = models.ForeignKey('Server')
+    player = models.ForeignKey('MinecraftPlayer', related_name='osc_player')
+    material_type = models.ForeignKey('MaterialType', db_index=True)
+    count = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = ('server', 'player', 'material_type')
+
+    @classmethod
+    def increment(cls, server, material_type, player, amount):
+        ore_count, created = cls.objects.get_or_create(server=server,
+                                                       material_type=material_type,
+                                                       player=player)
+        ore_count.count += amount
+        ore_count.save()
+
+
 class IPTracking(StandardModel):
     timestamp = models.DateTimeField(default=datetime.utcnow)
     ip = models.IPAddressField()
@@ -173,20 +233,3 @@ class PlayerActivity(StandardModel):
     server = models.ForeignKey('Server')
     player = models.ForeignKey('MinecraftPlayer')
     activity_type = models.IntegerField()
-
-
-'''
-class FactionRelation(models.Model):
-    faction1 = models.ForeignKey('Faction', related_name='faction1')
-    faction2 = models.ForeignKey('Faction', related_name='faction2')
-    relation_type = models.IntegerField(default=0)
-    
-    class Meta:
-        unique_together = ('faction1', 'faction2')
-    
-class MinecraftFaction(models.Model):
-    name = models.CharField(max_length=20, unique=True)
-    description = models.CharField(max_length=100)
-    allies = models.ManyToManyField('self', through='FactionRelation', symmetrical=False)
-    enemies = models.ManyToManyField('self', through='FactionRelation', symmetrical=False)
-'''
