@@ -2,9 +2,9 @@
   {% if stats %}
     <b>Ticks per second: {{ stats.tps|floatformat:"0" }}</b><br><br>
     <b>Player count: {{ stats.num_players }} / {{ stats.max_players }}</b><br><br>
-    {% if stats.players|length > 0 %}
+    {% if stats.player_info|length > 0 %}
       <b>Players online:</b>
-      {% for player, rank in stats.players %}
+      {% for player, rank in stats.player_info %}
         <div>
           {% if rank %}
             <a class="rank-star" href="/ranking?player={{ player.username }}">{{ rank }}</a>

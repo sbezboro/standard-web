@@ -154,7 +154,7 @@ def forum_unreads(forum, user):
         return False
     else:
         if isinstance(user.posttracking.topics, dict):
-            topics = forum.topics.filter(deleted=False).only('last_post')
+            topics = forum.topics.filter(deleted=False)
             if user.posttracking.last_read:
                 topics = topics.filter(updated__gte=user.posttracking.last_read)
             for topic in topics:

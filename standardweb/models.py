@@ -51,8 +51,6 @@ class MinecraftPlayer(StandardModel):
     
     @property
     def forum_profile(self):
-        from djangobb_forum.models import Profile as ForumProfile
-        
         try:
             return self.djangobb_profile.get()
         except:

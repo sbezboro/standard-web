@@ -50,7 +50,9 @@ def index(request, full=True):
             Q(category__groups__in=user_groups) | \
             Q(category__groups__isnull=True)).select_related('last_post__topic',
                                                             'last_post__user',
-                                                            'category')
+                                                            'category',
+                                                            'last_post__user__forum_profile__player')
+
     for forum in _forums:
         cat = cats.setdefault(forum.category.id,
             {'id': forum.category.id, 'cat': forum.category, 'forums': []})
