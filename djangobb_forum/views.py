@@ -271,7 +271,7 @@ def show_forum(request, forum_id, full=True):
         topics = topics.order_by('-sticky', '-created')
     else:
         topics = topics.order_by('-sticky', '-updated')
-    
+
     moderator = request.user.is_superuser or\
         request.user in forum.moderators.all()
     to_return = {'categories': Category.objects.all(),
@@ -297,7 +297,9 @@ def show_topic(request, topic_id, full=True):
 
     if request.user.is_authenticated():
         topic.update_read(request.user)
-    posts = topic.posts.filter(deleted=False).select_related()
+    posts = topic.posts.filter(deleted=False) \
+        .select_related('user__forum_profile__player') \
+        .prefetch_related('attachments')
 
     initial = {}
     if request.user.is_authenticated():
