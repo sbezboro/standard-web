@@ -215,41 +215,44 @@ def player_list(request, server_id=None):
     stats = cache.get('minecraft-stats')
 
     if not stats:
-        server_id = int(server_id or 2)
-        server = Server.objects.get(id=server_id)
+        try:
+            server_id = int(server_id or 2)
+            server = Server.objects.get(id=server_id)
 
-        server_status = api.get_server_status(server)
+            server_status = api.get_server_status(server)
 
-        server_status['players'].sort(key=lambda x: (x.get('nickname') or x['username']).lower())
+            server_status['players'].sort(key=lambda x: (x.get('nickname') or x['username']).lower())
 
-        player_info = []
-        top10_player_ids = PlayerStats.objects.filter(server=server).order_by('-time_spent')[:10].values_list('player', flat=True)
+            player_info = []
+            top10_player_ids = PlayerStats.objects.filter(server=server).order_by('-time_spent')[:10].values_list('player', flat=True)
 
-        usernames = [x['username'] for x in server_status['players']]
-        players = MinecraftPlayer.objects.filter(username__in=usernames)
-        for player in players:
-            rank = None
-            if player.id in top10_player_ids:
-                for index, top10player_id in enumerate(top10_player_ids):
-                    if player.id == top10player_id:
-                        rank = index + 1
+            usernames = [x['username'] for x in server_status['players']]
+            players = MinecraftPlayer.objects.filter(username__in=usernames)
+            for player in players:
+                rank = None
+                if player.id in top10_player_ids:
+                    for index, top10player_id in enumerate(top10_player_ids):
+                        if player.id == top10player_id:
+                            rank = index + 1
 
-            player_info.append((player, rank))
+                player_info.append((player, rank))
 
-        # Create player objects for players that don't exist on the server yet
-        missing_usernames = set(usernames) - set(player.username for player in players)
-        missing_players = [MinecraftPlayer.factory(username=username) for username in missing_usernames]
-        for player in missing_players:
-            player_info.append((player, None))
+            # Create player objects for players that don't exist on the server yet
+            missing_usernames = set(usernames) - set(player.username for player in players)
+            missing_players = [MinecraftPlayer.factory(username=username) for username in missing_usernames]
+            for player in missing_players:
+                player_info.append((player, None))
 
-        stats = {
-            'player_info': player_info,
-            'num_players': server_status['numplayers'],
-            'max_players': server_status['maxplayers'],
-            'tps': server_status['tps']
-        }
+            stats = {
+                'player_info': player_info,
+                'num_players': server_status['numplayers'],
+                'max_players': server_status['maxplayers'],
+                'tps': server_status['tps']
+            }
 
-        cache.set('minecraft-stats', stats, 5)
+            cache.set('minecraft-stats', stats, 5)
+        except:
+            pass
         
     return render_to_response('includes/playerlist.html', {
         'stats': stats
