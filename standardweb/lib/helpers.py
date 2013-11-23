@@ -58,6 +58,10 @@ def _flash(request, level, message, title=None):
     messages.add_message(request, level, content)
 
 
+def flash_error(request, message, title=None):
+    _flash(request, messages.constants.ERROR, message, title=title)
+
+
 def flash_warning(request, message, title=None):
     _flash(request, messages.constants.WARNING, message, title=title)
 
