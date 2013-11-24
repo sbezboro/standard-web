@@ -27,14 +27,15 @@
                 {% endif %}
             </h1>
             {% with player.forum_profile as profile %}
-            {% if profile and profile.post_count and profile.last_post %}
+            {% with profile.last_post as last_post %}
+            {% if profile and profile.post_count and last_post %}
                 {% load forum_extras %}
                 <div class="player-forum-section">
                     <h3>Forum posts:</h3>
                     <a href="{% url "djangobb:search" %}?action=show_user&amp;user_id={{ profile.id }}">{{ profile.post_count }}</a>
                 </div>
                 <div class="player-forum-section">
-                    <h3>Last post:</h3> <a href="{{ profile.last_post_url }}"><abbr class="timeago" title="{% forum_time profile.last_post %}"></abbr></a>
+                    <h3>Last post:</h3> <a href="{{ last_post_url }}"><abbr class="timeago" title="{% forum_time last_post %}"></abbr></a>
                 </div>
                 {% if profile.location %}
                 <div class="player-forum-section">
@@ -50,6 +51,7 @@
                 {% endif %}
                 <div class="clear"></div>
             {% endif %}
+            {% endwith %}
             {% endwith %}
         </div>
     </div>
@@ -101,11 +103,20 @@
                 <br/>
                 <br/>
                 {% for kill in pvp_kills %}
-                    <div class="stat-row">
-                        <div class="username"><a href="/{{ server.id }}/player/{{ kill.username }}"><img class="face-thumb" alt="{{ kill.username }}" src="/faces/16/{{ kill.username }}.png"/>{% if kill.nickname %}{{kill.nickname}}{% else %}{{kill.username}}{% endif %} </a></div>
-                        <div class="count">{{ kill.count }}</div>
-                        <div class="clear"></div>
-                    </div>
+                    {% with kill.player as killer %}
+                        <div class="stat-row">
+                            <div class="player">
+                                <a href="/{{ server.id }}/player/{{ killer.username }}">
+                                    <img class="face-thumb" alt="{{ killer.username }}" src="/faces/16/{{ killer.username }}.png"/>
+                                    <div class="username">
+                                        {{ killer.displayname_html|safe }}
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="count">{{ kill.count }}</div>
+                            <div class="clear"></div>
+                        </div>
+                    {% endwith %}
                 {% endfor %}
             </div>
             <div class="player-stat-section">
@@ -114,11 +125,20 @@
                 <br/>
                 <br/>
                 {% for death in pvp_deaths %}
-                    <div class="stat-row">
-                        <div class="username"><a href="/{{ server.id }}/player/{{ death.username }}"><img class="face-thumb" alt="{{ death.username }}" src="/faces/16/{{ death.username }}.png"/>{% if death.nickname %}{{death.nickname}}{% else %}{{death.username}}{% endif %} </a></div>
-                        <div class="count">{{ death.count }}</div>
-                        <div class="clear"></div>
-                    </div>
+                    {% with death.player as victim %}
+                        <div class="stat-row">
+                            <div class="player">
+                                <a href="/{{ server.id }}/player/{{ victim.username }}">
+                                    <img class="face-thumb" alt="{{ victim.username }}" src="/faces/16/{{ victim.username }}.png"/>
+                                    <div class="username">
+                                        {{ victim.displayname_html|safe }}
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="count">{{ death.count }}</div>
+                            <div class="clear"></div>
+                        </div>
+                    {% endwith %}
                 {% endfor %}
             </div>
             <div class="player-stat-section">
@@ -128,7 +148,7 @@
                 <br/>
                 {% for kill in other_kills %}
                     <div class="stat-row">
-                        <div class="username">{{ kill.type }} </div>
+                        {{ kill.type }}
                         <div class="count">{{ kill.count }}</div>
                         <div class="clear"></div>
                     </div>
@@ -141,7 +161,7 @@
                 <br/>
                 {% for death in other_deaths %}
                     <div class="stat-row">
-                        <div class="username">{{ death.type }} </div> 
+                        {{ death.type }}
                         <div class="count">{{ death.count }}</div>
                         <div class="clear"></div>
                     </div>

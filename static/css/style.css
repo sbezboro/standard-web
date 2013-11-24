@@ -623,8 +623,18 @@ a:hover {
     padding: 2px 2px 0px 2px;
 }
 
-.stat-row .username {
+.stat-row .player {
     float: left;
+    white-space: nowrap;
+}
+
+.stat-row .player .username {
+    vertical-align: top;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    overflow: hidden;
+    width: 150px;
 }
 
 .stat-row .count {

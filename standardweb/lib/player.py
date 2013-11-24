@@ -15,10 +15,10 @@ def get_server_data(server, player):
     if not stats:
         return stats
 
-    pvp_kills = {}
-    pvp_deaths = {}
-    other_kills = {}
-    other_deaths = {}
+    pvp_kills = []
+    pvp_deaths = []
+    other_kills = []
+    other_deaths = []
 
     pvp_kill_count = 0
     pvp_death_count = 0
@@ -32,28 +32,38 @@ def get_server_data(server, player):
 
     for death in deaths:
         if death.killer:
-            pvp_deaths[death.killer.username] = death.count
-            nickname_map[death.killer.username] = death.killer.nickname
+            pvp_deaths.append({
+                'player': death.killer,
+                'count': death.count
+            })
             pvp_death_count += death.count
         else:
-            other_deaths[death.death_type.displayname] = death.count
+            other_deaths.append({
+                'type': death.death_type.displayname,
+                'count': death.count
+            })
             other_death_count += death.count
 
     for kill in kills:
-        other_kills[kill.kill_type.displayname] = kill.count
+        other_kills.append({
+            'type': kill.kill_type.displayname,
+            'count': kill.count
+        })
         other_kill_count += kill.count
 
     kills = DeathCount.objects.filter(server=server, killer=player).select_related('victim', 'death_type')
 
     for kill in kills:
-        pvp_kills[kill.victim.username] = kill.count
-        nickname_map[kill.victim.username] = kill.victim.nickname
+        pvp_kills.append({
+            'player': kill.victim,
+            'count': kill.count
+        })
         pvp_kill_count += kill.count
 
-    pvp_kills = sorted([{'username': key, 'nickname': nickname_map.get(key), 'count': pvp_kills[key]} for key in pvp_kills], key=lambda k: (-k['count'], (k['nickname'] or k['username']).lower()))
-    pvp_deaths = sorted([{'username': key, 'nickname': nickname_map.get(key), 'count': pvp_deaths[key]} for key in pvp_deaths], key=lambda k: (-k['count'], (k['nickname'] or k['username']).lower()))
-    other_deaths = sorted([{'type': key, 'count': other_deaths[key]} for key in other_deaths], key=lambda k: (-k['count'], k['type']))
-    other_kills = sorted([{'type': key, 'count': other_kills[key]} for key in other_kills], key=lambda k: (-k['count'], k['type']))
+    pvp_kills = sorted(pvp_kills, key=lambda k: (-k['count'], (k['player'].displayname).lower()))
+    pvp_deaths = sorted(pvp_deaths, key=lambda k: (-k['count'], (k['player'].displayname).lower()))
+    other_deaths = sorted(other_deaths, key=lambda k: (-k['count'], k['type']))
+    other_kills = sorted(other_kills, key=lambda k: (-k['count'], k['type']))
 
     online_now = datetime.utcnow() - timedelta(minutes=1) < stats.last_seen
 

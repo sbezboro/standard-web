@@ -328,14 +328,14 @@ class Profile(models.Model):
         verbose_name_plural = _('Profiles')
 
     def last_post(self):
-        posts = Post.objects.filter(deleted=False, user__id=self.user_id).order_by('-created')
+        posts = Post.objects.filter(deleted=False, user__id=self.user_id).order_by('-created')[:1]
         if posts:
             return posts[0].created
         else:
             return  None
     
     def last_post_url(self):
-        posts = Post.objects.filter(deleted=False, user__id=self.user_id).order_by('-created')
+        posts = Post.objects.filter(deleted=False, user__id=self.user_id).order_by('-created')[:1]
         if posts:
             return posts[0].get_absolute_url()
         else:
