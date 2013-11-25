@@ -265,7 +265,7 @@ def show_forum(request, forum_id, full=True):
         return HttpResponseForbidden()
 
     topics = forum.topics.filter(deleted=False).select_related('user__forum_profile__player',
-                                                               'last_post__user__forum_profile__player')
+                                                               'last_post__user__forum_profile')
     
     if forum.locked:
         topics = topics.order_by('-sticky', '-created')
