@@ -29,7 +29,7 @@
                             <a href="/{{ server.id }}/player/{{ player.username }}">
                                 <img class="face-thumb" alt="{{ player.username }}" src="/faces/16/{{ player.username }}.png"/>
                                 <div class="username">
-                                    {{ player.displayname|safe }}
+                                    {{ player.displayname_html|safe }}
                                 </div>
                             </a>
                         </div>
