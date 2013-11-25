@@ -34,7 +34,7 @@ def index(request):
 
     h.flash_info(request, 'The server will stay on 1.6.4 until CraftBukkit and relevant plugins are updated to be compatible and very stable. Click <a href="http://bukkit.org/">here</a> to get more info about status of the update that changed the world.',
                  title='Waiting for 1.7.2')
-    
+
     if not h.mojang_status().session:
         h.flash_warning(request, 'Minecraft session servers are down! You won\'t be able to connect to this server until they are back up.',
                         title='Heads up!')

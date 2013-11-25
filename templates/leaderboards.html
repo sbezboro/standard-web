@@ -25,14 +25,12 @@
                 {% for kill in kills %}
                     {% with kill.killer as player %}
                     <div class="stat-row">
-                        <div class="username">
+                        <div class="player">
                             <a href="/{{ server.id }}/player/{{ player.username }}">
                                 <img class="face-thumb" alt="{{ player.username }}" src="/faces/16/{{ player.username }}.png"/>
-                                {% if player.nickname %}
-                                    {{ player.nickname }}
-                                {% else %}
-                                    {{ player.username }}
-                                {% endif %}
+                                <div class="username">
+                                    {{ player.displayname|safe }}
+                                </div>
                             </a>
                         </div>
                         <div class="count">{{ kill.count }}</div>
