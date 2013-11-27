@@ -83,8 +83,8 @@ class PlayerStats(StandardModel):
     pvp_logs = models.IntegerField(default=0)
     
     def get_rank(self):
-        above = PlayerStats.objects.filter(server=self.server, time_spent__gte=self.time_spent).exclude(player_id=self.player_id)
-        return len(above) + 1
+        return PlayerStats.objects.filter(server=self.server, time_spent__gte=self.time_spent) \
+            .exclude(player_id=self.player_id).count() + 1
 
 
 class ServerStatus(StandardModel):
