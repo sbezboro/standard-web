@@ -381,16 +381,16 @@ def leaderboards(request, server_id=None):
 
     enderdragon = KillType.objects.get(type='enderdragon')
     enderdragon_kills = KillCount.objects.filter(server=server, kill_type=enderdragon) \
-                            .select_related('killer') \
-                            .order_by('-count')
+                            .select_related('killer')
     if enderdragon_kills:
+        enderdragon_kills = sorted(enderdragon_kills, key=lambda x: (-x.count, x.killer.displayname.lower()))
         _leaderboards.append(('Ender Dragon Kills', enderdragon_kills))
 
     wither = KillType.objects.get(type='wither')
     wither_kills = KillCount.objects.filter(server=server, kill_type=wither) \
-                            .select_related('killer') \
-                            .order_by('-count')
+                            .select_related('killer')
     if wither_kills:
+        wither_kills = sorted(wither_kills, key=lambda x: (-x.count, x.killer.displayname.lower()))
         _leaderboards.append(('Wither Kills', wither_kills))
 
     return render_to_response('leaderboards.html', {
