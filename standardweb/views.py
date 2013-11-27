@@ -21,6 +21,7 @@ import StringIO
 import calendar
 import json
 import os.path
+import operator
 import urllib
 
 
@@ -239,6 +240,8 @@ def player_list(request, server_id=None):
             missing_players = [MinecraftPlayer.factory(username=username) for username in missing_usernames]
             for player in missing_players:
                 player_info.append((player, None))
+
+            player_info.sort(key=lambda x: x[0].displayname.lower())
 
             stats = {
                 'player_info': player_info,
