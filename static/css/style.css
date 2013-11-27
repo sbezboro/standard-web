@@ -718,6 +718,12 @@ a:hover {
     width: 30%;
 }
 
+.leaderboard-stat-section h5 {
+    margin: -18px 0 10px;
+
+    color: #888;
+}
+
 .search-row {
     font-size: 14pt;
 }

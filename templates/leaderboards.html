@@ -19,11 +19,13 @@
     </div>
     <div id="main">
         <h2>Leaderboards</h2>
-        {% for name, kills in leaderboards %}
+        {% for leaderboard in leaderboards %}
             <div class="leaderboard-stat-section">
-                <h3>{{ name }}</h3>
-                {% for kill in kills %}
-                    {% with kill.killer as player %}
+                <h3>{{ leaderboard.title }}</h3>
+                {% if leaderboard.subtitle %}
+                    <h5>{{ leaderboard.subtitle }}</h5>
+                {% endif %}
+                {% for count, player in leaderboard.list %}
                     <div class="stat-row">
                         <div class="player">
                             <a href="/{{ server.id }}/player/{{ player.username }}">
@@ -33,10 +35,9 @@
                                 </div>
                             </a>
                         </div>
-                        <div class="count">{{ kill.count }}</div>
+                        <div class="count">{{ count }}</div>
                         <div class="clear"></div>
                     </div>
-                    {% endwith %}
                 {% endfor %}
             </div>
         {% endfor %}

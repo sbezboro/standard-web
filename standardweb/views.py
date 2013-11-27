@@ -379,13 +379,27 @@ def leaderboards(request, server_id=None):
 
     _leaderboards = []
 
-    enderdragon_kills = libleaderboards.build_kill_leaderboard(server, 'enderdragon', 'Ender Dragon Kills')
+    enderdragon_kills = libleaderboards.build_kill_leaderboard(server, 'enderdragon')
     if enderdragon_kills:
-        _leaderboards.append(enderdragon_kills)
+        _leaderboards.append({
+            'title': 'Ender Dragon Kills',
+            'list': enderdragon_kills
+        })
 
-    wither_kills = libleaderboards.build_kill_leaderboard(server, 'wither', 'Wither Kills')
+    wither_kills = libleaderboards.build_kill_leaderboard(server, 'wither')
     if wither_kills:
-        _leaderboards.append(wither_kills)
+        _leaderboards.append({
+            'title': 'Wither Kills',
+            'list': wither_kills
+        })
+
+    diamonds_breaks = libleaderboards.build_block_discovery_leaderboard(server, 'DIAMOND_ORE')
+    if diamonds_breaks:
+        _leaderboards.append({
+            'title': 'Diamond Ore Discoveries',
+            'subtitle': '(as of 2013/11/20)',
+            'list': diamonds_breaks
+        })
 
     return render_to_response('leaderboards.html', {
         'servers': Server.objects.all(),
