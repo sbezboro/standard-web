@@ -11,6 +11,7 @@ from django.template import RequestContext
 from django.views.decorators.http import last_modified
 
 from standardweb.lib import api
+from standardweb.lib import leaderboards as libleaderboards
 from standardweb.lib import player as libplayer
 from standardweb.models import *
 
@@ -21,7 +22,6 @@ import StringIO
 import calendar
 import json
 import os.path
-import operator
 import urllib
 
 
@@ -379,19 +379,13 @@ def leaderboards(request, server_id=None):
 
     _leaderboards = []
 
-    enderdragon = KillType.objects.get(type='enderdragon')
-    enderdragon_kills = KillCount.objects.filter(server=server, kill_type=enderdragon) \
-                            .select_related('killer')
+    enderdragon_kills = libleaderboards.build_kill_leaderboard(server, 'enderdragon', 'Ender Dragon Kills')
     if enderdragon_kills:
-        enderdragon_kills = sorted(enderdragon_kills, key=lambda x: (-x.count, x.killer.displayname.lower()))
-        _leaderboards.append(('Ender Dragon Kills', enderdragon_kills))
+        _leaderboards.append(enderdragon_kills)
 
-    wither = KillType.objects.get(type='wither')
-    wither_kills = KillCount.objects.filter(server=server, kill_type=wither) \
-                            .select_related('killer')
+    wither_kills = libleaderboards.build_kill_leaderboard(server, 'wither', 'Wither Kills')
     if wither_kills:
-        wither_kills = sorted(wither_kills, key=lambda x: (-x.count, x.killer.displayname.lower()))
-        _leaderboards.append(('Wither Kills', wither_kills))
+        _leaderboards.append(wither_kills)
 
     return render_to_response('leaderboards.html', {
         'servers': Server.objects.all(),
