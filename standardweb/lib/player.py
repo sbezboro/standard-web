@@ -1,6 +1,4 @@
-from datetime import datetime, timedelta
-
-from standardweb.lib import helpers as h
+from datetime import timedelta
 
 from standardweb.models import *
 
@@ -24,8 +22,6 @@ def get_server_data(server, player):
     pvp_death_count = 0
     other_kill_count = 0
     other_death_count = 0
-
-    nickname_map = {}
 
     deaths = DeathCount.objects.filter(server=server, victim=player).select_related('killer', 'death_type')
     kills = KillCount.objects.filter(server=server, killer=player).select_related('victim', 'kill_type')

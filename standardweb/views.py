@@ -397,7 +397,7 @@ def leaderboards(request, server_id=None):
     if diamonds_breaks:
         _leaderboards.append({
             'title': 'Diamond Ore Discoveries',
-            'subtitle': '(as of 2013/11/20)',
+            'subtitle': '(since 2013/11/20)',
             'list': diamonds_breaks
         })
 
