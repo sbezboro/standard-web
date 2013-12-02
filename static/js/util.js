@@ -8,7 +8,6 @@ if (typeof Object.create === 'undefined') {
 
 $(document).ready(function() {
   var hash = window.location.hash ? window.location.hash.substring(1) : null;
-  console.log(hash);
 
   $('.extender').on('click', function() {
     var target = '#' + $(this).attr('data-target');
