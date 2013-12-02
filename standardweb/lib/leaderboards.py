@@ -8,7 +8,7 @@ def build_kill_leaderboard(server, type):
     kills = KillCount.objects.filter(server=server, kill_type=kill_type) \
                 .select_related('killer')
     if kills:
-        return sorted([(x.count, x.killer) for x in kills], key=lambda x: (-x[0], x[1].displayname.lower()))
+        return sorted([(x.count, x.killer) for x in kills], key=lambda x: (-x[0], x[1].displayname.lower()))[:10]
 
     return None
 
@@ -19,6 +19,6 @@ def build_block_discovery_leaderboard(server, type):
                         .select_related('player')
 
     if discoveries:
-        return sorted([(x.count, x.player) for x in discoveries], key=lambda x: (-x[0], x[1].displayname.lower()))
+        return sorted([(x.count, x.player) for x in discoveries], key=lambda x: (-x[0], x[1].displayname.lower()))[:10]
 
     return None

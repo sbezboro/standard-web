@@ -20,7 +20,8 @@
     <div id="main">
         <h2>Top 10 Players</h2>
         <table class="ranking-table">
-        {% for player in player_info %}
+        {% for row in ranking %}
+            {% with row.player as player %}
             <tr>
                 <td class="rank">
                     {{ forloop.counter }}
@@ -28,20 +29,17 @@
                 <td class="username">
                     <a href="/{{ server.id }}/player/{{ player.username }}">
                         <img class="face-thumb" src="/faces/16/{{ player.username }}.png"/>
-                        {% if player.nickname_html %}
-                            {{ player.nickname_html|safe }}
-                        {% else %}
-                            {{ player.username }}
-                        {% endif %}
+                        {{ player.displayname_html|safe }}
                     </a>
                     {% if player.online %}
                         <img src="/static/images/online.png" alt="Online now!" title="Online now!">
                     {% endif %}
                 </td>
                 <td class="timeSpent">
-                    {{ player.time_spent }}
+                    {{ row.time_spent }}
                 </td>
             </tr>
+            {% endwith %}
         {% if forloop.counter == 10 %}
         </table>
         <br>

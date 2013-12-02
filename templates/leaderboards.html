@@ -19,24 +19,44 @@
     </div>
     <div id="main">
         <h2>Leaderboards</h2>
-        {% for leaderboard in leaderboards %}
-            <div class="leaderboard-stat-section">
-                <h3>{{ leaderboard.title }}</h3>
-                {% if leaderboard.subtitle %}
-                    <h5>{{ leaderboard.subtitle }}</h5>
-                {% endif %}
-                {% for count, player in leaderboard.list %}
-                    <div class="stat-row">
-                        <div class="player">
-                            <a href="/{{ server.id }}/player/{{ player.username }}">
-                                <img class="face-thumb" alt="{{ player.username }}" src="/faces/16/{{ player.username }}.png"/>
-                                <div class="username">
-                                    {{ player.displayname_html|safe }}
-                                </div>
-                            </a>
-                        </div>
-                        <div class="count">{{ count }}</div>
-                        <div class="clear"></div>
+        <div class="nav-pills">
+            <ul>
+                {% for section in leaderboard_sections %}
+                    {% if section.leaderboards %}
+                    <li class="{% if section.active %}active{% endif %}">
+                        <a href="#{{ section.name|lower }}">{{ section.name }}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% for section in leaderboard_sections %}
+            <div id="{{ section.name|lower }}" class="nav-section {% if section.active %}active{% endif %}">
+                {% for leaderboard in section.leaderboards %}
+                    <div class="leaderboard-section {% cycle 'left' 'right' %}">
+                        <h3>{{ leaderboard.title }}</h3>
+                        {% if leaderboard.subtitle %}
+                            <h5>{{ leaderboard.subtitle }}</h5>
+                        {% endif %}
+                        <table class="leaderboard-table">
+                            {% for count, player in leaderboard.list %}
+                            <tr>
+                                <td class="rank">
+                                    {{ forloop.counter }}
+                                </td>
+                                <td class="player">
+                                    <a href="/{{ server.id }}/player/{{ player.username }}">
+                                        <img class="face-thumb" src="/faces/16/{{ player.username }}.png"/>
+                                        {{ player.displayname_html|safe }}
+                                    </a>
+                                </td>
+                                <td class="count">
+                                    {{ count }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </table>
                     </div>
                 {% endfor %}
             </div>

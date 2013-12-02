@@ -349,16 +349,14 @@ def ranking(request, server_id=None):
     server_id = int(server_id or 2)
     server = Server.objects.get(id=server_id)
     
-    player_info = []
+    ranking = []
     player_stats = PlayerStats.objects.filter(server=server) \
                        .order_by('-time_spent')[:40] \
-                       .select_related()
+                       .select_related('player')
     
     for player_stat in player_stats:
-        player_info.append({
-            'username': player_stat.player.username,
-            'nickname': player_stat.player.nickname,
-            'nickname_html': player_stat.player.nickname_html,
+        ranking.append({
+            'player': player_stat.player,
             'time_spent': h.elapsed_time_string(player_stat.time_spent),
             'online': datetime.utcnow() - timedelta(minutes = 1) < player_stat.last_seen,
         })
@@ -366,7 +364,7 @@ def ranking(request, server_id=None):
     return render_to_response('ranking.html', {
         'servers': Server.objects.all(),
         'server': server,
-        'player_info': player_info,
+        'ranking': ranking,
         }, context_instance=RequestContext(request))
 
 
@@ -377,34 +375,52 @@ def leaderboards(request, server_id=None):
     server_id = int(server_id or 2)
     server = Server.objects.get(id=server_id)
 
-    _leaderboards = []
+    kill_leaderboards = []
+    ore_leaderboards = []
 
     enderdragon_kills = libleaderboards.build_kill_leaderboard(server, 'enderdragon')
     if enderdragon_kills:
-        _leaderboards.append({
+        kill_leaderboards.append({
             'title': 'Ender Dragon Kills',
             'list': enderdragon_kills
         })
 
     wither_kills = libleaderboards.build_kill_leaderboard(server, 'wither')
     if wither_kills:
-        _leaderboards.append({
+        kill_leaderboards.append({
             'title': 'Wither Kills',
             'list': wither_kills
         })
 
     diamonds_breaks = libleaderboards.build_block_discovery_leaderboard(server, 'DIAMOND_ORE')
     if diamonds_breaks:
-        _leaderboards.append({
+        ore_leaderboards.append({
             'title': 'Diamond Ore Discoveries',
             'subtitle': '(since 2013/11/20)',
             'list': diamonds_breaks
         })
 
+    emerald_breaks = libleaderboards.build_block_discovery_leaderboard(server, 'EMERALD_ORE')
+    if emerald_breaks:
+        ore_leaderboards.append({
+            'title': 'Emerald Ore Discoveries',
+            'subtitle': '(since 2013/11/20)',
+            'list': emerald_breaks
+        })
+
+    leaderboard_sections = [{
+        'active': True,
+        'name': 'Kills',
+        'leaderboards': kill_leaderboards
+    }, {
+        'name': 'Ores',
+        'leaderboards': ore_leaderboards
+    }]
+
     return render_to_response('leaderboards.html', {
         'servers': Server.objects.all(),
         'server': server,
-        'leaderboards': _leaderboards,
+        'leaderboard_sections': leaderboard_sections,
         }, context_instance=RequestContext(request))
 
 

@@ -282,11 +282,11 @@ a:hover {
     display: inline-block;
 }
 
-#player-list a, .ranking-table a, .player-stat-section a, .leaderboard-stat-section a, .search-row a {
+#player-list a, .ranking-table a, .player-stat-section a, .leaderboard-table a, .search-row a {
     color: #545454;
 }
 
-#player-list a:hover, .ranking-table a:hover, .player-stat-section a:hover, .leaderboard-stat-section a:hover, .search-row a:hover {
+#player-list a:hover, .ranking-table a:hover, .player-stat-section a:hover, .leaderboard-table a:hover, .search-row a:hover {
     color: #AAA;
 }
 
@@ -714,14 +714,75 @@ a:hover {
     white-space: nowrap;
 }
 
-.leaderboard-stat-section {
-    width: 30%;
+.leaderboard-section {
+    width: 49%;
+    display: inline-block;
 }
 
-.leaderboard-stat-section h5 {
+.leaderboard-section h5 {
     margin: -18px 0 10px;
-
     color: #888;
+}
+
+.leaderboard-table {
+    width: 100%;
+    font-size: 18px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    padding: 0;
+    border-collapse: collapse;
+}
+
+.leaderboard-table tr {
+    padding: 0;
+    margin: 0;
+    border-top: 1px solid #ddd;
+    position: relative;
+}
+
+.leaderboard-table td {
+    padding-top: 3px;
+}
+
+.leaderboard-table .rank {
+    width: 22px;
+    text-align: right;
+    border-right: 1px solid #ddd;
+}
+
+.leaderboard-table .player {
+    padding-left: 4px;
+    border-right: 1px solid #ddd;
+}
+
+.leaderboard-table .count {
+    padding-left: 6px;
+    padding-right: 4px;
+    text-align: right;
+    width: 1px;
+    white-space: nowrap;
+}
+
+.nav-pills ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-pills li {
+    padding: 8px 12px;
+    vertical-align: middle;
+    display: inline-block;
+    border-radius: 6px;
+}
+
+.nav-pills li.active {
+    background: #999;
+}
+
+.nav-pills li.active a {
+    color: #fff;
+    cursor: default;
 }
 
 .search-row {
