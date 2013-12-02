@@ -378,51 +378,13 @@ def leaderboards(request, server_id=None):
     kill_leaderboards = []
     ore_leaderboards = []
 
-    enderdragon_kills = libleaderboards.build_kill_leaderboard(server, 'enderdragon')
-    if enderdragon_kills:
-        kill_leaderboards.append({
-            'title': 'Ender Dragon Kills',
-            'list': enderdragon_kills
-        })
-
-    wither_kills = libleaderboards.build_kill_leaderboard(server, 'wither')
-    if wither_kills:
-        kill_leaderboards.append({
-            'title': 'Wither Kills',
-            'list': wither_kills
-        })
-
-    diamonds_breaks = libleaderboards.build_block_discovery_leaderboard(server, 'DIAMOND_ORE')
-    if diamonds_breaks:
-        ore_leaderboards.append({
-            'title': 'Diamond Ore Discoveries',
-            'subtitle': '(since 2013/11/20)',
-            'list': diamonds_breaks
-        })
-
-    emerald_breaks = libleaderboards.build_block_discovery_leaderboard(server, 'EMERALD_ORE')
-    if emerald_breaks:
-        ore_leaderboards.append({
-            'title': 'Emerald Ore Discoveries',
-            'subtitle': '(since 2013/11/20)',
-            'list': emerald_breaks
-        })
-
-    lapis_breaks = libleaderboards.build_block_discovery_leaderboard(server, 'LAPIS_ORE')
-    if lapis_breaks:
-        ore_leaderboards.append({
-            'title': 'Lapis Ore Discoveries',
-            'subtitle': '(since 2013/11/20)',
-            'list': lapis_breaks
-        })
-
-    redstone_breaks = libleaderboards.build_block_discovery_leaderboard(server, 'REDSTONE_ORE')
-    if redstone_breaks:
-        ore_leaderboards.append({
-            'title': 'Redstone Ore Discoveries',
-            'subtitle': '(since 2013/11/20)',
-            'list': redstone_breaks
-        })
+    libleaderboards.get_kill_leaderboards(server, 'enderdragon', 'Ender Dragon Kills', kill_leaderboards)
+    libleaderboards.get_kill_leaderboards(server, 'wither', 'Wither Kills', kill_leaderboards)
+    libleaderboards.get_kill_leaderboards(server, 'creeper', 'Creeper Kills', kill_leaderboards)
+    libleaderboards.get_ore_leaderboards(server, 'DIAMOND_ORE', 'Diamond Ore Discoveries', ore_leaderboards, subtitle='Since (2013/11/20)')
+    libleaderboards.get_ore_leaderboards(server, 'EMERALD_ORE', 'Emerald Ore Discoveries', ore_leaderboards, subtitle='Since (2013/11/20)')
+    libleaderboards.get_ore_leaderboards(server, 'LAPIS_ORE', 'Lapis Ore Discoveries', ore_leaderboards, subtitle='Since (2013/11/20)')
+    libleaderboards.get_ore_leaderboards(server, 'REDSTONE_ORE', 'Redstone Ore Discoveries', ore_leaderboards, subtitle='Since (2013/11/20)')
 
     leaderboard_sections = [{
         'active': True,

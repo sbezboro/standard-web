@@ -34,7 +34,7 @@
         {% for section in leaderboard_sections %}
             <div id="{{ section.name|lower }}" class="nav-section">
                 {% for leaderboard in section.leaderboards %}
-                    <div class="leaderboard-section {% cycle 'left' 'right' %}">
+                    <div class="leaderboard-section {% if forloop.counter|divisibleby:2 %}right{% else %}left{% endif %}">
                         <h3>{{ leaderboard.title }}
                             {% if leaderboard.subtitle %}
                                 <span class="subtitle">{{ leaderboard.subtitle }}</span>
