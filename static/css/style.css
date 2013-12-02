@@ -719,9 +719,9 @@ a:hover {
     display: inline-block;
 }
 
-.leaderboard-section h5 {
-    margin: -18px 0 10px;
+.leaderboard-section .subtitle {
     color: #888;
+    font-size: 14px;
 }
 
 .leaderboard-table {

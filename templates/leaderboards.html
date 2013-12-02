@@ -35,10 +35,11 @@
             <div id="{{ section.name|lower }}" class="nav-section {% if section.active %}active{% endif %}">
                 {% for leaderboard in section.leaderboards %}
                     <div class="leaderboard-section {% cycle 'left' 'right' %}">
-                        <h3>{{ leaderboard.title }}</h3>
-                        {% if leaderboard.subtitle %}
-                            <h5>{{ leaderboard.subtitle }}</h5>
-                        {% endif %}
+                        <h3>{{ leaderboard.title }}
+                            {% if leaderboard.subtitle %}
+                                <span class="subtitle">{{ leaderboard.subtitle }}</span>
+                            {% endif %}
+                        </h3>
                         <table class="leaderboard-table">
                             {% for count, player in leaderboard.list %}
                             <tr>
