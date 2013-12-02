@@ -408,6 +408,22 @@ def leaderboards(request, server_id=None):
             'list': emerald_breaks
         })
 
+    lapis_breaks = libleaderboards.build_block_discovery_leaderboard(server, 'LAPIS_ORE')
+    if lapis_breaks:
+        ore_leaderboards.append({
+            'title': 'Lapis Ore Discoveries',
+            'subtitle': '(since 2013/11/20)',
+            'list': lapis_breaks
+        })
+
+    redstone_breaks = libleaderboards.build_block_discovery_leaderboard(server, 'REDSTONE_ORE')
+    if redstone_breaks:
+        ore_leaderboards.append({
+            'title': 'Redstone Ore Discoveries',
+            'subtitle': '(since 2013/11/20)',
+            'list': redstone_breaks
+        })
+
     leaderboard_sections = [{
         'active': True,
         'name': 'Kills',
