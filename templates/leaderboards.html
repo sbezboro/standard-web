@@ -23,7 +23,7 @@
             <ul>
                 {% for section in leaderboard_sections %}
                     {% if section.leaderboards %}
-                    <li class="{% if section.active %}active{% endif %}">
+                    <li>
                         <a href="#{{ section.name|lower }}">{{ section.name }}</a>
                     </li>
                     {% endif %}
@@ -32,7 +32,7 @@
         </div>
 
         {% for section in leaderboard_sections %}
-            <div id="{{ section.name|lower }}" class="nav-section {% if section.active %}active{% endif %}">
+            <div id="{{ section.name|lower }}" class="nav-section">
                 {% for leaderboard in section.leaderboards %}
                     <div class="leaderboard-section {% cycle 'left' 'right' %}">
                         <h3>{{ leaderboard.title }}

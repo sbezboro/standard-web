@@ -7,7 +7,10 @@ if (typeof Object.create === 'undefined') {
 }
 
 $(document).ready(function() {
-  $('.extender').on('click', function(e) {
+  var hash = window.location.hash ? window.location.hash.substring(1) : null;
+  console.log(hash);
+
+  $('.extender').on('click', function() {
     var target = '#' + $(this).attr('data-target');
     $(target).toggle();
   });
@@ -41,10 +44,35 @@ $(document).ready(function() {
     });
   });
 
-  $('.nav-section').each(function() {
-    var $this = $(this);
-    if (!$this.hasClass('active')) {
-      $this.addClass('hidden');
+  var activePill = $('.nav-pills li.active').length > 0;
+
+  $('.nav-pills li').each(function(index) {
+    var $pill = $(this);
+
+    if (!activePill) {
+      if (hash) {
+        if (hash === $pill.children('a').attr('href').substring(1)) {
+          $pill.addClass('active');
+        }
+      } else if (index == 0) {
+        $pill.addClass('active');
+      }
+    }
+  });
+
+  $('.nav-section').each(function(index) {
+    var $section = $(this);
+
+    if (activePill) {
+      if (!$section.hasClass('active')) {
+        $section.addClass('hidden');
+      }
+    } else if (hash) {
+      if (hash != $section.attr('id')) {
+        $section.addClass('hidden');
+      }
+    } else if (index > 0) {
+      $section.addClass('hidden');
     }
   });
 });
