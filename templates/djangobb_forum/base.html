@@ -41,6 +41,7 @@ var POST_PREVIEW_URL = "{% url "djangobb:post_preview" %}";
 {% endif %}
 {% block extra_meta %}{% endblock %}
 
+{% include 'includes/messages.html' %}
 {% if user.is_authenticated and not user.email %}
 	<div class="alert warning">
 		<h4>Hey there!</h4>

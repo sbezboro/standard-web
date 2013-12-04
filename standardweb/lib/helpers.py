@@ -68,3 +68,7 @@ def flash_warning(request, message, title=None):
 
 def flash_info(request, message, title=None):
     _flash(request, messages.constants.INFO, message, title=title)
+
+
+def flash_success(request, message, title=None):
+    _flash(request, messages.constants.SUCCESS, message, title=title)

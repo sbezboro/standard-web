@@ -202,7 +202,7 @@ class PersonalProfileForm(forms.ModelForm):
         self.profile.site = self.cleaned_data['site']
         if self.cleaned_data['name']:
             cleaned_name = self.cleaned_data['name'].strip()
-            if  ' ' in cleaned_name:
+            if ' ' in cleaned_name:
                 self.profile.user.first_name, self.profile.user.last_name = cleaned_name.split(None, 1)
             else:
                 self.profile.user.first_name = cleaned_name

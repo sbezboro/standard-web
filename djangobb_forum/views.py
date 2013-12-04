@@ -32,6 +32,7 @@ from djangobb_forum.templatetags.forum_extras import forum_moderated_by
 from haystack.query import SearchQuerySet, SQ
 
 from standardweb import settings
+from standardweb.lib import helpers as h
 
 
 def index(request, full=True):
@@ -238,9 +239,17 @@ def misc(request):
                 request.user.save()
             
             body_html = convert_text_to_html(form.cleaned_data['body'], 'bbcode')
+
+            from_player = request.user.forum_profile.player
+
+            if from_player:
+                sent_by = '<a href="%(website)s/player/%(username)s">%(username)s</a>' % \
+                          {'username': request.user.username, 'website': Site.objects.get_current().domain}
+            else:
+                sent_by = user.username
             
             body = '%s<br><br><hr>Sent by <b>%s</b> on the Standard Survival Forum<br>%s' \
-                   % (body_html, request.user.username, Site.objects.get_current().domain)
+                   % (body_html, sent_by, Site.objects.get_current().domain)
             
             message = EmailMessage(subject, body,
                 '%s <%s>' % (request.user.username, settings.DEFAULT_FROM_EMAIL),
@@ -248,6 +257,8 @@ def misc(request):
                 headers={'Reply-To': from_email})
             message.content_subtype = 'html'
             message.send()
+
+            h.flash_success(request, 'Email sent to <b>%s</b>!' % user.username)
             
             return HttpResponseRedirect(reverse('djangobb:index'))
 
@@ -416,6 +427,7 @@ def user(request, username, section='essentials', action=None, template='djangob
         profile_url = reverse('djangobb:forum_profile_%s' % section, args=[user.username])
         form = build_form(form_class, request, instance=user.forum_profile, extra_args={'request': request})
         if request.method == 'POST' and form.is_valid():
+            h.flash_success(request, 'Settings saved!')
             form.save()
             return HttpResponseRedirect(profile_url)
         return render(request, template, {'active_menu': section,
