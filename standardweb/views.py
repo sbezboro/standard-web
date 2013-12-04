@@ -384,7 +384,7 @@ def leaderboards(request, server_id=None):
     libleaderboards.get_ore_leaderboards(server, 'DIAMOND_ORE', 'Diamond Ore Discoveries', ore_leaderboards, subtitle='Since (2013/11/20)')
     libleaderboards.get_ore_leaderboards(server, 'EMERALD_ORE', 'Emerald Ore Discoveries', ore_leaderboards, subtitle='Since (2013/11/20)')
     libleaderboards.get_ore_leaderboards(server, 'LAPIS_ORE', 'Lapis Ore Discoveries', ore_leaderboards, subtitle='Since (2013/11/20)')
-    libleaderboards.get_ore_leaderboards(server, 'REDSTONE_ORE', 'Redstone Ore Discoveries', ore_leaderboards, subtitle='Since (2013/11/20)')
+    libleaderboards.get_ore_leaderboards(server, 'REDSTONE_ORE', 'Redstone Ore Discoveries', ore_leaderboards, subtitle='Since (2013/12/4)')
 
     leaderboard_sections = [{
         'active': True,
