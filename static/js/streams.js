@@ -3,15 +3,14 @@ var commandIndex = -1;
     
 var mentionPat = '(&gt;.*|Server\].*|Web\ Chat\].*\: .*|FactionChat.*|AllianceChat.*|command:.*)(MENTION_PART)';
 
-function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, source) {
+function Stream(authData, baseUrl, $outputArea, $textbox, serverId, source) {
     var _this = this;
     
-    this.sessionKey = sessionKey;
+    this.authData = authData;
     this.baseUrl = baseUrl;
     this.$outputArea = $outputArea;
     this.$textbox = $textbox;
     this.serverId = serverId;
-    this.data = data;
     this.source = source;
     this.socket = null;
     this.numLines = 0;
@@ -141,20 +140,17 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
         _this.socketInitialized();
 
         socket.on('connect_failed', function(reason) {
-            if (reason === 'unauthorized') {
-                _this.addOutputLine("ERROR: you are not authorized!");
-            } else {
-                _rollbar.push({level: 'error', msg: 'Client could not connect to stream socket', reason: reason});
-                _this.addOutputLine("ERROR: failed to connect!");
-            }
+            _rollbar.push({level: 'error', msg: 'Client could not connect to stream socket', reason: reason});
+            _this.addOutputLine("ERROR: failed to connect!");
         });
         
         socket.on('connect', function() {
             $outputArea.empty();
             _this.numLines = 0;
 
-            socket.emit('server', {
-                serverId: serverId
+            socket.emit('auth', {
+                server_id: _this.serverId,
+                auth_data: _this.authData
             });
         });
         
@@ -162,14 +158,7 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
             _rollbar.push({level: 'error', msg: 'Client disconnected from stream socket'});
             _this.addOutputLine("ERROR: socket connection lost!");
         });
-        
-        socket.on('heartbeat', function(data) {
-            console.log(data);
-            socket.emit('heartbeat', {
-                timestamp: data.timestamp
-            });
-        });
-        
+
         socket.on('mc-connection-lost', function() {
             _this.addOutputLine("Connection to Minecraft server lost, retrying...");
         });
@@ -249,8 +238,8 @@ function Stream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data, sour
     }
 }
 
-function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data) {
-    Stream.call(this, sessionKey, baseUrl, $outputArea, $textbox, serverId, data, 'console');
+function ConsoleStream(authToken, baseUrl, $outputArea, $textbox, serverId) {
+    Stream.call(this, authToken, baseUrl, $outputArea, $textbox, serverId, 'console');
     this.allPlayers = {};
     
     this.maxLines = 2000;
@@ -390,20 +379,24 @@ function ConsoleStream(sessionKey, baseUrl, $outputArea, $textbox, serverId, dat
 
 ConsoleStream.prototype = Object.create(Stream.prototype);
 
-function ChatStream(sessionKey, baseUrl, $outputArea, $textbox, serverId, data) {
-    Stream.call(this, sessionKey, baseUrl, $outputArea, $textbox, serverId, data, 'chat');
+function ChatStream(authData, baseUrl, $outputArea, $textbox, serverId, username, nickname) {
+    Stream.call(this, authData, baseUrl, $outputArea, $textbox, serverId, 'chat');
     var _this = this;
     var socket;
     
-    if (this.data) {
-        this.addChatMention(data.username, 'background:#00ACC4');
-        if (this.data.nickname) {
-            this.addChatMention(data.nickname, 'background:#00ACC4');
-        }
+    if (username) {
+        this.addChatMention(username, 'background:#00ACC4');
+    }
+    if (nickname) {
+        this.addChatMention(nickname, 'background:#00ACC4');
     }
     
     this.socketInitialized = function() {
         socket = _this.socket;
+
+        socket.on('unauthorized', function() {
+            _this.addOutputLine("ERROR: you are not authorized!");
+        });
         
         socket.on('connection-spam', function() {
             _this.addOutputLine("Stop trying to connect so much!");

@@ -107,8 +107,7 @@
         
         var consoleStream;
         var currentUsername;
-        
-        var sessionKey = '{{ request.session.session_key }}';
+
         var baseUrl = '{{ rts_address }}';
         var serverId = {{ server_id }};
         
@@ -195,7 +194,7 @@
             
             var $consoleTextbox = $('.console-textbox');
             
-            consoleStream = new ConsoleStream(sessionKey, baseUrl, $console,
+            consoleStream = new ConsoleStream({{ rts_auth_data|safe }}, baseUrl, $console,
                                               $consoleTextbox, serverId);
             
             resize();

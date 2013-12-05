@@ -26,13 +26,13 @@
       <h2>Live Server Chat</h2>
       <div id="chat-container">
         <div id="chat"></div>
-        <input id="chat-textbox" type="text" maxlength="80">
+        <input id="chat-textbox" type="text" maxlength="80"/>
       </div>
       {% if not user.is_authenticated %}
-      <br>
-      <div>
-        You must be <a href="{% url "views.login" %}">logged in</a> to the website to be able to chat!
-      </div>
+        <br>
+        <div>
+          You must be <a href="{% url "views.login" %}">logged in</a> to the website to be able to chat!
+        </div>
       {% endif %}
       <table class="players-table">
       </table>
@@ -41,7 +41,6 @@
           $(document).ready(function() {
               var $chat = $('#chat');
               var $chatTextbox = $('#chat-textbox');
-              var sessionKey = '{% if request.user.is_authenticated %}{{ request.session.session_key }}{% endif %}';
               var baseUrl = '{{ rts_address }}';
               var serverId = {{ server_id }};
               
@@ -50,17 +49,19 @@
                   $chatTextbox.focus();
                   return false;
               });
-              
-              var data = {
-                  {% if player %}
-                  username: '{{ player.username }}',
-                      {% if player.nickname %}
-                      nickname: '{{ player.nickname }}'
-                      {% endif %}
+
+              var username;
+              var nickname;
+
+              {% if player %}
+                  username = '{{ player.username }}';
+                  {% if player.nickname %}
+                    nickname = '{{ player.nickname }}';
                   {% endif %}
-              }
-              var chatStream = new ChatStream(sessionKey, baseUrl, $chat,
-                                              $chatTextbox, serverId, data);
+              {% endif %}
+
+              var chatStream = new ChatStream({{ rts_auth_data|safe }}, baseUrl, $chat,
+                                              $chatTextbox, serverId, username, nickname);
               chatStream.connect(function(error) {});
               
               soundManager.setup({
