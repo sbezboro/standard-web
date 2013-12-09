@@ -33,8 +33,8 @@ def index(request):
     news_post = news_topic.posts.filter(deleted=False).order_by('created')[0]
     comments = news_topic.posts.count() - 1
 
-    h.flash_warning(request, 'The server is down at the moment while upgrading to 1.7.2. It will be up soon!.',
-                 title='Waiting for 1.7.2')
+    h.flash_success(request, 'The server has been finally upgrading to 1.7.2! Hopefully it stays this way assuming things are stable long-term.',
+                 title='1.7.2')
 
     if not h.mojang_status().session:
         h.flash_warning(request, 'Minecraft session servers are down! You won\'t be able to connect to this server until they are back up.',
