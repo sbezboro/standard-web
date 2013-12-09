@@ -33,7 +33,7 @@ def index(request):
     news_post = news_topic.posts.filter(deleted=False).order_by('created')[0]
     comments = news_topic.posts.count() - 1
 
-    h.flash_info(request, 'The server will stay on 1.6.4 until CraftBukkit and relevant plugins are updated to be compatible and very stable. Click <a href="http://bukkit.org/">here</a> to get more info about status of the update that changed the world.',
+    h.flash_warning(request, 'The server is down at the moment while upgrading to 1.7.2. It will be up soon!.',
                  title='Waiting for 1.7.2')
 
     if not h.mojang_status().session:

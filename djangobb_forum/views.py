@@ -243,7 +243,7 @@ def misc(request):
             from_player = request.user.forum_profile.player
 
             if from_player:
-                sent_by = '<a href="%(website)s/player/%(username)s">%(username)s</a>' % \
+                sent_by = '<a href="https://%(website)s/player/%(username)s">%(username)s</a>' % \
                           {'username': request.user.username, 'website': Site.objects.get_current().domain}
             else:
                 sent_by = user.username
