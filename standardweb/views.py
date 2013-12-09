@@ -33,7 +33,7 @@ def index(request):
     news_post = news_topic.posts.filter(deleted=False).order_by('created')[0]
     comments = news_topic.posts.count() - 1
 
-    h.flash_success(request, 'The server has been finally upgrading to 1.7.2! Hopefully it stays this way assuming things are stable long-term.',
+    h.flash_success(request, 'The server has finally been upgraded to 1.7.2! Hopefully it stays this way assuming things are stable long-term.',
                  title='1.7.2')
 
     if not h.mojang_status().session:
