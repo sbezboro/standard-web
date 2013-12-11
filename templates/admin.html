@@ -112,9 +112,20 @@
         var serverId = {{ server_id }};
         
         function resize() {
-            $console.height($(window).height() - $("#header").outerHeight() - $(".nav-header").outerHeight() - $(".sub-header").outerHeight() - 30);
-            $detail.height($(window).height() - $("#header").outerHeight() - $(".nav-header").outerHeight() - $(".sub-header").outerHeight() - 22);
-            $(".players").height($(window).height() - $("#header").outerHeight() - $(".nav-header").outerHeight() - $(".sub-header").outerHeight() - 150);
+            var baseHeight = $(window).height() - $("#header").outerHeight() - $(".sub-header").outerHeight();
+            var consoleHeight = baseHeight - 30;
+            var detailHeight = baseHeight - 22;
+            var playersHeight = baseHeight - 150;
+
+            if ($(".nav-header").is(':visible')) {
+                consoleHeight -= $(".nav-header").outerHeight();
+                detailHeight -= $(".nav-header").outerHeight();
+                playersHeight -= $(".nav-header").outerHeight();
+            }
+
+            $console.height(consoleHeight);
+            $detail.height(detailHeight);
+            $(".players").height(playersHeight);
             $(".users").height(138);
         }
         
@@ -137,7 +148,7 @@
             $link.attr('href', href);
             
             var hours = Math.floor(player.time_spent / 60);
-            var minutes = hours > 1 ? player.time_spent % (hours * 60) : player.time_spent;
+            var minutes = hours > 0 ? (player.time_spent % (hours * 60)) : player.time_spent;
             
             var timeSpent;
             

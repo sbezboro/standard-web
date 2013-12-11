@@ -144,3 +144,12 @@
 .dotclear .markItUpEditor {
 	background-image:url(images/bg-editor-wiki.png);
 }
+@media (max-width: 980px) {
+	.markItUp {
+		width: 95%;
+	}
+
+    .markItUpEditor {
+        width:94%;
+    }
+}
