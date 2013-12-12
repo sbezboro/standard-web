@@ -185,6 +185,8 @@ USE_SSL = True
 OLD_SESSION_COOKIE_NAME = 'sessionid'
 SESSION_COOKIE_NAME = 'djangosessionid'
 
+MAIN_SERVER_ID = 2
+
 try:
     from local_settings import *
 except ImportError:

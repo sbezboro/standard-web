@@ -164,7 +164,7 @@ DD.postavatar {MARGIN-BOTTOM: 5px}
 
 /* 8.3 Extra top spacing for signatures and edited by */
 
-DIV.postsignature, DIV.postmsg P.postedit {PADDING-TOP: 15px}
+DIV.postsignature, DIV.postmsg P.postedit {PADDING-TOP: 15px; max-height: 360px;}
 
 /* 8.4 Spacing for code and quote boxes */
 

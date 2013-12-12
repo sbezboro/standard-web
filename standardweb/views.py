@@ -57,7 +57,7 @@ def logout(request):
 
 
 def analytics(request, server_id=None):
-    server_id = int(server_id or 2)
+    server_id = int(server_id or settings.MAIN_SERVER_ID)
     
     server = Server.objects.get(id=server_id)
     
@@ -105,7 +105,7 @@ def analytics(request, server_id=None):
 
 
 def admin(request, server_id=None):
-    server_id = int(server_id or 2)
+    server_id = int(server_id or settings.MAIN_SERVER_ID)
     
     if not request.user.is_superuser:
         return HttpResponseForbidden()
@@ -117,7 +117,7 @@ def admin(request, server_id=None):
 
 
 def chat(request, server_id=None):
-    server_id = int(server_id or 2)
+    server_id = int(server_id or settings.MAIN_SERVER_ID)
     
     player = None
     if request.user.is_authenticated():
@@ -183,7 +183,7 @@ def _get_player_graph_data(server, show_new_players=False, granularity=15, start
 
 
 def player_graph(request, server_id=None):
-    server_id = int(server_id or 2)
+    server_id = int(server_id or settings.MAIN_SERVER_ID)
     server = Server.objects.get(id=server_id)
     
     week_index = int(request.GET.get('weekIndex', -1))
@@ -211,7 +211,7 @@ def player_list(request, server_id=None):
 
     if not stats:
         try:
-            server_id = int(server_id or 2)
+            server_id = int(server_id or settings.MAIN_SERVER_ID)
             server = Server.objects.get(id=server_id)
 
             server_status = api.get_server_status(server)
@@ -343,7 +343,7 @@ def ranking(request, server_id=None):
     if not server_id:
         return HttpResponseRedirect('/2/ranking')
     
-    server_id = int(server_id or 2)
+    server_id = int(server_id or settings.MAIN_SERVER_ID)
     server = Server.objects.get(id=server_id)
     
     ranking = []
@@ -369,7 +369,7 @@ def leaderboards(request, server_id=None):
     if not server_id:
         return HttpResponseRedirect('/2/leaderboards')
 
-    server_id = int(server_id or 2)
+    server_id = int(server_id or settings.MAIN_SERVER_ID)
     server = Server.objects.get(id=server_id)
 
     kill_leaderboards = []
