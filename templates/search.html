@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load standardweb_extras %}
+
 {% block title %}Player Search - Standard Survival Minecraft Server{% endblock %}
 
 {% block content %}
@@ -9,7 +11,7 @@
         {% for player_info in player_info %}
         <div class="search-row">
             <a href="/player/{{ player_info.username }}">
-                <img class="face-thumb" src="/faces/16/{{ player_info.username }}.png"/>
+                {{ player_info.username|face_thumb }}
                 {% if player_info.nickname %}
                     {{ player_info.nickname }}
                 {% else %}

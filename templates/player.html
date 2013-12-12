@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load standardweb_extras %}
+
 {% block title %}
     {{ player.displayname }} {% if player.nickname %}({{ player.username }}){% endif %} - {{ server.address }} - Standard Survival Minecraft Server
 {% endblock %}
@@ -12,7 +14,7 @@
     <div id="sub-header">
         <div class="player-header">
             <h1>
-                <img class="face-large" src="/faces/64/{{ player.username }}.png" alt="{{ player.username }}" width="64px" height=64px"/>
+                {{ player.username|face_large }}
                 {% if player.nickname_html %}
                     {{ player.nickname_html|safe }}
                     <span class="small">
@@ -109,7 +111,7 @@
                         <div class="stat-row">
                             <div class="player">
                                 <a href="/{{ server.id }}/player/{{ killer.username }}">
-                                    <img class="face-thumb" alt="{{ killer.username }}" src="/faces/16/{{ killer.username }}.png"/>
+                                    {{ killer.username|face_thumb }}
                                     <div class="username">
                                         {{ killer.displayname_html|safe }}
                                     </div>
@@ -131,7 +133,7 @@
                         <div class="stat-row">
                             <div class="player">
                                 <a href="/{{ server.id }}/player/{{ victim.username }}">
-                                    <img class="face-thumb" alt="{{ victim.username }}" src="/faces/16/{{ victim.username }}.png"/>
+                                    {{ victim.username|face_thumb }}
                                     <div class="username">
                                         {{ victim.displayname_html|safe }}
                                     </div>

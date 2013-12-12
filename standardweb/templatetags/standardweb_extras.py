@@ -1,6 +1,7 @@
 import os
 
 from django import template
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -33,3 +34,19 @@ def static_url(path):
         ts_string = '?ts=%d' % mtime
 
     return '%s/%s%s' % (STATIC_PATH, path, ts_string)
+
+
+def _face_image(username, size):
+    cls = 'face-thumb' if size == 16 else 'face-large'
+    return '<img src="/faces/%(size)d/%(username)s.png" class="%(cls)s" width="%(size)d" height="%(size)d" alt="%(username)s">' \
+           % {'size': size, 'cls': cls, 'username': username}
+
+
+@register.filter
+def face_thumb(username):
+    return mark_safe(_face_image(username, 16))
+
+
+@register.filter
+def face_large(username):
+    return mark_safe(_face_image(username, 64))

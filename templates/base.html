@@ -69,7 +69,7 @@
                 <div id="right">
                     {% if user.is_authenticated %}
                         {% if not user.is_superuser %}
-                            <a class="{% block select_player %}{% endblock %}" href="/player/{{ user.username }}"><img class="face-thumb" src="/faces/16/{{ user.username }}.png" alt="{{ user.username }}">{{ user.username }}</a>
+                            <a class="{% block select_player %}{% endblock %}" href="/player/{{ user.username }}">{{ user.username|face_thumb }}{{ user.username }}</a>
                         {% endif %}
                         <a href="/logout">Log out</a>
                     {% else %}
@@ -97,7 +97,7 @@
                         <li>&nbsp;</li>
                     {% if user.is_authenticated %}
                         {% if not user.is_superuser %}
-                            <li><a href="/player/{{ user.username }}"><img class="face-thumb" src="/faces/16/{{ user.username }}.png" alt="{{ user.username }}">{{ user.username }}</a></li>
+                            <li><a href="/player/{{ user.username }}">{{ user.username|face_thumb }}d{{ user.username }}</a></li>
                         {% endif %}
                         <li><a href="/logout">Log out</a></li>
                     {% else %}

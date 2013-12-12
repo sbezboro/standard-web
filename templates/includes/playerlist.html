@@ -1,3 +1,5 @@
+{% load standardweb_extras %}
+
 {% block playerlist %}
   {% if stats %}
     <b>Ticks per second: {{ stats.tps|floatformat:"0" }}</b><br><br>
@@ -11,7 +13,7 @@
           {% endif %}
           <a href="/player/{{ player.username }}">
             <span>
-              <img class="face-thumb" src="/faces/16/{{ player.username }}.png" alt="{{ player.username }}">
+              {{ player.username|face_thumb }}
               {{ player.displayname_html|safe }}
             </span>
           </a>

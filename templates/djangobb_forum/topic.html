@@ -2,6 +2,7 @@
 {% load forum_extras %}
 {% load pagination_tags %}
 {% load i18n %}
+{% load standardweb_extras %}
 
 {% block title %}{{ topic.name }} - {{ topic.forum.name }} - Standard Survival Forum{% endblock %}
 
@@ -38,7 +39,7 @@
 						<dd class="postavatar">
 							{% if player %}
 								<a href="/player/{{ player.username }}">
-									<img class="face-large" title="{{ player.username }}" src="/faces/64/{{ player.username }}.png" width="64px" height=64px"/>
+                                    {{ player.username|face_large }}
 								</a>
 							{% endif %}
 							{% if post.user.is_superuser %}

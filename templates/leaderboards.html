@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load standardweb_extras %}
+
 {% block title %}Leaderboards - {{ server.address }} - Standard Survival Minecraft Server{% endblock %}
 
 {% block description %}A set of different leaderboards for various actions on the Minecraft server {{ server.address }}{% endblock %}
@@ -48,7 +50,7 @@
                                 </td>
                                 <td class="player">
                                     <a href="/{{ server.id }}/player/{{ player.username }}">
-                                        <img class="face-thumb" src="/faces/16/{{ player.username }}.png"/>
+                                        {{ player.username|face_thumb }}
                                         {{ player.displayname_html|safe }}
                                     </a>
                                 </td>
