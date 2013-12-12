@@ -28,6 +28,7 @@
             </h1>
             {% with player.forum_profile as profile %}
             {% with profile.last_post as last_post %}
+            {% with profile.last_post_url as last_post_url %}
             {% if profile and profile.post_count and last_post %}
                 {% load forum_extras %}
                 <div class="player-forum-section">
@@ -51,6 +52,7 @@
                 {% endif %}
                 <div class="clear"></div>
             {% endif %}
+            {% endwith %}
             {% endwith %}
             {% endwith %}
         </div>
