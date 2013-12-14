@@ -6,8 +6,7 @@
 
 {% block title %}{{ topic.name }} - {{ topic.forum.name }} - Standard Survival Forum{% endblock %}
 
-{% block select_forum %}{% if topic.id == 116 %}{% else %}selected{% endif %}{% endblock %}
-{% block select_vote %}{% if topic.id == 116 %}selected{% endif %}{% endblock %}
+{% block select_forum %}selected{% endblock %}
 
 {% block djangobb_content %}
 {% autopaginate posts forum_settings.TOPIC_PAGE_SIZE %}

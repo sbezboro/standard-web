@@ -6,9 +6,8 @@
     {% if noindex %}
     <meta name="robots" content="noindex">
     {% endif %}
-    
-    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1" />
-    <meta name="viewport" content="width=device-width" />
+
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
 
     {% load standardweb_extras %}
 
@@ -62,7 +61,6 @@
                 <a class="{% block select_ranking %}{% endblock %}" href="/{% if server %}{{ server.id }}{% else %}2{% endif %}/ranking">Ranking</a>
                 <a class="{% block select_leaderboards %}{% endblock %}" href="/{% if server %}{{ server.id }}{% else %}2{% endif %}/leaderboards">Leaderboards</a>
                 <a class="{% block select_forum %}{% endblock %}" href="/forum/">Forum</a>
-                <a class="{% block select_vote %}{% endblock %}" href="/forum/topic/116/">Vote</a>
                 <a class="{% block select_chat %}{% endblock %}" href="/chat">Live Chat</a>
                 {% if user.is_superuser %}<a href="/analytics">Analytics</a>{% endif %}
                 {% if user.is_superuser %}<a href="/server-admin">Server Admin</a>{% endif %}
@@ -90,14 +88,13 @@
                     <li><a href="/ranking">Ranking</a></li>
                     <li><a href="/leaderboards">Leaderboards</a></li>
                     <li><a href="/forum">Forum</a></li>
-                    <li><a href="/forum/topic/116/">Vote</a></li>
                     <li><a href="/chat">Live Chat</a></li>
                     {% if user.is_superuser %}<li><a href="/analytics">Analytics</a></li>{% endif %}
                     {% if user.is_superuser %}<li><a href="/server-admin">Server Admin</a></li>{% endif %}
                         <li>&nbsp;</li>
                     {% if user.is_authenticated %}
                         {% if not user.is_superuser %}
-                            <li><a href="/player/{{ user.username }}">{{ user.username|face_thumb }}d{{ user.username }}</a></li>
+                            <li><a href="/player/{{ user.username }}">{{ user.username|face_thumb }} {{ user.username }}</a></li>
                         {% endif %}
                         <li><a href="/logout">Log out</a></li>
                     {% else %}
