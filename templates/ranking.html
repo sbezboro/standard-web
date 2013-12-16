@@ -33,7 +33,7 @@
                         {{ player.username|face_thumb }}
                         {{ player.displayname_html|safe }}
                     </a>
-                    {% if player.online %}
+                    {% if row.online %}
                         <img src="/static/images/online.png" alt="Online now!" title="Online now!">
                     {% endif %}
                 </td>
