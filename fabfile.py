@@ -8,7 +8,7 @@ ENV_DIR = '/home/sbezboro/standard-web-env'
 WEB_SERVICE = 'standard-web'
 
 env.roledefs = {
-    'web': ['204.12.249.34']
+    'web': ['208.110.64.130']
 }
 
 def deploy():
