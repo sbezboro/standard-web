@@ -154,7 +154,7 @@ def main():
 
     durations = []
 
-    for server in Server.objects.all():
+    for server in Server.objects.filter(online=True):
         with transaction.commit_manually():
             start = int(round(time.time() * 1000))
 

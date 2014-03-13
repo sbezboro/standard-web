@@ -26,4 +26,3 @@ class CachedResult(object):
     def _cache_key(self, *args, **kwargs):
         key = self.prefix + '-' + '-'.join([str(getattr(arg, 'id', arg)) for arg in args])
         return key
-    

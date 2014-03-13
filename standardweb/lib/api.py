@@ -11,7 +11,7 @@ import rollbar
 apis = {}
 
 def _global_console_command(command):
-    for server in Server.objects.all():
+    for server in Server.objects.filter(online=True):
         api = get_api(server.address)
         
         api.call('runConsoleCommand', command)
@@ -68,7 +68,7 @@ def send_stats(server, data):
 def forum_post(username, forum_name, topic_name, path):
     base_url = Site.objects.get_current().domain
     
-    for server in Server.objects.all():
+    for server in Server.objects.filter(online=True):
         try:
             data = {
                 'username': username,
