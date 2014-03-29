@@ -295,7 +295,7 @@ def player(request, username, server_id=None):
         raise Http404
     
     if not server_id:
-        return HttpResponseRedirect('/2/player/%s' % username)
+        return HttpResponseRedirect('/4/player/%s' % username)
     
     server_id = int(server_id)
     server = get_object_or_404(Server, pk=server_id)
@@ -341,7 +341,7 @@ def player(request, username, server_id=None):
 
 def ranking(request, server_id=None):
     if not server_id:
-        return HttpResponseRedirect('/2/ranking')
+        return HttpResponseRedirect('/4/ranking')
     
     server_id = int(server_id or settings.MAIN_SERVER_ID)
     server = Server.objects.get(id=server_id)
@@ -367,7 +367,7 @@ def ranking(request, server_id=None):
 
 def leaderboards(request, server_id=None):
     if not server_id:
-        return HttpResponseRedirect('/2/leaderboards')
+        return HttpResponseRedirect('/4/leaderboards')
 
     server_id = int(server_id or settings.MAIN_SERVER_ID)
     server = Server.objects.get(id=server_id)
