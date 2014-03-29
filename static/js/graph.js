@@ -1,6 +1,6 @@
 function loadPlayerGraph($elem, serverId, maxPlayers) {
     var offset = new Date().getTimezoneOffset() * 1000 * 60;
-    serverId = serverId || 2;
+    serverId = serverId || 4;
     maxPlayers = maxPlayers || 90;
     
     var data = {};
