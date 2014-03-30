@@ -48,8 +48,8 @@ def _query_server(server, mojang_status):
                                    activity_type=PLAYER_ACTIVITY_TYPES['enter'])
             enter.save()
         
-        # respect nicknames from the main (id=2) server
-        if server.id == 2:
+        # respect nicknames from the main server
+        if server.id == settings.MAIN_SERVER_ID:
             nickname_ansi = player_info.get('nickname_ansi')
             nickname = player_info.get('nickname')
             
