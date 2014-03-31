@@ -64,9 +64,7 @@
             <ul>
                 {% for s in servers %}
                 <li {% if s == server %}class="selected"{% endif %}>
-                    {% if s.online %}
-                        <a class="tooltip" href="/{{s.id}}/player/{{ player.username }}" title="Address: {{ s.address }}">{{ s.name }}</a>
-                    {% endif %}
+                    <a class="tooltip" href="/{{s.id}}/player/{{ player.username }}" title="Address: {{ s.address }}">{{ s.name }}</a>
                 </li>
                 {% endfor %}
             </ul>
