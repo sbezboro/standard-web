@@ -159,6 +159,15 @@ code {
     cursor: default;
 }
 
+.nav-header li a.disabled {
+    color: #aaa;
+}
+
+.nav-header li a.disabled:hover {
+    background: #e0e0e0;
+    cursor: default;
+}
+
 .nav-header li a {
     color: #222;
     padding: 0 11px;

@@ -14,7 +14,7 @@
         <ul>
           {% for server in servers %}
           <li {% if server.id == server_id %}class="selected"{% endif %}>
-              <a class="tooltip" href="/{{server.id}}/chat" title="Address: {{ server.address }}">{{ server.name }}</a>
+              <a class="tooltip {% if not server.online %}disabled{% endif %}" href="{% if server.online %}/{{server.id}}/chat{% else %}#{% endif %}" title="{% if server.online %}Address: {% endif %}{{ server.address }}">{{ server.name }}</a>
           </li>
           {% endfor %}
         </ul>
