@@ -185,7 +185,7 @@ USE_SSL = True
 OLD_SESSION_COOKIE_NAME = 'sessionid'
 SESSION_COOKIE_NAME = 'djangosessionid'
 
-MAIN_SERVER_ID = 2
+MAIN_SERVER_ID = 4
 
 try:
     from local_settings import *
